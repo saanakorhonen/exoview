@@ -71,7 +71,7 @@ const Planet = (props) => {
 
   return (
     <View style={{flex: 0.5, alignItems: "center", height: WW(), paddingTop: padding}}>
-        <Text style={
+        <View style={
           {
             fontSize: (30  * relativeSize), 
             borderRadius: 1000, // random ylisuuri numero
@@ -81,8 +81,8 @@ const Planet = (props) => {
             paddingTop: 55 * relativeSize, 
             textAlign: 'center'}
           } >
-          {name}
-        </Text>
+          <Text>{name}</Text>
+        </View>
       </View>
   );
 }
