@@ -111,7 +111,9 @@ const styles = StyleSheet.create({
     textInput: {
         width: 200,
         backgroundColor: "gray",
-        marginRight: 10
+        marginRight: 10,
+        borderBottomLeftRadius: 10,
+        borderBottomRightRadius: 10
     },
 
     searchBar: {
