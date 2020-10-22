@@ -52,11 +52,19 @@ const Search = ( {navigation} ) => {
 
     //TODO: key prop
     return (
-        <ScrollView>
-            <View>
-                {renderFoundPlanets()}
+        <View>
+            <View style={styles.searchBar}>
+                <TextInput style={styles.textInput}></TextInput>
+                <TouchableOpacity style={styles.button}>
+                    <Text style={styles.buttonText}>Search</Text>
+                </TouchableOpacity>
             </View>
-        </ScrollView>
+            <ScrollView>
+                <View>
+                    {renderFoundPlanets()}
+                </View>
+            </ScrollView>
+        </View>
 
     )
 }
@@ -98,6 +106,17 @@ const PlanetBrief = ( props ) => {
 const styles = StyleSheet.create({
     container: {
         padding: 20
+    },
+
+    textInput: {
+        width: 200,
+        backgroundColor: "gray",
+        marginRight: 10
+    },
+
+    searchBar: {
+        flexDirection: "row",
+        justifyContent: "center"
     },
 
     infoWrapper: {
