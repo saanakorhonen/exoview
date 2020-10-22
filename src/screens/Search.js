@@ -46,7 +46,7 @@ const Search = ( {navigation} ) => {
                 pmasse: planet[3]
             }
             
-            return <PlanetBrief data={planetProps} key={generateKey()}/>
+            return <PlanetBrief navigation={navigation} data={planetProps} key={generateKey()}/>
         });
     }
 
@@ -112,7 +112,7 @@ const PlanetBrief = ( props ) => {
                 </Text>
             </View>
             <View style = {styles.buttonWrapper}>
-                <TouchableOpacity style={styles.button}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
+                <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate('Information', props.data)}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
                 <TouchableOpacity style={styles.button}><Text style={styles.buttonText}>View host star</Text></TouchableOpacity>
             </View>
         </View>

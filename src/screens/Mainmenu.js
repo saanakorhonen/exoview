@@ -8,10 +8,10 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 //luo päävalikko componentin
 //saa argumenttina tuon navigaation jotta pystytään kulkemaan screeneistä toiseen
-const Mainmenu = ({navigation}) => {
+const Mainmenu = ({ navigation }) => {
 	return (
     <View style={styles.container}>
-	  <Button style={styles.nappi} onPress = { () => navigation.navigate('Information',navigation) } title= "Planet info" /> 
+	  <Button style={styles.nappi} onPress = { () => navigation.navigate('Information') } title= "Planet info" /> 
 	  <Button style={styles.nappi} onPress = { () => navigation.navigate('Search') } title= "Search" /> 
 	  <Button style={styles.nappi} title= "About" onPress = { () => navigation.navigate('About')}  />
       <StatusBar style="auto" />

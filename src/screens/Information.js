@@ -4,7 +4,8 @@ import { StyleSheet, View, Text, TouchableOpacity,  } from 'react-native'
 import { parse } from 'fast-xml-parser';
 import InfoView from '../components/InfoView';
 
-const Information = ( {navigation} ) => {
+const Information = ({ navigation, route }) => {
+
 
   // alussa tyhjä alustus
   const [planet, setPlanet] = useState({
@@ -17,6 +18,10 @@ const Information = ( {navigation} ) => {
   })
 
   useEffect(() => {
+    if (route.params !=undefined) {
+      setPlanet({ planet: { hname: route.params.hname, pname: route.params.pname, pradius: route.params.pradius, pmasse: route.params.pmasse}})
+      return
+    }
     fetcPlanet();
   },[])
 
@@ -42,7 +47,7 @@ const Information = ( {navigation} ) => {
       </View >
       <View style={styles.visualisationButton}>
        {/**navigoidaan visualisaatioihin */}
-        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Visualisation', planet)}>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Visualisation',planet)}>
           <Text style={{color: '#fff'}}>Open visualisation</Text>
         </TouchableOpacity>
       </View>

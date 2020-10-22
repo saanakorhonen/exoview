@@ -4,9 +4,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import PlanetComparison from '../components/PlanetComparison'
 
 const Visualisation = ({ route }) => {
+
   return (
     <View>
-      <PlanetComparison planet={route.params} />
+      <PlanetComparison planet={route.params.planet} />
     </View>
   )
 
