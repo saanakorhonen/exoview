@@ -12,8 +12,8 @@ const Mainmenu = ({navigation}) => {
 	return (
     <View style={styles.container}>
 	  <Button style={styles.nappi} onPress = { () => navigation.navigate('Information',navigation) } title= "Planet info" /> 
-	  <Button style={styles.nappi}/*onPress = { () => jotain }*/ title= "Search" /> 
-	  <Button style={styles.nappi} title= "About" onPress = {() => navigation.navigate('About')}  />
+	  <Button style={styles.nappi} onPress = { () => navigation.navigate('Search') } title= "Search" /> 
+	  <Button style={styles.nappi} title= "About" onPress = { () => navigation.navigate('About')}  />
       <StatusBar style="auto" />
     </View>
 	);
