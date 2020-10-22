@@ -46,7 +46,7 @@ const Search = ( {navigation} ) => {
                 pmasse: planet[3]
             }
             
-            return <PlanetBrief data={planetProps}/>
+            return <PlanetBrief data={planetProps} key={generateKey()}/>
         });
     }
 
@@ -67,6 +67,24 @@ const Search = ( {navigation} ) => {
         </View>
 
     )
+}
+
+
+const generateKey = () => {
+    const keys = '1234567890abcdefghijklmnopqrstuvwxyz'
+
+    const idLength = 10
+
+    let i = 0;
+
+    let id = '';
+
+    while (i < idLength) {
+        id = id + keys.charAt(Math.floor(Math.random() * Math.floor(keys.length)))
+        i++;
+    }
+
+    return id;
 }
 
 //Planeetan kevyet tiedot search-näkymään
