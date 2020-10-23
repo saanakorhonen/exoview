@@ -15,20 +15,20 @@ const color = "lightblue";
 export default function PlanetComparison(props) {
 
   const earth = 1.0;
-  var exoSize = 1.0;
+  var exoSize = 1.3;
   
   let relativeSize = 1.0;
-  exoSize = props.planet.prade;
+  exoSize = props.planet.pradius;
 
-  if (isNaN(props.planet.prade)) {
+  if (isNaN(props.planet.pradius)) {
     exoSize = 1.0;
   }
 
   relativeSize = exoSize / earth;
 
   return (
-    <View style={{flex: 1, flexDirection: 'row'}}>
-      <Planet name={props.planet.pname} relative={relativeSize}></Planet>
+    <View style={{flex: 0.4, flexDirection: 'row'}}>
+      <Planet relative={relativeSize}></Planet>
       <Planet isEarth={true} relative={relativeSize}></Planet>
     </View>
   );
@@ -51,9 +51,6 @@ function WW() {
  */
 const Planet = (props) => {
 
-  let name = props.name;
-  if (props.isEarth) name = "Earth";
-
   let relativeSize = 1.0;
   let padding = 0;
 
@@ -70,7 +67,7 @@ const Planet = (props) => {
   }
 
   return (
-    <View style={{flex: 0.5, alignItems: "center", height: WW(), paddingTop: padding}}>
+    <View style={{flex: 0.5, alignItems: "center", height: WW(), paddingTop: padding, backgroundColor: 'rgba(52, 52, 52, 0.0)'}}>
         <View style={
           {
             fontSize: (30  * relativeSize), 
@@ -81,7 +78,6 @@ const Planet = (props) => {
             paddingTop: 55 * relativeSize, 
             textAlign: 'center'}
           } >
-          <Text>{name}</Text>
         </View>
       </View>
   );
