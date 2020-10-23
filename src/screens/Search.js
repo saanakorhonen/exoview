@@ -12,7 +12,7 @@ const Search = ( {navigation} ) => {
     var start = 10
 
     //Base url
-    var url =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_masse+from+ps+where+disc_year+=+2020'
+    var url =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_bmasse+from+pscomppars+where+disc_year+=+2020'
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 

@@ -27,7 +27,7 @@ const Information = ({ navigation, route }) => {
 
   // haetaan 1 planeetan tiedot
   const fetcPlanet = async () => {
-    const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_masse+from+ps+where+disc_year+=+2020')
+    const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_bmasse+from+pscomppars+where+disc_year+=+2020')
     const teksti = await res.text()
     const obj = await parse(teksti)
     // varsinainen haluttu data taulukkossa
