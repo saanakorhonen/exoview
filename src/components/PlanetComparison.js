@@ -3,6 +3,7 @@ import React from "react";
 import { Text, View, Dimensions } from "react-native";
 
 const color = "lightblue";
+const exocolor = "lightblue";
 
 
 /**
@@ -14,7 +15,8 @@ const color = "lightblue";
  */
 export default function PlanetComparison(props) {
 
-  const earth = 1.0;
+  const earth = props.comparison;
+  const jupiter = 11.209;
   var exoSize = 1.3;
   
   let relativeSize = 1.0;
@@ -27,7 +29,7 @@ export default function PlanetComparison(props) {
   relativeSize = exoSize / earth;
 
   return (
-    <View style={{flex: 0.4, flexDirection: 'row'}}>
+    <View style={{flex: 0.4, flexDirection: 'row', marginTop: (WW() / 4)}}>
       <Planet relative={relativeSize}></Planet>
       <Planet isEarth={true} relative={relativeSize}></Planet>
     </View>
@@ -67,7 +69,7 @@ const Planet = (props) => {
   }
 
   return (
-    <View style={{flex: 0.5, alignItems: "center", height: WW(), paddingTop: padding, backgroundColor: 'rgba(52, 52, 52, 0.0)'}}>
+    <View style={{flex: 1, alignItems: "center", height: WW(), paddingTop: padding, backgroundColor: 'rgba(52, 52, 52, 0.0)'}}>
         <View style={
           {
             fontSize: (30  * relativeSize), 

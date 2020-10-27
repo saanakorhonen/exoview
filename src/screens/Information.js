@@ -14,12 +14,14 @@ const Information = ({ navigation, route }) => {
       pname: '',
       pradius: '',
       pmasse: '',
+      pl_massj: '',
+      pl_radj:'',
    }
   })
 
   useEffect(() => {
     if (route.params !=undefined) {
-      setPlanet({ planet: { hname: route.params.hname, pname: route.params.pname, pradius: route.params.pradius, pmasse: route.params.pmasse}})
+      setPlanet({ planet: { hname: route.params.hname, pname: route.params.pname, pradius: route.params.pradius, pmasse: route.params.pmasse, pl_massj: route.params.pl_bmassj, pl_radj: route.params.pl_radj}})
       return
     }
     fetcPlanet();
@@ -27,13 +29,13 @@ const Information = ({ navigation, route }) => {
 
   // haetaan 1 planeetan tiedot
   const fetcPlanet = async () => {
-    const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_bmasse+from+pscomppars+where+disc_year+=+2020')
+    const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+disc_year+=+2020')
     const teksti = await res.text()
     const obj = await parse(teksti)
     // varsinainen haluttu data taulukkossa
     const objArray = obj.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR.TD
     // asetetaan planeetan tiedot
-    setPlanet({ planet: { hname: objArray[0], pname: objArray[1], pradius: objArray[2], pmasse: objArray[3] }})
+    setPlanet({ planet: { hname: objArray[0], pname: objArray[1], pradius: objArray[2], pmasse: objArray[3], pl_bmassj: objArray[4], pl_radj: objArray[5] }})
   }
 
   return (

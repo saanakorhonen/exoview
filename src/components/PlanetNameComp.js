@@ -9,11 +9,15 @@ import { Text, View, Dimensions, StyleSheet } from "react-native";
  * @param {*} props name = planeetan nimi
  */
 export default function PlanetNameComp(props) {
+  console.log('planet name', props.name)
+  
 
   return (
-    <View style={{flex: 1, flexDirection: 'row'}}>
-      <Text style={styles.text}>{props.name}</Text>
-      <Text style={styles.text}>Earth</Text>
+    <View style={{flex: 1, marginTop:Dimensions.get('window').height / 5}}>
+      <View style={{ flexDirection: 'row'}}>
+        <Text style={styles.text}>{props.name}</Text>
+        <Text style={styles.text}>{props.comparison}</Text>
+      </View>
     </View>
   );
 }
