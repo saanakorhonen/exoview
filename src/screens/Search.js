@@ -3,7 +3,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { parse } from 'fast-xml-parser';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-
+import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
+import { set } from 'react-native-reanimated';
 
 //Planeettojen etsimisikkuna
 const Search = ( {navigation} ) => {
@@ -13,21 +14,41 @@ const Search = ( {navigation} ) => {
 
     //Base url
     //TODO:  hakua muutettu information puolella, hakee myös tietoja suhteessa jupiterin massaan ja säteeseen, tänne samat muutokset
-    var url =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_bmasse+from+pscomppars+where+disc_year+=+2020'
+    var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse+from+ps+where+";
+	var loppu = "+default_flag+=+1";//format=csv;
+	//var url = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name+from+ps+where+disc_year+=+2020+and+default_flag+=+1&format=csv';
+	var url = alku + loppu;
+
+    
+    var open = true;
+
+
+    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_bmasse+from+pscomppars+where+disc_year+=+2020'
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
 
+    //Hakufiltteri
+    const [searchFilter, setFilter] = useState('')
+
+    //Hakutermi
+    const [searchTerm, changeSearchTerm] = useState('')
+
+    const [padding, setPadding] = useState({})
+
+
+
     //Aloittaa hakemalla datan
     useEffect(() => {
-        fetchData();
+        fetchData(defaultUrl);
     }, []);
 
 
 
     //Hakee default-datan tässä vaiheessa
-    const fetchData = async () => {
-        const response = await fetch(url);
+    const fetchData = async ( props ) => {
+        const response = await fetch(props);
+
         const teksti = await response.text();
         const objects = await parse(teksti);
         const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
@@ -51,25 +72,81 @@ const Search = ( {navigation} ) => {
         });
     }
 
-    //TODO: key prop
+    const parseSearchTerms = () => {
+        if(searchTerm === "" ){
+            fetchData(defaultUrl);
+            return;
+
+        }
+        var hakuehto = searchFilter;
+
+        var hakutermi = '+like+\'' + searchTerm + '%\'+and'
+
+        var apikutsu = alku + hakuehto + hakutermi + loppu;
+
+        console.log(apikutsu)
+
+        fetchData(apikutsu);
+    }
+
+
+    const setMenuProviderStyle = () => {
+
+        if (padding.padding === 10) {
+            open = false;
+            setPadding({
+            flexDirection: "column",
+            padding: 100
+            
+            })
+           
+        } else {
+            setPadding({padding:10});
+            open = true;
+        }
+    }
+
     return (
         <View>
             <View style={styles.searchBar}>
-                <TextInput style={styles.textInput}></TextInput>
+                <TextInput style={styles.textInput} onChangeText={term => changeSearchTerm(term)}></TextInput>
                 <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText}>Search</Text>
-                </TouchableOpacity>
+                    <Text style={styles.buttonText} onPress={() => parseSearchTerms()}>Search</Text>
+                </TouchableOpacity>      
+                <MenuProvider style={padding} on>
+                <Menu onSelect={filter => setFilter(filter)}>
+                        <MenuTrigger onPress={() => setMenuProviderStyle()}>
+                            <Text>Search options</Text>
+                        </MenuTrigger>
+
+                        <MenuOptions>
+                            <MenuOption value={"pl_name"}>
+                                <Text>Planet name</Text>
+                            </MenuOption>
+                            
+                            <MenuOption value={"hostname"}>
+                                <Text>Host star</Text>
+                            </MenuOption>
+
+                            <MenuOption value={"pl_rade"}>
+                                <Text>Radius</Text>
+                            </MenuOption>
+
+                            <MenuOption value={"pl_masse"}>
+                                <Text>planet masse</Text>
+                            </MenuOption>
+                        </MenuOptions>
+
+                    </Menu>
+            </MenuProvider>     
             </View>
             <ScrollView>
-                <View>
-                    {renderFoundPlanets()}
-                </View>
+                {renderFoundPlanets()}
             </ScrollView>
         </View>
 
     )
 }
-
 
 const generateKey = () => {
     const keys = '1234567890abcdefghijklmnopqrstuvwxyz'
@@ -135,9 +212,17 @@ const styles = StyleSheet.create({
         borderBottomRightRadius: 10
     },
 
+    menuProvider:{
+        
+    },
+    planetScroll:{
+        
+    },
     searchBar: {
+    
         flexDirection: "row",
-        justifyContent: "center"
+        justifyContent: "center",
+        zIndex:1
     },
 
     infoWrapper: {
