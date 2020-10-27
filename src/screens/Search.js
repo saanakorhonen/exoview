@@ -12,18 +12,14 @@ const Search = ( {navigation} ) => {
     //Aloitusmaksimi queryssa
     var start = 10
 
-    //Base url
-    //TODO:  hakua muutettu information puolella, hakee myös tietoja suhteessa jupiterin massaan ja säteeseen, tänne samat muutokset
-    var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse+from+ps+where+";
+    var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+ps+where+";
 	var loppu = "+default_flag+=+1";//format=csv;
-	//var url = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+pl_name+from+ps+where+disc_year+=+2020+and+default_flag+=+1&format=csv';
-	var url = alku + loppu;
-
+	
     
-    var open = true;
+    
 
 
-    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_bmasse+from+pscomppars+where+disc_year+=+2020'
+    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+disc_year+=+2020'
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
@@ -72,6 +68,8 @@ const Search = ( {navigation} ) => {
         });
     }
 
+
+    //Käsittelee hakutermin ja -filtterin
     const parseSearchTerms = () => {
         if(searchTerm === "" ){
             fetchData(defaultUrl);
@@ -89,11 +87,12 @@ const Search = ( {navigation} ) => {
         fetchData(apikutsu);
     }
 
-
+    //vaihtaa menun paddingin että sitä näkee käytää
+    //TODO:jokin järkevämpi ratkaisu
     const setMenuProviderStyle = () => {
 
         if (padding.padding === 10) {
-            open = false;
+            
             setPadding({
             flexDirection: "column",
             padding: 100
@@ -102,10 +101,12 @@ const Search = ( {navigation} ) => {
            
         } else {
             setPadding({padding:10});
-            open = true;
+            
         }
     }
 
+    
+    //Palauttaa hakunäkymän
     return (
         <View>
             <View style={styles.searchBar}>
@@ -148,6 +149,8 @@ const Search = ( {navigation} ) => {
     )
 }
 
+
+//Luo id:n planeettakomponenteille
 const generateKey = () => {
     const keys = '1234567890abcdefghijklmnopqrstuvwxyz'
 
