@@ -10,8 +10,8 @@ import { set } from 'react-native-reanimated';
 const Search = ( {navigation} ) => {
 
     //Aloitusmaksimi queryssa
-    var start = 10
-
+    var start = 0;
+    var juoksevaluku = start;
     var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+ps+where+";
 	var loppu = "+default_flag+=+1";//format=csv;
 	
@@ -19,7 +19,7 @@ const Search = ( {navigation} ) => {
     
 
 
-    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+10+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+disc_year+=+2020'
+    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+disc_year+=+2020+and+rownum+>=' + start + '+and+rownum+<' + 9
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
@@ -30,13 +30,14 @@ const Search = ( {navigation} ) => {
     //Hakutermi
     const [searchTerm, changeSearchTerm] = useState('')
 
-    const [padding, setPadding] = useState({})
-
 
 
     //Aloittaa hakemalla datan
     useEffect(() => {
-        fetchData(defaultUrl);
+       fetchData(defaultUrl)
+       .then((data) => {
+           setFoundPlanets(data);
+       })
     }, []);
 
 
@@ -47,9 +48,13 @@ const Search = ( {navigation} ) => {
 
         const teksti = await response.text();
         const objects = await parse(teksti);
+
         const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-        
-        setFoundPlanets(planetArray);
+
+        return new Promise((resolve, reject) => {
+            var success = planetArray != undefined;
+            success ? resolve(planetArray) : reject('Query failed');
+        })
     }
 
 
@@ -71,38 +76,62 @@ const Search = ( {navigation} ) => {
 
     //Käsittelee hakutermin ja -filtterin
     const parseSearchTerms = () => {
-        if(searchTerm === "" ){
-            fetchData(defaultUrl);
+
+        if(searchTerm === "" && searchFilter === ""){
+            var planets = fetchData(defaultUrl);
+            setFoundPlanets(planets);
             return;
 
         }
-        var hakuehto = searchFilter;
 
-        var hakutermi = '+like+\'' + searchTerm + '%\'+and'
+        var apikutsu = createQuery();
 
-        var apikutsu = alku + hakuehto + hakutermi + loppu;
-
-        console.log(apikutsu)
-
-        fetchData(apikutsu);
+        fetchData(apikutsu)
+        .then((data) => {
+            setFoundPlanets(data);
+        })        
     }
 
-    //vaihtaa menun paddingin että sitä näkee käytää
-    //TODO:jokin järkevämpi ratkaisu
-    const setMenuProviderStyle = () => {
 
-        if (padding.padding === 10) {
-            
-            setPadding({
-            flexDirection: "column",
-            padding: 100
-            
-            })
-           
-        } else {
-            setPadding({padding:10});
-            
-        }
+    //Luo uuden api queryn
+    const createQuery = () => {
+        var hakuehto = searchFilter;
+
+        //var rajat = '+rownum+>=' + juoksevaluku + '+and+rownum+<+' + (juoksevaluku+9) +'+and'
+        
+        if (hakuehto === '' || hakuehto === undefined) {
+            console.log(alku+/*rajat+*/loppu);
+            return alku + /*rajat+*/ loppu;
+        } 
+
+        var hakutermi = '+like+\'' + searchTerm + '%\'+and'
+        console.log(alku + hakuehto + hakutermi + /*rajat+*/ loppu);
+        return alku + hakuehto + hakutermi + /*rajat+*/ loppu;
+    }
+
+
+
+    //Lataa seuraavat planeetat, kun on selattu loppuun
+    const loadNext = ( props  ) => {
+        if (!isAtBottom(props)) return;
+
+        juoksevaluku = juoksevaluku + 10;
+        var apikutsu = createQuery();
+
+        /*fetchData(apikutsu)
+        .then((data) => {
+            setFoundPlanets(foundPlanets.concat(data));
+        })*/
+    }
+
+
+    //Katsotaan, onko selaus lopussa
+    const isAtBottom = ( props ) => {
+        let layout = props.layoutMeasurement.height;
+        let offset = props.contentOffset.y;
+        let size = props.contentSize.height;
+
+        return layout + offset >= size
     }
 
     
@@ -111,7 +140,7 @@ const Search = ( {navigation} ) => {
         
             <MenuProvider /*style={padding}*/ on>
                 <Menu onSelect={filter => setFilter(filter)}>
-                        <MenuTrigger onPress={() => setMenuProviderStyle()}>
+                        <MenuTrigger /*onPress={() => setMenuProviderStyle()}*/>
                             <Text>Search options</Text>
                         </MenuTrigger>
 
@@ -140,56 +169,14 @@ const Search = ( {navigation} ) => {
                          <Text style={styles.buttonText} onPress={() => parseSearchTerms()}>Search</Text>
                     </TouchableOpacity>    
                     </View>
-                    <ScrollView>
+                    <ScrollView onScroll={({nativeEvent}) => {
+                        loadNext(nativeEvent);
+                    }}>
                         {renderFoundPlanets()}
                     </ScrollView>
 
             </MenuProvider>     
 
-
-       
-
-
-
-        /*
-        <View>
-            <View style={styles.searchBar}>
-                <TextInput style={styles.textInput} onChangeText={term => changeSearchTerm(term)}></TextInput>
-                <TouchableOpacity style={styles.button}>
-                    <Text style={styles.buttonText} onPress={() => parseSearchTerms()}>Search</Text>
-                </TouchableOpacity>      
-                <MenuProvider style={padding} on>
-                <Menu onSelect={filter => setFilter(filter)}>
-                        <MenuTrigger onPress={() => setMenuProviderStyle()}>
-                            <Text>Search options</Text>
-                        </MenuTrigger>
-
-                        <MenuOptions>
-                            <MenuOption value={"pl_name"}>
-                                <Text>Planet name</Text>
-                            </MenuOption>
-                            
-                            <MenuOption value={"hostname"}>
-                                <Text>Host star</Text>
-                            </MenuOption>
-
-                            <MenuOption value={"pl_rade"}>
-                                <Text>Radius</Text>
-                            </MenuOption>
-
-                            <MenuOption value={"pl_masse"}>
-                                <Text>planet masse</Text>
-                            </MenuOption>
-                        </MenuOptions>
-
-                    </Menu>
-            </MenuProvider>     
-            </View>
-            <ScrollView>
-                {renderFoundPlanets()}
-            </ScrollView>
-        </View>
-        */
     )
 }
 
@@ -218,28 +205,46 @@ const generateKey = () => {
 //TODO n/a jos tietoa ei ole saatavilla
 const PlanetBrief = ( props ) => {
 
+    var isVisible = false;
+
+    const toggleVisibility = () => {
+        isVisible = !isVisible;
+    }
+
+    const renderView = () => {
+        if (isVisible) {
+            return view;
+        }
+
+        return null;
+    }
+
+    var view =  <View>    
+                    <View style={styles.infoWrapper}>
+                        <Text>
+                            Host star: { props.data.hname}
+                        </Text>
+                        <Text>
+                            Masse: { props.data.pmasse}
+                        </Text>
+                        <Text>
+                            Radius: { props.data.pradius}
+                        </Text>
+                    </View>
+                    <View style = {styles.buttonWrapper}>
+                        <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate('Information', props.data)}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.button}><Text style={styles.buttonText}>View host star</Text></TouchableOpacity>
+                    </View>
+                </View>
+
     return (
         <View style={styles.container}>
-            <View style = {styles.headerWrapper}>
+            <View style = {styles.headerWrapper} onPress = {toggleVisibility()}>
                 <Text style = {styles.header}>
                     { props.data.pname }
                 </Text>
             </View>
-            <View style={styles.infoWrapper}>
-                <Text>
-                    Host star: { props.data.hname}
-                </Text>
-                <Text>
-                    Masse: { props.data.pmasse}
-                </Text>
-                <Text>
-                    Radius: { props.data.pradius}
-                </Text>
-            </View>
-            <View style = {styles.buttonWrapper}>
-                <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate('Information', props.data)}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
-                <TouchableOpacity style={styles.button}><Text style={styles.buttonText}>View host star</Text></TouchableOpacity>
-            </View>
+            {renderView()}
         </View>
     )
 }
