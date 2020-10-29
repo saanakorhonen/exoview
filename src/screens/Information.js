@@ -29,16 +29,18 @@ const Information = ({ navigation, route }) => {
 
   // haetaan 1 planeetan tiedot
   const fetcPlanet = async () => {
-    const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+disc_year+=+2020')
+    const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax+from+pscomppars+where+disc_year+=+2020')
     const teksti = await res.text()
     const obj = await parse(teksti)
     // varsinainen haluttu data taulukkossa
     const objArray = obj.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR.TD
     // asetetaan planeetan tiedot
-    setPlanet({ planet: { hname: objArray[0], pname: objArray[1], pradius: objArray[2], pmasse: objArray[3], pl_bmassj: objArray[4], pl_radj: objArray[5] }})
+    setPlanet({ planet: { hname: objArray[0], pname: objArray[1], pradius: objArray[2], pmasse: objArray[3], pl_bmassj: objArray[4], pl_radj: objArray[5], pl_orbsmax: objArray[6] }})
   }
 
+  console.log('Information ennen return', planet)
   return (
+    
     <View style={styles.container}>
       <View style={styles.nameBox}>
         <Text style={styles.name}>{planet.planet.pname}</Text>
@@ -50,6 +52,9 @@ const Information = ({ navigation, route }) => {
       <View style={styles.visualisationButton}>
        {/**navigoidaan visualisaatioihin */}
         <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Visualisation',planet)}>
+          <Text style={{color: '#fff'}}>Open visualisation</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Distance',planet)}>
           <Text style={{color: '#fff'}}>Open visualisation</Text>
         </TouchableOpacity>
       </View>

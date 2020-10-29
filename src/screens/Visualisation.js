@@ -5,8 +5,6 @@ import Planet from '../components/Planet';
 
 const Visualisation = ({ route }) => {
 
-  console.log(route.params.planet)
-
   const params = ( param ) => param  === undefined ? 'an unknown amount' : param
   
   const name = route.params.planet.pname;

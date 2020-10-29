@@ -5,6 +5,7 @@ import Visualisation from '../screens/Visualisation'
 import Mainmenu from '../screens/Mainmenu'
 import Search from '../screens/Search'
 import About from '../screens/About'
+import Distance from '../screens/Distance'
 
 const Stack = createStackNavigator();
 //stack navigaatio plneetan infosta planeetan visualisaatioihin
@@ -14,7 +15,8 @@ function InfoVisualisationStack() {
 	    <Stack.Screen name="Mainmenu" component={Mainmenu} />
       <Stack.Screen name="Information" component={Information} />
       <Stack.Screen name="Visualisation" component={Visualisation} />
-	    <Stack.Screen name="About" component={About} />
+	    <Stack.Screen name="Distance" component={Distance} />
+      <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Search" component={Search} />
     </Stack.Navigator>
   );

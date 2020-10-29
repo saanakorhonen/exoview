@@ -9,7 +9,6 @@ import { Text, View, Dimensions, StyleSheet } from "react-native";
  * @param {*} props name = planeetan nimi
  */
 export default function PlanetNameComp(props) {
-  console.log('planet name', props.name)
   
 
   return (
