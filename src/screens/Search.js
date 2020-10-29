@@ -108,6 +108,50 @@ const Search = ( {navigation} ) => {
     
     //Palauttaa hakunäkymän
     return (
+        
+            <MenuProvider /*style={padding}*/ on>
+                <Menu onSelect={filter => setFilter(filter)}>
+                        <MenuTrigger onPress={() => setMenuProviderStyle()}>
+                            <Text>Search options</Text>
+                        </MenuTrigger>
+
+                        <MenuOptions>
+                            <MenuOption value={"pl_name"}>
+                                <Text>Planet name</Text>
+                            </MenuOption>
+                            
+                            <MenuOption value={"hostname"}>
+                                <Text>Host star</Text>
+                            </MenuOption>
+
+                            <MenuOption value={"pl_rade"}>
+                                <Text>Radius</Text>
+                            </MenuOption>
+
+                            <MenuOption value={"pl_masse"}>
+                                <Text>planet masse</Text>
+                            </MenuOption>
+                        </MenuOptions>
+
+                    </Menu>
+                    <View style={styles.searchBar}>
+                        <TextInput style={styles.textInput} onChangeText={term => changeSearchTerm(term)}></TextInput>
+                    <TouchableOpacity style={styles.button}>
+                         <Text style={styles.buttonText} onPress={() => parseSearchTerms()}>Search</Text>
+                    </TouchableOpacity>    
+                    </View>
+                    <ScrollView>
+                        {renderFoundPlanets()}
+                    </ScrollView>
+
+            </MenuProvider>     
+
+
+       
+
+
+
+        /*
         <View>
             <View style={styles.searchBar}>
                 <TextInput style={styles.textInput} onChangeText={term => changeSearchTerm(term)}></TextInput>
@@ -145,7 +189,7 @@ const Search = ( {navigation} ) => {
                 {renderFoundPlanets()}
             </ScrollView>
         </View>
-
+        */
     )
 }
 
