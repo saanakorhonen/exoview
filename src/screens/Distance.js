@@ -41,8 +41,8 @@ const Distance = ({ route }) => {
 					</Text>
 					<Text style={styles.infoBoxContent}>
 						It completes a full orbit around its host star every{" "}
-						<Text style={{ color: "yellow" }}>TODO</Text> days, or once every
-						<Text style={{ color: "yellow" }}> TODO/365</Text> Earth years.
+						<Text style={{ color: "yellow" }}>{planet.pl_orbper}</Text> days, or once every
+						<Text style={{ color: "yellow" }}> {(planet.pl_orbper/365).toFixed(2)}</Text> Earth years.
 					</Text>
 					<Text style={styles.infoBoxContent}>
 						{planet.pname}'s orbit has an{" "}
@@ -55,11 +55,11 @@ const Distance = ({ route }) => {
 							}}>
 							eccentricity
 						</Text>{" "}
-						of <Text style={{ color: "yellow" }}>TODO</Text>, making it
+						of <Text style={{ color: "yellow" }}>{planet.pl_orbeccen}</Text>, making it
 						more/less elliptical than Earth's orbit.
 					</Text>
 				</View>
-				<OrbitView eccentricity={0.3}></OrbitView>
+				<OrbitView eccentricity={planet.pl_orbeccen}></OrbitView>
 			</View>
 		</View>
 	);

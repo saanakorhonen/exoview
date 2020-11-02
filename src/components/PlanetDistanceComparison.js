@@ -48,9 +48,10 @@ const PlanetDistanceComparison = ({ planet }) => {
 
 const styles = StyleSheet.create({
 	line: {
+		flex: 1,
 		position: "absolute",
 		width: 1,
-		height: Dimensions.get("window").height * 5 / 6,
+		height: '90%', //Dimensions.get("window").height * 5 / 6,
 		borderWidth: 1,
 		borderRadius: 1.0,
 		borderColor: "yellow",

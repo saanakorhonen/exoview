@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'rgb(255, 255, 255)',
     textAlign: "center",
-    fontSize: 30
+    fontSize: 25
   }
 })
 
