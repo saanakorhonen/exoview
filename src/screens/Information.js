@@ -21,7 +21,8 @@ const Information = ({ navigation, route }) => {
 
   useEffect(() => {
     if (route.params !=undefined) {
-      setPlanet({ planet: { hname: route.params.hname, pname: route.params.pname, pradius: route.params.pradius, pmasse: route.params.pmasse, pl_massj: route.params.pl_bmassj, pl_radj: route.params.pl_radj }})
+      const p = route.params
+      setPlanet({ planet: { hname: p.hname, pname: p.pname, pradius: p.pradius, pmasse: p.pmasse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen }})
       return
     }
     fetcPlanet();

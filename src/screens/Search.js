@@ -19,7 +19,7 @@ const Search = ( {navigation} ) => {
     
 
 
-    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+disc_year+=+2020+and+rownum+>=' + start + '+and+rownum+<' + 9
+    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen+from+pscomppars+where+disc_year+=+2020+and+rownum+>=' + start + '+and+rownum+<' + 9
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
@@ -66,7 +66,12 @@ const Search = ( {navigation} ) => {
                 hname: planet[0],
                 pname: planet[1],
                 pradius: planet[2],
-                pmasse: planet[3]
+                pmasse: planet[3],
+                pl_bmassj: planet[4],
+                pl_radj: planet[5],
+                pl_orbsmax: planet[6],
+                pl_orbper: planet[7],
+                pl_orbeccen: planet[8]
             }
             
             return <PlanetBrief navigation={navigation} data={planetProps} key={generateKey()}/>
@@ -76,9 +81,10 @@ const Search = ( {navigation} ) => {
 
     //Käsittelee hakutermin ja -filtterin
     const parseSearchTerms = () => {
-
+        console.log('tääöö')
         if(searchTerm === "" && searchFilter === ""){
             var planets = fetchData(defaultUrl);
+            console.log(planets)
             setFoundPlanets(planets);
             return;
 
@@ -134,7 +140,6 @@ const Search = ( {navigation} ) => {
         return layout + offset >= size
     }
 
-    
     //Palauttaa hakunäkymän
     return (
         
@@ -165,8 +170,8 @@ const Search = ( {navigation} ) => {
                     </Menu>
                     <View style={styles.searchBar}>
                         <TextInput style={styles.textInput} onChangeText={term => changeSearchTerm(term)}></TextInput>
-                    <TouchableOpacity style={styles.button}>
-                         <Text style={styles.buttonText} onPress={() => parseSearchTerms()}>Search</Text>
+                    <TouchableOpacity style={styles.button} onPress={() => parseSearchTerms()}>
+                         <Text style={styles.buttonText}>Search</Text>
                     </TouchableOpacity>    
                     </View>
                     <ScrollView onScroll={({nativeEvent}) => {

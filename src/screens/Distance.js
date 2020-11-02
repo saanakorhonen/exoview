@@ -4,8 +4,9 @@ import PlanetDistanceComparison from "../components/PlanetDistanceComparison";
 import OrbitView from "../components/OrbitView";
 
 const Distance = ({ route }) => {
-	console.log("const dist", route.params.planet);
+	//console.log("const dist", route.params.planet);
 	const planet = route.params.planet;
+
 	return (
 		<View style={styles.container}>
 			<View style={styles.distanceBox}>
@@ -55,8 +56,8 @@ const Distance = ({ route }) => {
 							}}>
 							eccentricity
 						</Text>{" "}
-						of <Text style={{ color: "yellow" }}>{planet.pl_orbeccen}</Text>, making it
-						more/less elliptical than Earth's orbit.
+						of <Text style={{ color: "yellow" }}>{planet.pl_orbeccen}</Text>, making it 
+						{ planet.pl_orbeccen > 0.0167086 ? " more" : " less" } than Earth's
 					</Text>
 				</View>
 				<OrbitView eccentricity={planet.pl_orbeccen}></OrbitView>
@@ -78,8 +79,10 @@ const styles = StyleSheet.create({
 	},
 	infoBox: {
 		flex: 3,
+
 		//width: Dimensions.get('window').width /2,
 		backgroundColor: "black",
+
 	},
 	infoBoxTitle: {
 		fontSize: 30,
@@ -91,7 +94,7 @@ const styles = StyleSheet.create({
 		marginRight: 20,
 		marginBottom: 8,
 		color: "white",
-		fontSize: 20,
+		fontSize: 18, 
 	},
 });
 
