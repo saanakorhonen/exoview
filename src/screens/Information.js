@@ -16,7 +16,7 @@ const Information = ({ navigation, route }) => {
       pmasse: '',
       pl_massj: '',
       pl_radj:'',
-   }
+    }
   })
 
   useEffect(() => {

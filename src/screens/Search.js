@@ -1,13 +1,13 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import { Keyboard, View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { parse } from 'fast-xml-parser';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
 import { set } from 'react-native-reanimated';
 
 //Planeettojen etsimisikkuna
-const Search = ( {navigation} ) => {
+const Search = ({ navigation, route } ) => {
 
     //Aloitusmaksimi queryssa
     var start = 0;
@@ -16,13 +16,16 @@ const Search = ( {navigation} ) => {
 	var loppu = "+default_flag+=+1";//format=csv;
 	
     
-    
 
-
-    var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen+from+pscomppars+where+disc_year+=+2020+and+rownum+>=' + start + '+and+rownum+<' + 9
+   // var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen+from+pscomppars+where+disc_year+=+2020+and+rownum+>=' + start + '+and+rownum+<' + 9
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
+
+    const [planetObjects, setPlanetObjects] = useState([]) 
+    //const [filteredPlanets, setFilteredPlanets] = useState([]) 
+
+    const [allPlanets, setAllPlanets] = useState([])
 
     //Hakufiltteri
     const [searchFilter, setFilter] = useState('')
@@ -30,21 +33,53 @@ const Search = ( {navigation} ) => {
     //Hakutermi
     const [searchTerm, changeSearchTerm] = useState('')
 
+    //Menutriggerin tekstin vaihto
+    const [menuTriggerText, setMenuTriggerText] = useState('Search options')
+
 
 
     //Aloittaa hakemalla datan
     useEffect(() => {
-       fetchData(defaultUrl)
-       .then((data) => {
-           setFoundPlanets(data);
-       })
+        setPlanets()
     }, []);
 
+    const setPlanets = () => {
+       let arrayP = []
+        route.params.map(obj => {
+            const planet = obj.TD
+            const propPlanet =
+            {
+                hname: planet[0],
+                pname: planet[1],
+                pradius: planet[2],
+                pmasse: planet[3],
+                pl_bmassj: planet[4],
+                pl_radj: planet[5],
+                pl_orbsmax: planet[6],
+                pl_orbper: planet[7],
+                pl_orbeccen: planet[8],
+                disc_year: planet[9]
+            }
+            arrayP = arrayP.concat(propPlanet)
+        })
+        //setPlanetObjects(arrayP)
+        
+        setAllPlanets(arrayP)
+        //const planets10 = route.params.slice(0,10);
+        //console.log('setplanets', planets10)
+        //setFoundPlanets(planets10);
+    };
+
+    useEffect(() => {
+        const planets10 = allPlanets.slice(0,10)
+        setFoundPlanets(planets10)
+    }, [allPlanets])
 
 
     //Hakee default-datan tässä vaiheessa
     const fetchData = async ( props ) => {
         const response = await fetch(props);
+        //console.log('fetchData',route.params)
 
         const teksti = await response.text();
         const objects = await parse(teksti);
@@ -60,9 +95,11 @@ const Search = ( {navigation} ) => {
 
     //Tekee löydetyistä planeetoista katseltavia komponentteja
     const renderFoundPlanets = () => {
+        console.log(foundPlanets)
+        /*
         return foundPlanets.map((obj) => {
             let planet = obj.TD;
-            planetProps = {
+            const planetProps = {
                 hname: planet[0],
                 pname: planet[1],
                 pradius: planet[2],
@@ -71,32 +108,68 @@ const Search = ( {navigation} ) => {
                 pl_radj: planet[5],
                 pl_orbsmax: planet[6],
                 pl_orbper: planet[7],
-                pl_orbeccen: planet[8]
+                pl_orbeccen: planet[8],
+                disc_year: planet[9]
             }
             
             return <PlanetBrief navigation={navigation} data={planetProps} key={generateKey()}/>
-        });
+        });*/
+        return foundPlanets.map(planet => <PlanetBrief navigation={navigation} data={planet} key={generateKey()}/>)
     }
 
 
     //Käsittelee hakutermin ja -filtterin
     const parseSearchTerms = () => {
-        console.log('tääöö')
-        if(searchTerm === "" && searchFilter === ""){
-            var planets = fetchData(defaultUrl);
-            console.log(planets)
-            setFoundPlanets(planets);
+        /*if(searchTerm === "" && searchFilter === ""){
+            
+            fetchData(defaultUrl)
+            .then((data) => {
+                setFoundPlanets(data);
+            })
             return;
 
-        }
+        } =
 
         var apikutsu = createQuery();
 
         fetchData(apikutsu)
         .then((data) => {
             setFoundPlanets(data);
-        })        
+        }) 
+         let i = 0;
+        switch (searchFilter) {
+            case "pl_name":
+                i = "pl_name";
+                break;
+            case "hostname":
+                i = 1;
+                break;
+            case "pl_rade":
+                i = 9;
+                break;
+    
+            case "pl_masse":
+                i = 7;
+                break;
+            default:
+                break;
+        }
+       console.log(i)
+       if(searchTerm === '')  return setFoundPlanets(allPlanets.slice(0,10))
+       console.log(searchFilter)
+        */
+       //TODO: radius jne ei toimi, planet name toimii tehdään tätä varten joku iffittely :)
+       console.log(searchTerm)
+       const filteredPlanetsAr  = allPlanets.filter(planet => planet[searchFilter].toLowerCase().match(searchTerm.toLowerCase()) )
+       setFoundPlanets(filteredPlanetsAr)
+       Keyboard.dismiss()
     }
+
+    const handleTextChange = (term) => {
+        if (term === '') return  setFoundPlanets(allPlanets.slice(0,10))
+        changeSearchTerm(term)
+    }
+   
 
 
     //Luo uuden api queryn
@@ -122,7 +195,11 @@ const Search = ( {navigation} ) => {
         if (!isAtBottom(props)) return;
 
         juoksevaluku = juoksevaluku + 10;
-        var apikutsu = createQuery();
+        //var apikutsu = createQuery(); // TODO=
+
+        var nextPlanets = allPlanets.slice(juoksevaluku, juoksevaluku + 10);
+
+        setFoundPlanets(foundPlanets.concat(nextPlanets));
 
         /*fetchData(apikutsu)
         .then((data) => {
@@ -140,17 +217,45 @@ const Search = ( {navigation} ) => {
         return layout + offset >= size
     }
 
+
+
+    const changeMenuTrigger = (filter) => {
+        switch (filter) {
+            case "pname":
+                setMenuTriggerText("Planet name");
+                break;
+            case "hostname":
+                setMenuTriggerText("Host star");
+                break;
+            case "pradius":
+                setMenuTriggerText("Radius");
+                break;
+            case "pl_masse":
+                setMenuTriggerText("Planet masse");
+                break;
+                
+            default:
+                setMenuTriggerText("Search options");
+                break;
+
+        }
+    }
+    
     //Palauttaa hakunäkymän
     return (
         
             <MenuProvider /*style={padding}*/ on>
-                <Menu onSelect={filter => setFilter(filter)}>
+                <Menu onSelect={filter => 
+                                    {
+                                        setFilter(filter);
+                                        changeMenuTrigger(filter);
+                                    }}>
                         <MenuTrigger /*onPress={() => setMenuProviderStyle()}*/>
-                            <Text>Search options</Text>
+                            <Text>{menuTriggerText}</Text>
                         </MenuTrigger>
 
                         <MenuOptions>
-                            <MenuOption value={"pl_name"}>
+                            <MenuOption value={"pname"}>
                                 <Text>Planet name</Text>
                             </MenuOption>
                             
@@ -158,7 +263,7 @@ const Search = ( {navigation} ) => {
                                 <Text>Host star</Text>
                             </MenuOption>
 
-                            <MenuOption value={"pl_rade"}>
+                            <MenuOption value={"pradius"}>
                                 <Text>Radius</Text>
                             </MenuOption>
 
@@ -169,14 +274,12 @@ const Search = ( {navigation} ) => {
 
                     </Menu>
                     <View style={styles.searchBar}>
-                        <TextInput style={styles.textInput} onChangeText={term => changeSearchTerm(term)}></TextInput>
+                        <TextInput style={styles.textInput} onChangeText={term => handleTextChange(term)}></TextInput>
                     <TouchableOpacity style={styles.button} onPress={() => parseSearchTerms()}>
-                         <Text style={styles.buttonText}>Search</Text>
+                        <Text style={styles.buttonText}>Search</Text>
                     </TouchableOpacity>    
                     </View>
-                    <ScrollView onScroll={({nativeEvent}) => {
-                        loadNext(nativeEvent);
-                    }}>
+                    <ScrollView onScroll={({nativeEvent}) => {loadNext(nativeEvent);}} scrollEventThrottle={16}>
                         {renderFoundPlanets()}
                     </ScrollView>
 
@@ -235,6 +338,11 @@ const PlanetBrief = ( props ) => {
                         <Text>
                             Radius: { props.data.pradius}
                         </Text>
+                        {/** 
+                         * <Text>
+                            Discovery year: { props.data.disc_year}
+                        </Text>
+                        */}
                     </View>
                     <View style = {styles.buttonWrapper}>
                         <TouchableOpacity style={styles.button} onPress={() => props.navigation.navigate('Information', props.data)}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
