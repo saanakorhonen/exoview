@@ -47,7 +47,7 @@ const Mainmenu = ({ navigation }) => {
     <View style={{ flex:1, justifyContent: 'center', }}>
       {loading
       ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
-          <ActivityIndicator size='large' />
+          <ActivityIndicator size='large' color='rgba(255,255,255, 0.4)' />
           <Text style={{padding: 10, marginBottom: 50, color:'rgba(255,255,255, 0.4)'}}>Loading</Text>
           <Text style={{padding: 10,color:'rgba(255,255,255, 0.2)'}}>exoView 2020</Text>
         </ImageBackground>
