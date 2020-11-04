@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View, Button } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, View, Button, ImageBackground } from 'react-native';
 import { parse } from 'fast-xml-parser';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -44,12 +44,13 @@ const Mainmenu = ({ navigation }) => {
 }
 
 	return (
-    <View style={{ flex:1, justifyContent: 'center', alignItems: 'center'}}>
+    <View style={{ flex:1, justifyContent: 'center', }}>
       {loading
-      ? <View>
+      ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
           <ActivityIndicator size='large' />
-          <Text style={{padding: 10}}>Lataa</Text>
-      </View>
+          <Text style={{padding: 10, marginBottom: 50, color:'rgba(255,255,255, 0.4)'}}>Loading</Text>
+          <Text style={{padding: 10,color:'rgba(255,255,255, 0.2)'}}>exoView 2020</Text>
+        </ImageBackground>
       : (<View style={styles.container}>
           <Button style={styles.nappi} onPress = { () => navigation.navigate('Information') } title= "Planet info" /> 
           <Button style={styles.nappi} onPress = { () => navigation.navigate('Search', foundPlanets) } title= "Search" /> 
