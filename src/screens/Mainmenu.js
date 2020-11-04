@@ -7,7 +7,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
 
-//luo päävalikko componentin
+//luo päävalikko componentin  order+by+
 //saa argumenttina tuon navigaation jotta pystytään kulkemaan screeneistä toiseen
 const Mainmenu = ({ navigation }) => {
 
