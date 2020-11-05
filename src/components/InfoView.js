@@ -8,15 +8,15 @@ const InfoView = ( { data }) => {
     <View style={styles.container}>
       <View style={styles.element}>
         <Text>Host star</Text>
-        <Text style={styles.text}>{data.hname}</Text>
+        <Text style={styles.text}>{data.hostname}</Text>
       </View>
       <View style={styles.element}>
         <Text>Planet mass</Text>
-        <Text style={styles.text}>{data.pmasse}</Text>
+        <Text style={styles.text}>{data.pl_masse}</Text>
       </View>
       <View style={styles.element}>
         <Text>Planet radius</Text>
-        <Text style={styles.text}>{data.pradius}</Text>
+        <Text style={styles.text}>{data.pl_rade}</Text>
       </View>
     </View>
   )

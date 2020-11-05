@@ -11,16 +11,19 @@ const Search = ({ navigation, route } ) => {
 
     //Aloitusmaksimi queryssa
     var start = 0;
+    //https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+ps+where+
 
-    var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+ps+where+";
+    var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+";
 	var loppu = "+default_flag+=+1";//format=csv;
 	
     
 
-   // var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen+from+pscomppars+where+disc_year+=+2020+and+rownum+>=' + start + '+and+rownum+<' + 9
+    //var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen+from+pscomppars'
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
+
+    //const [loading, setLoading] = useState(true)
 
     //const [filteredPlanets, setFilteredPlanets] = useState([]) 
 
@@ -41,19 +44,21 @@ const Search = ({ navigation, route } ) => {
 
     //Aloittaa hakemalla datan
     useEffect(() => {
-        setPlanets()
+        const arrayPlanets = setPlanets(route.params)
+        //setLoading(false)
+        setAllPlanets(arrayPlanets)
     }, []);
 
-    const setPlanets = () => {
+    const setPlanets = (arr) => {
        let arrayP = []
-        route.params.map(obj => {
+        arr.map(obj => {
             const planet = obj.TD
             const propPlanet =
             {
-                hname: planet[0],
-                pname: planet[1],
-                pradius: planet[2],
-                pmasse: planet[3],
+                hostname: planet[0],
+                pl_name: planet[1],
+                pl_rade: planet[2],
+                pl_masse: planet[3],
                 pl_bmassj: planet[4],
                 pl_radj: planet[5],
                 pl_orbsmax: planet[6],
@@ -63,7 +68,7 @@ const Search = ({ navigation, route } ) => {
             }
             arrayP = arrayP.concat(propPlanet)
         })
-        setAllPlanets(arrayP)
+        return arrayP
     };
 
     //asetetaan 10 ensimmäistä planeettaa
@@ -92,7 +97,7 @@ const Search = ({ navigation, route } ) => {
 
     //Tekee löydetyistä planeetoista katseltavia komponentteja
     const renderFoundPlanets = () => {
-        console.log('rendered', foundPlanets)
+        //console.log('rendered', foundPlanets)
         /*
         return foundPlanets.map((obj) => {
             let planet = obj.TD;
@@ -117,35 +122,51 @@ const Search = ({ navigation, route } ) => {
 
     //Käsittelee hakutermin ja -filtterin
     const parseSearchTerms = () => {
-        /*if(searchTerm === "" && searchFilter === ""){
-            
+        
+        if(searchTerm === "" || searchFilter === ""){ 
+            Keyboard.dismiss(); 
+            setFilter(""); 
+            setMenuTriggerText('Search Options'); 
+            return setFoundPlanets(allPlanets.slice(0,10));
+        }
+        /*
             fetchData(defaultUrl)
             .then((data) => {
                 setFoundPlanets(data);
             })
+
             return;
 
-        } =
+        }
 
         var apikutsu = createQuery();
 
         fetchData(apikutsu)
         .then((data) => {
-            setFoundPlanets(data);
-        }) 
-        */
- 
+            const arr = setPlanets(data)
+            setFoundPlanets(arr);
+        }) */
+        
+    
       const searchedWord = '^' + searchTerm
-      const filteredPlanetsAr = (searchFilter !== 'pradius' && searchFilter !== 'pmasse' 
+      const filteredPlanetsAr = (searchFilter !== 'pl_rade' && searchFilter !== 'pl_masse' 
+      
        ? (allPlanets.filter(planet => planet[searchFilter].toLowerCase().match(searchTerm.toLowerCase())))
-       : (foundPlanets.filter(planet => planet[searchFilter].toString().match(searchedWord))))
-
+       : (allPlanets.filter(planet => planet[searchFilter].toString().match(searchedWord))))
+      console.log(filteredPlanetsAr.length)
+      
       setFoundPlanets(filteredPlanetsAr)
       Keyboard.dismiss()
+      
     }
 
     const handleTextChange = (term) => {
-        if (term === '') return  setFoundPlanets(allPlanets.slice(0,10))
+        if (term === '') {
+            setFilter(""); 
+            //setMenuTriggerText('Search Options'); 
+            return setFoundPlanets(allPlanets.slice(0,10));
+        }
+
         changeSearchTerm(term)
     }
    
@@ -159,10 +180,10 @@ const Search = ({ navigation, route } ) => {
             console.log(alku+/*rajat+*/loppu);
             return alku + /*rajat+*/ loppu;
         } 
-
-        var hakutermi = '+like+\'' + searchTerm + '%\'+and'
-        console.log(alku + hakuehto + hakutermi + /*rajat+*/ loppu);
-        return alku + hakuehto + hakutermi + /*rajat+*/ loppu;
+        //+and'    + /*rajat+*/ loppu
+        var hakutermi = '+like+\'' + searchTerm + '%\''
+        console.log(alku + hakuehto + hakutermi);
+        return alku + hakuehto + hakutermi;
     }
 
     //Lataa seuraavat planeetat, kun on selattu loppuun
@@ -194,16 +215,16 @@ const Search = ({ navigation, route } ) => {
 
     const changeMenuTrigger = (filter) => {
         switch (filter) {
-            case "pname":
+            case "pl_name":
                 setMenuTriggerText("Planet name");
                 break;
-            case "hname":
+            case "hostname":
                 setMenuTriggerText("Host star");
                 break;
-            case "pradius":
+            case "pl_rade":
                 setMenuTriggerText("Radius");
                 break;
-            case "pmasse":
+            case "pl_masse":
                 setMenuTriggerText("Planet masse");
                 break;
                 
@@ -228,19 +249,19 @@ const Search = ({ navigation, route } ) => {
                         </MenuTrigger>
 
                         <MenuOptions>
-                            <MenuOption value={"pname"}>
+                            <MenuOption value={"pl_name"}>
                                 <Text>Planet name</Text>
                             </MenuOption>
                             
-                            <MenuOption value={"hname"}>
+                            <MenuOption value={"hostname"}>
                                 <Text>Host star</Text>
                             </MenuOption>
 
-                            <MenuOption value={"pradius"}>
+                            <MenuOption value={"pl_rade"}>
                                 <Text>Radius</Text>
                             </MenuOption>
 
-                            <MenuOption value={"pmasse"}>
+                            <MenuOption value={"pl_masse"}>
                                 <Text>planet masse</Text>
                             </MenuOption>
                         </MenuOptions>
@@ -302,16 +323,16 @@ const PlanetBrief = ( props ) => {
     var view =  <View>    
                     <View style={styles.infoWrapper}>
                         <Text>
-                            Host star: { props.data.hname}
+                            Host star: { props.data.hostname}
                         </Text>
                         <Text>
-                            Masse: { props.data.pmasse}
+                            Masse: { props.data.pl_masse}
                         </Text>
                         <Text>
-                            Radius: { props.data.pradius}
+                            Radius: { props.data.pl_rade}
                         </Text>
-                        {/** 
-                         * <Text>
+                        {/*
+                        <Text>
                             Discovery year: { props.data.disc_year}
                         </Text>
                         */}
@@ -326,7 +347,7 @@ const PlanetBrief = ( props ) => {
         <View style={styles.container}>
             <View style = {styles.headerWrapper} onPress = {toggleVisibility()}>
                 <Text style = {styles.header}>
-                    { props.data.pname }
+                    { props.data.pl_name }
                 </Text>
             </View>
             {renderView()}

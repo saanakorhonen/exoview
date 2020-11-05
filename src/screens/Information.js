@@ -10,10 +10,10 @@ const Information = ({ navigation, route }) => {
   // alussa tyhjä alustus
   const [planet, setPlanet] = useState({
     planet: {
-      hname: '',
-      pname: '',
-      pradius: '',
-      pmasse: '',
+      hostname: '',
+      pl_name: '',
+      pl_rade: '',
+      pl_masse: '',
       pl_massj: '',
       pl_radj:'',
     }
@@ -22,7 +22,7 @@ const Information = ({ navigation, route }) => {
   useEffect(() => {
     if (route.params !=undefined) {
       const p = route.params
-      setPlanet({ planet: { hname: p.hname, pname: p.pname, pradius: p.pradius, pmasse: p.pmasse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen }})
+      setPlanet({ planet: { hostname: p.hostname, pl_name: p.pl_name, pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen }})
       return
     }
     fetcPlanet();
@@ -36,7 +36,7 @@ const Information = ({ navigation, route }) => {
     // varsinainen haluttu data taulukkossa
     const objArray = obj.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR.TD
     // asetetaan planeetan tiedot
-    setPlanet({ planet: { hname: objArray[0], pname: objArray[1], pradius: objArray[2], pmasse: objArray[3], pl_bmassj: objArray[4], pl_radj: objArray[5], pl_orbsmax: objArray[6], pl_orbper: objArray[7], pl_orbeccen: objArray[8] }})
+    setPlanet({ planet: { hostname: objArray[0], pl_name: objArray[1], pl_rade: objArray[2], pl_masse: objArray[3], pl_bmassj: objArray[4], pl_radj: objArray[5], pl_orbsmax: objArray[6], pl_orbper: objArray[7], pl_orbeccen: objArray[8] }})
   }
 
   console.log('Information ennen return', planet)
@@ -44,7 +44,7 @@ const Information = ({ navigation, route }) => {
     
     <View style={styles.container}>
       <View style={styles.nameBox}>
-        <Text style={styles.name}>{planet.planet.pname}</Text>
+        <Text style={styles.name}>{planet.planet.pl_name}</Text>
       </View>
       <View style={styles.infoBox}>
         {/**detaljeet, informaatio datat */}

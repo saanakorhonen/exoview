@@ -20,9 +20,9 @@ export default function PlanetComparison(props) {
   var exoSize = 1.3;
   
   let relativeSize = 1.0;
-  exoSize = props.planet.pradius;
+  exoSize = props.planet.pl_rade;
 
-  if (isNaN(props.planet.pradius)) {
+  if (isNaN(props.planet.pl_rade)) {
     exoSize = 1.0;
   }
 

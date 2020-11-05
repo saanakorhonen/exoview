@@ -7,10 +7,10 @@ const Visualisation = ({ route }) => {
 
   const params = ( param ) => param  === undefined ? 'an unknown amount' : param
   
-  const name = route.params.planet.pname;
-  const radius = params(route.params.planet.pradius)
-  const mass = params(route.params.planet.pmasse)
-  const massJ = params(route.params.planet.pl_bmassj)
+  const name = route.params.planet.pl_name;
+  const radius = params(route.params.planet.pl_rade)
+  const mass = params(route.params.planet.pl_masse)
+  const massJ = params(route.params.planet.pl_massj)
   const radiusJ = params(route.params.planet.pl_radj)
 
   return (

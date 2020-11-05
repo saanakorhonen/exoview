@@ -8,10 +8,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 
 
 //luo päävalikko componentin  order+by+
-//saa argumenttina tuon navigaation jotta pystytään kulkemaan screeneistä toiseen
+//saa argumenttina tuon navigaation jotta pystytään kulkemaan screeneistä toiseen 
 const Mainmenu = ({ navigation }) => {
-
-  var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+order+by+disc_year+desc'
+  var defaultUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+order+by+disc_year+desc'
   const [foundPlanets, setFoundPlanets] = useState([]) 
   const [loading, setLoading] = useState(true)
 
@@ -49,7 +48,7 @@ const Mainmenu = ({ navigation }) => {
       ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
           <ActivityIndicator size='large' color='rgba(255,255,255, 0.4)' />
           <Text style={{padding: 10, marginBottom: 50, color:'rgba(255,255,255, 0.4)'}}>Loading</Text>
-          <Text style={{padding: 10,color:'rgba(255,255,255, 0.2)'}}>exoView 2020</Text>
+          <Text style={{padding: 10,color:'rgba(255,255,255, 0.2)'}}>Eksolaakson tarinoita 2020</Text>
         </ImageBackground>
       : (<View style={styles.container}>
           <Button style={styles.nappi} onPress = { () => navigation.navigate('Information') } title= "Planet info" /> 

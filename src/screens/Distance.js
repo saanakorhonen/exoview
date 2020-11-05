@@ -46,7 +46,7 @@ const Distance = ({ route }) => {
 						<Text style={{ color: "yellow" }}> {(planet.pl_orbper/365).toFixed(2)}</Text> Earth years.
 					</Text>
 					<Text style={styles.infoBoxContent}>
-						{planet.pname}'s orbit has an{" "}
+						{planet.pl_name}'s orbit has an{" "}
 						<Text
 							style={{ color: "lightblue" }}
 							onPress={() => {

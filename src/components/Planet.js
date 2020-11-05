@@ -9,9 +9,9 @@ const Planet = ({ planet }) => {
   return (
     <View style={styles.background}>
       <PlanetComparison planet={planet} comparison={1.0} style={styles.Planets} />
-      <PlanetNameComp name={planet.pname} comparison={'Earth'}  style={styles.Names}/>
+      <PlanetNameComp name={planet.pl_name} comparison={'Earth'}  style={styles.Names}/>
       <PlanetComparison planet={planet} comparison={11.209} style={styles.Planets} />
-      <PlanetNameComp name={planet.pname} comparison={'Jupiter'} style={styles.Names} color="yellow"/>
+      <PlanetNameComp name={planet.pl_name} comparison={'Jupiter'} style={styles.Names} color="yellow"/>
     </View>
   )
 

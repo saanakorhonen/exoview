@@ -15,14 +15,14 @@ const PlanetDistanceComparison = ({ planet }) => {
 
   // jos maa lähinnä, niin suhteutetaan maksimietäisyys exoplaneetan obsmax:n mukaan
   let closest = 'Earth';
-  let farthest = planet.pname;
+  let farthest = planet.pl_name;
   let closestFlex = length/planet.pl_orbsmax;
   let farthestFlex = length-closestFlex;
 
   // jos eksoplaneetan etäisyys tähdestä pienempi kuin 1 (eli Maan etäisyys Auringosta), 
   // niin asetetaan Maa kauimmaksi planeetaksi
   if( planet.pl_orbsmax < 1) {
-    closest = planet.pname;
+    closest = planet.pl_name;
     farthest = 'Earth';
     farthestFlex = length-planet.pl_orbsmax
     closestFlex = planet.pl_orbsmax
@@ -38,7 +38,7 @@ const PlanetDistanceComparison = ({ planet }) => {
         marginLeft: 20,
 			}}>
 			<View style={styles.line}>
-        <BallAndName pName={planet.hname} pSize={30} flex={closestFlex} top={5} />
+        <BallAndName pName={planet.hostname} pSize={30} flex={closestFlex} top={5} />
         <BallAndName pName={closest} pSize={10} flex={farthestFlex} top={-5} />
         <BallAndName pName={farthest} pSize={10} flex={0} top={-5} />
 			</View>
