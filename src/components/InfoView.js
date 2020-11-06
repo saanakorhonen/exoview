@@ -3,7 +3,6 @@ import { StyleSheet, Text, View} from 'react-native';
 
 const InfoView = ( { data }) => {
   //renderoidään näkymiin planeetat
-  //flatlist ei toiminut.. pitää miettiä miksi ja tehdä parempi versio
   return (
     <View style={styles.container}>
       <View style={styles.element}>
@@ -17,6 +16,10 @@ const InfoView = ( { data }) => {
       <View style={styles.element}>
         <Text>Planet radius</Text>
         <Text style={styles.text}>{data.pl_rade}</Text>
+      </View>
+      <View style={styles.element}>
+        <Text>Discovery year</Text>
+        <Text style={styles.text}>{data.disc_year}</Text>
       </View>
     </View>
   )

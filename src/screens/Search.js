@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import { Keyboard, View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import {  FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
 import { parse } from 'fast-xml-parser';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
@@ -9,23 +9,14 @@ import { set } from 'react-native-reanimated';
 //Planeettojen etsimisikkuna
 const Search = ({ navigation, route } ) => {
 
-    //Aloitusmaksimi queryssa
+    /*Aloitusmaksimi queryssa
     var start = 0;
-    //https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+ps+where+
-
     var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+";
 	var loppu = "+default_flag+=+1";//format=csv;
-	
-    
-
-    //var defaultUrl =  'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen+from+pscomppars'
+	*/
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
-
-    //const [loading, setLoading] = useState(true)
-
-    //const [filteredPlanets, setFilteredPlanets] = useState([]) 
 
     const [allPlanets, setAllPlanets] = useState([])
 
@@ -44,78 +35,17 @@ const Search = ({ navigation, route } ) => {
 
     //Aloittaa hakemalla datan
     useEffect(() => {
-        const arrayPlanets = setPlanets(route.params)
-        //setLoading(false)
-        setAllPlanets(arrayPlanets)
+        setAllPlanets(route.params)
     }, []);
 
-    const setPlanets = (arr) => {
-       let arrayP = []
-        arr.map(obj => {
-            const planet = obj.TD
-            const propPlanet =
-            {
-                hostname: planet[0],
-                pl_name: planet[1],
-                pl_rade: planet[2],
-                pl_masse: planet[3],
-                pl_bmassj: planet[4],
-                pl_radj: planet[5],
-                pl_orbsmax: planet[6],
-                pl_orbper: planet[7],
-                pl_orbeccen: planet[8],
-                disc_year: planet[9]
-            }
-            arrayP = arrayP.concat(propPlanet)
-        })
-        return arrayP
-    };
-
-    //asetetaan 10 ensimmäistä planeettaa
+    //asetetaan alussa kaikki planeetat löytyneiksi
     useEffect(() => {
-        const planets10 = allPlanets.slice(0,10)
-        setFoundPlanets(planets10)
+        setFoundPlanets(allPlanets)
     }, [allPlanets])
-
-
-    //Hakee default-datan tässä vaiheessa
-    const fetchData = async ( props ) => {
-        const response = await fetch(props);
-        //console.log('fetchData',route.params)
-
-        const teksti = await response.text();
-        const objects = await parse(teksti);
-
-        const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-
-        return new Promise((resolve, reject) => {
-            var success = planetArray != undefined;
-            success ? resolve(planetArray) : reject('Query failed');
-        })
-    }
 
 
     //Tekee löydetyistä planeetoista katseltavia komponentteja
     const renderFoundPlanets = () => {
-        //console.log('rendered', foundPlanets)
-        /*
-        return foundPlanets.map((obj) => {
-            let planet = obj.TD;
-            const planetProps = {
-                hname: planet[0],
-                pname: planet[1],
-                pradius: planet[2],
-                pmasse: planet[3],
-                pl_bmassj: planet[4],
-                pl_radj: planet[5],
-                pl_orbsmax: planet[6],
-                pl_orbper: planet[7],
-                pl_orbeccen: planet[8],
-                disc_year: planet[9]
-            }
-            
-            return <PlanetBrief navigation={navigation} data={planetProps} key={generateKey()}/>
-        });*/
         return foundPlanets.map(planet => <PlanetBrief navigation={navigation} data={planet} key={generateKey()}/>)
     }
 
@@ -127,33 +57,13 @@ const Search = ({ navigation, route } ) => {
             Keyboard.dismiss(); 
             setFilter(""); 
             setMenuTriggerText('Search Options'); 
-            return setFoundPlanets(allPlanets.slice(0,10));
+            return setFoundPlanets(allPlanets);
         }
-        /*
-            fetchData(defaultUrl)
-            .then((data) => {
-                setFoundPlanets(data);
-            })
-
-            return;
-
-        }
-
-        var apikutsu = createQuery();
-
-        fetchData(apikutsu)
-        .then((data) => {
-            const arr = setPlanets(data)
-            setFoundPlanets(arr);
-        }) */
-        
-    
       const searchedWord = '^' + searchTerm
       const filteredPlanetsAr = (searchFilter !== 'pl_rade' && searchFilter !== 'pl_masse' 
       
        ? (allPlanets.filter(planet => planet[searchFilter].toLowerCase().match(searchTerm.toLowerCase())))
        : (allPlanets.filter(planet => planet[searchFilter].toString().match(searchedWord))))
-      console.log(filteredPlanetsAr.length)
       
       setFoundPlanets(filteredPlanetsAr)
       Keyboard.dismiss()
@@ -164,7 +74,7 @@ const Search = ({ navigation, route } ) => {
         if (term === '') {
             setFilter(""); 
             //setMenuTriggerText('Search Options'); 
-            return setFoundPlanets(allPlanets.slice(0,10));
+            return setFoundPlanets(allPlanets);
         }
 
         changeSearchTerm(term)
@@ -184,33 +94,6 @@ const Search = ({ navigation, route } ) => {
         var hakutermi = '+like+\'' + searchTerm + '%\''
         console.log(alku + hakuehto + hakutermi);
         return alku + hakuehto + hakutermi;
-    }
-
-    //Lataa seuraavat planeetat, kun on selattu loppuun
-    const loadNext = ( props  ) => {
-        if (!isAtBottom(props)) return;
-        if (searchTerm !== '') return;
-
-        const juokseva = juoksevaluku + 10
-        setJuoksevaluku(juokseva)
-        //var apikutsu = createQuery(); // TODO=
-        console.log('juokseva', juoksevaluku)
-        var nextPlanets = allPlanets.slice(juokseva, juokseva + 10)
-        setFoundPlanets(foundPlanets.concat(nextPlanets));
-        
-        /*fetchData(apikutsu)
-        .then((data) => {
-            setFoundPlanets(foundPlanets.concat(data));
-        })*/
-    }
-
-    //Katsotaan, onko selaus lopussa
-    const isAtBottom = ( props ) => {
-        let layout = props.layoutMeasurement.height;
-        let offset = props.contentOffset.y;
-        let size = props.contentSize.height;
-
-        return layout + offset >= size
     }
 
     const changeMenuTrigger = (filter) => {
@@ -273,9 +156,20 @@ const Search = ({ navigation, route } ) => {
                         <Text style={styles.buttonText}>Search</Text>
                     </TouchableOpacity>    
                     </View>
+                    {/*
                     <ScrollView onScroll={({nativeEvent}) => {loadNext(nativeEvent);}} scrollEventThrottle={16}>
                         {renderFoundPlanets()}
-                    </ScrollView>
+                    </ScrollView> */}
+
+                    <FlatList
+                        data={foundPlanets}
+                        renderItem={({ item }) => (
+                            <PlanetBrief navigation={navigation} data={item} />
+                        )}
+                        keyExtractor={(item) => item.pl_name}
+                        >
+                       
+                    </FlatList>
 
             </MenuProvider>     
 

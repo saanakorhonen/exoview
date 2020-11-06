@@ -3,9 +3,9 @@ import { Text, View, Dimensions, StyleSheet } from "react-native";
 import PlanetDistanceComparison from "../components/PlanetDistanceComparison";
 import OrbitView from "../components/OrbitView";
 
-const Distance = ({ route }) => {
+const Distance = ({ eplanet }) => {
 	//console.log("const dist", route.params.planet);
-	const planet = route.params.planet;
+	const planet = eplanet;
 
 	return (
 		<View style={styles.container}>
@@ -14,9 +14,9 @@ const Distance = ({ route }) => {
 			</View>
 			<View style={styles.infoBox}>
 				<View style={styles.infoBox}>
-					<Text style={styles.infoBoxTitle}>{planet.pname}</Text>
+					<Text style={styles.infoBoxTitle}>{planet.pl_name}</Text>
 					<Text style={styles.infoBoxContent}>
-						{planet.pname} has a
+						{planet.pl_name} has a
 						<Text
 							style={{ color: "lightblue" }}
 							onPress={() => {

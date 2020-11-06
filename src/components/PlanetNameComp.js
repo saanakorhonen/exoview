@@ -10,7 +10,6 @@ import { Text, View, Dimensions, StyleSheet } from "react-native";
  */
 export default function PlanetNameComp(props) {
   
-
   return (
     <View style={{flex: 1, marginTop:Dimensions.get('window').height / 5}}>
       <View style={{ flexDirection: 'row'}}>
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
     flex: 1,
     color: 'rgb(255, 255, 255)',
     textAlign: "center",
-    fontSize: 25
+    fontSize: 18
   }
 })
 

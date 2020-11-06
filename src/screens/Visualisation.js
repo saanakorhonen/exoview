@@ -3,25 +3,28 @@ import { StyleSheet, View, Text, FlatList, TouchableOpacity, Button } from 'reac
 import { MaterialIcons } from '@expo/vector-icons';
 import Planet from '../components/Planet';
 
-const Visualisation = ({ route }) => {
+const Visualisation = ({ planet }) => {
+  console.log(planet)
 
   const params = ( param ) => param  === undefined ? 'an unknown amount' : param
   
-  const name = route.params.planet.pl_name;
-  const radius = params(route.params.planet.pl_rade)
-  const mass = params(route.params.planet.pl_masse)
-  const massJ = params(route.params.planet.pl_massj)
-  const radiusJ = params(route.params.planet.pl_radj)
+  const name = planet.pl_name;
+  const radius = params(planet.pl_rade)
+  const mass = params(planet.pl_masse)
+  const massJ = params(planet.pl_massj)
+  const radiusJ = params(planet.pl_radj)
 
   return (
     <View style={styles.container} >
       <View style={styles.planetBox} >
-        <Planet planet={route.params.planet } />
+        <Planet planet={planet } />
       </View>
       {/** Teksti selitystä */}
       <View style={styles.textBox}>
-        <Text style={{color: 'black'}}>
+        <Text style={{color: 'white', fontSize: 16 ,marginHorizontal: 10, marginBottom:5}}>
           Planet {name}'s radius is {radius} of Earth's and it's mass {mass} as much.
+        </Text>
+        <Text style={{color: 'white', fontSize: 16 ,marginHorizontal: 10, marginTop: 5}}>
           Planet {name}'s radius is {radiusJ} of Jupiter's and it's mass {massJ} as much.
         </Text>
       </View>
@@ -37,11 +40,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgb(25, 25, 25)'
   },
   planetBox :{
-    flex:4
+    flex:4,
   },
   textBox: {
     flex:1,
-    backgroundColor: 'white',
+    justifyContent:'center',
+    backgroundColor: 'rgba(82, 113, 255, 0.7)',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10
   }
 
 })
