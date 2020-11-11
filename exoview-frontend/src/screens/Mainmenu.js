@@ -49,24 +49,24 @@ const Mainmenu = ({ navigation }) => {
 
   const setPlanets = (arr) => {
     let arrayP = []
-     arr.map(obj => {
-         const planet = obj.TD
-         const propPlanet =
-         {
-             hostname: planet[0],
-             pl_name: planet[1],
-             pl_rade: planet[2],
-             pl_masse: planet[3],
-             pl_bmassj: planet[4],
-             pl_radj: planet[5],
-             pl_orbsmax: planet[6],
-             pl_orbper: planet[7],
-             pl_orbeccen: planet[8],
-             disc_year: planet[9]
-         }
-         arrayP = arrayP.concat(propPlanet)
-     })
-     return arrayP
+    arr.map(obj => {
+        const planet = obj.TD
+        const propPlanet =
+        {
+            hostname: planet[0],
+            pl_name: planet[1],
+            pl_rade: planet[2],
+            pl_masse: planet[3],
+            pl_bmassj: planet[4],
+            pl_radj: planet[5],
+            pl_orbsmax: planet[6],
+            pl_orbper: planet[7],
+            pl_orbeccen: planet[8],
+            disc_year: planet[9]
+        }
+        arrayP = arrayP.concat(propPlanet)
+    })
+    return arrayP
  };
 
 
