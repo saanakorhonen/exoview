@@ -1,34 +1,62 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
 const app = express();
 const PORT = process.env.PORT;
 const fetch = require('node-fetch');
 const parser = require('fast-xml-parser');
 
-const Planet = require('./models/planet');
+const planetSchema = require('./models/planet');
 const { response } = require('express');
 
 const dbUrl = process.env.MONGODB_URI;
 
+const dbName = 'planets';
+
 
 var defaultUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+order+by+disc_year+desc'
+
+var db;
+
+var collection;
 
 
 
 const connectDatabase = () => {
     var success = true;
     console.log('Connecting to database...');
-    mongoose.connect(dbUrl, {useUnifiedTopology: true, useNewUrlParser: true})
-    .catch(err => {
-        console.log(err);
-        success = false;
+
+    MongoClient.connect(dbUrl, {useUnifiedTopology: true}, (err, client) => {
+        
+
+        db = client.db(dbName);
+
+        collection = db.collection('planets');
+
+        
+        if (/*TODO TESTIl*/true) {
+            db.createCollection(dbName, {
+                validator: {
+                    $jsonSchema: planetSchema
+                }
+            })
+        }
+        
+
+        if (err) {
+            success = false;
+        }
     })
 
     return new Promise((resolve, reject) => {
         success ? resolve('Connection ok.') : reject('Connection failed');
         
     })
+}
+
+const databaseExists = (dbName) => {
+    return false;
 }
 
 const fetchData = async ( props ) => {
@@ -46,61 +74,51 @@ const fetchData = async ( props ) => {
 
 
 const parseData = (data) => {
-    data.map(obj => {
+    data.map(async (obj) => {
         const planet = obj.TD;
 
-        Planet.find({pl_name: planet[1]})
-        .then(result => {
+        collection.find({pl_name: planet[1]})
 
-            if (result[0] === undefined) {
-
-
-                const planetEntry = new Planet({
-                    hostname: planet[0],
-                    pl_name: planet[1],
-                    pl_rade: planet[2],
-                    pl_masse: planet[3],
-                    pl_bmassj: planet[4], // TODO: Tää on aina pl_masse / 317.816
-                    pl_radj: planet[5],
-                    pl_orbsmax: planet[6],
-                    pl_orbper: planet[7],
-                    pl_orbeccen: planet[8],
-                    disc_year: planet[9],
-                    dateAdded: new Date()
-                })
+        const foundPlanet = await collection.findOne({pl_name: planet[1]});
         
-                planetEntry.save().catch(err => {
-                    console.log('Save failed:', err);
-                })
+        if (foundPlanet === null) {
+            const planetEntry = {
+                hostname: planet[0],
+                pl_name: planet[1],
+                pl_rade: planet[2],
+                pl_masse: planet[3],
+                pl_bmassj: planet[4], // TODO: Tää on aina pl_masse / 317.816
+                pl_radj: planet[5],
+                pl_orbsmax: planet[6],
+                pl_orbper: planet[7],
+                pl_orbeccen: planet[8],
+                disc_year: planet[9],
+                dateAdded: new Date()
+            };
+
+            await collection.insertOne(planetEntry)
+        }
+
+        else {
+            const update = {
+                hostname: planet[0],
+                pl_name: planet[1],
+                pl_rade: planet[2],
+                pl_masse: planet[3],
+                pl_bmassj: planet[4], // TODO: Tää on aina pl_masse / 317.816
+                pl_radj: planet[5],
+                pl_orbsmax: planet[6],
+                pl_orbper: planet[7],
+                pl_orbeccen: planet[8],
+                disc_year: planet[9],
             }
-            
 
-            else {
-                var oldPlanet = result[0];
-
-                const update = {
-                    hostname: planet[0],
-                    pl_name: planet[1],
-                    pl_rade: planet[2],
-                    pl_masse: planet[3],
-                    pl_bmassj: planet[4], // TODO: Tää on aina pl_masse / 317.816
-                    pl_radj: planet[5],
-                    pl_orbsmax: planet[6],
-                    pl_orbper: planet[7],
-                    pl_orbeccen: planet[8],
-                    disc_year: planet[9],
-                }
-    
-                Planet.findByIdAndUpdate(oldPlanet._id, update, {useFindAndModify: false})
-                .then(() => {
-                    console.log('update ok');
-                })
-                .catch(err => {
-                    console.log('update failed: ',err);
-                });
-
-            }
-        })
+            /*collection.updateOne({_id: foundPlanet._id}, update)
+            .then(() => {
+                    //console.log('update ok');
+            })*/
+        }
+        
     });
 }
 
@@ -118,9 +136,24 @@ const requestData = () => {
 
 
 
-app.get('/search', (req, res) => {
-    const filter = req.query.filter;
+app.get('/search', async (req, res) => {
+    /*const filter = req.query.filter;
     const searchTerm = req.query.searchterm;
+    const offset = req.query.offset;
+    const limit = req.query.limit;*/
+
+    const planet =  await collection.find({pl_name: /TOI.*/})
+    res.send(planet);
+    console.log(planet);
+    /*.then(result => {
+        result.forEach(elem => {
+            console.log(elem.pl_name);
+        })
+        res.send(result);
+    })
+    .catch(() => {
+        res.close();
+    });*/
 })
 
 
@@ -130,6 +163,7 @@ const server = app.listen(PORT, () => {
     connectDatabase()
     .then(success => {
         console.log(success);
+
     }, reject => {
         console.log(reject);
         server.close();
