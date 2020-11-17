@@ -1,68 +1,51 @@
-//const mongoose = require('mongoose');
-
-
-/*const planetSchema = new mongoose.Schema({
-    hostname: String,
-    pl_name: String,
-    pl_rade: Number,
-    pl_masse: Number,
-    pl_bmassj: Number,
-    pl_radj: Number,
-    pl_orbsmax: Number,
-    pl_orbper: Number,
-    pl_orbeccen: Number,
-    disc_year: Number,
-    dateAdded: Date
-})*/
-
-/* "hostname", "pl_rade", "pl_masse", "pl_bmassj", "pl_radj", "pl_orbsmax", "pl_orbper", "pl_orbeccen", "disc_year",*/
+//Validation skeema planeetoille tietokannassa
 
 module.exports = {
     required: ["pl_name", "dateAdded"],
     properties: {
         
         hostname: {
-            bsonType: "string"
+            type: "string"
         },
 
         pl_name: {
-            bsonType: "string"
+            type: "string"
         },
 
         pl_rade: {
-            bsonType: "double"
+            type: "number"
         },
 
         pl_masse: {
-            bsonType: "double"
+            type: "number"
         },
 
         pl_bmassj: {
-            bsonType: "double"
+            type: "number"
         },
 
         pl_radj: {
-            bsonType: "double"
+            type: "number"
         },
 
         pl_orbsmax: {
-            bsonType: "double"
+            type: "number"
         },
 
-        pl_orbped: {
-            bsonType: "double"
+        pl_orbper: {
+            type: "number"
         },
 
         pl_orbeccen: {
-            bsonType: "double"
+            type: "number"
         },
 
         disc_year: {
-            bsonType: "string"
+            type: "string"
         },
 
         dateAdded: {
-            bsonType: "date"
+            type: "object"
         }
 
     }
