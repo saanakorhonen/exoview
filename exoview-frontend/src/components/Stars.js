@@ -14,13 +14,7 @@ let bColor = "lightblue";
  *  size = planeetan koko numerona (pl_rade)
  */
 export default function Stars({ star }) {
-    console.log(star)
-  const sun = {
-      hostname: "sun",
-      st_rad: 1,
-      st_teff: 6000,     
-  }
-
+    console.log(star.st_rad)
   /*
   let relativeSize = 1.0;
   exoSize = props.planet.pl_rade;
@@ -29,28 +23,44 @@ export default function Stars({ star }) {
     exoSize = 1.0;
   }
 */
-  const relativeSize = star.st_rad / sun.st_rad;
-  var bStar;
-  var fStar;
 
-  if(star.st_rad > 1){
-    bStar = star;
-    fStar = sun;
-    bColor =starColor(star.st_teff);
-    fColor = "yellow";
-  }
-  else{
-      bStar = sun;
-      fStar = star;
-      bColor = "yellow";
-      fColor = starColor(star.st_teff);
+  const starSunRel = star.st_rad / 1.0;
+
+  const bStar = {
+    color:"",
+    relativeSize: -1,
+  };
+
+  const fStar = {
+    color: "",
+    relativeSize: -1,
   }
 
+  if(starSunRel > 1){
+    bStar.color = starColor(star.st_teff);
+    bStar.relativeSize = 1.0
+    fStar.relativeSize = 1 / starSunRel 
+    fStar.color = starColor(5772);
+    //padding = (WW() - (WW() * relativeSize)) / 2;
+  }
+  else {
+      bStar.color = starColor(5772);
+      bStar.relativeSize = 1.0
+
+      fStar.color = starColor(star.st_teff);
+      fStar.relativeSize = star.st_rad;
+
+     // padding = (WW() - (WW() * relativeSize)) / 2;
+  }
+  
+  console.log(bStar.color)
   return (
     <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
-        <View style={{ position: 'relative', backgroundColor: bColor, height: WW()* relativeSize, width: WW()*relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
+      {/** background star */}
+        <View style={{ position: 'relative', backgroundColor: bStar.color, height: WW()* bStar.relativeSize, width: WW()*bStar.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
         </View>
-        <View style={{ position: 'absolute',backgroundColor: fColor,  height: WW()* (1/relativeSize), width: WW()*(1/relativeSize), borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
+        {/** front star */}
+        <View style={{ position: 'absolute',backgroundColor: fStar.color,  height: WW()* fStar.relativeSize, width: WW()*fStar.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
         </View> 
     </View>
   );
@@ -70,11 +80,13 @@ function starColor(temp){
     return "blue";
 
 }
+
+
 /**
  * Ottaa ikkunan leveydestä jonkun murto-osan
  */
 function WW() {
-  let ww = Dimensions.get('window').width / 2.5;
+  let ww = Dimensions.get('window').width / 2;
   return ww;
 }
 

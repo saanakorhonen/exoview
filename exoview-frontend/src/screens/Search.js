@@ -256,7 +256,7 @@ const handleStarsystem = (props,allPlanets) => {
     fetchData(kutsu)
     .then((data) =>{
         var star = setStars(data,props.data.hostname)
-        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star))
+        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
         const system = {star: star, planets: tahdenplaneetat}
         props.navigation.navigate('StarSystem', system)
     })

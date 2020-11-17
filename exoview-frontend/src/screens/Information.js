@@ -75,6 +75,7 @@ const Information = ({ navigation, route }) => {
         </View>
       </ScrollView>
       )}
+
     </View>   
   )
 
