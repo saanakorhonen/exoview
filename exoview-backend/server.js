@@ -1,14 +1,16 @@
 require('dotenv').config();
 const express = require('express');
-const mongoose = require('mongoose');
 const MongoClient = require('mongodb').MongoClient;
+const mongo = require('mongodb');
 const app = express();
 const PORT = process.env.PORT;
 const fetch = require('node-fetch');
 const parser = require('fast-xml-parser');
 
 const planetSchema = require('./models/planet');
+const Db = require('./src/db');
 const { response } = require('express');
+const planet = require('./models/planet');
 
 const dbUrl = process.env.MONGODB_URI;
 
@@ -23,24 +25,31 @@ var collection;
 
 
 
-const connectDatabase = () => {
+const connectDatabase = async () => {
+    let collectionName = 'planets'
     var success = true;
     console.log('Connecting to database...');
 
-    MongoClient.connect(dbUrl, {useUnifiedTopology: true}, (err, client) => {
+    db = new Db(planetSchema);
+
+    /*MongoClient.connect(dbUrl, {useUnifiedTopology: true}, async (err, client) => {
         
 
-        db = client.db(dbName);
+        //db = client.db(dbName);
 
-        collection = db.collection('planets');
+        collection = db.collection(collectionName);
 
-        
-        if (/*TODO TESTIl*/true) {
+        let cList = await db.listCollections({ name: collectionName }).toArray();
+
+        if (cList.length < 1) {
+            console.log("Creating collection...");
             db.createCollection(dbName, {
                 validator: {
                     $jsonSchema: planetSchema
-                }
-            })
+                },
+                //validationLevel: "off",
+                //validationAction: "warn"
+            });
         }
         
 
@@ -49,14 +58,14 @@ const connectDatabase = () => {
         }
     })
 
-    return new Promise((resolve, reject) => {
-        success ? resolve('Connection ok.') : reject('Connection failed');
+    
         
-    })
-}
+    })*/
 
-const databaseExists = (dbName) => {
-    return false;
+    return new Promise((resolve, reject) => {
+        var success = db !== undefined;
+        success ? resolve('Connection ok.') : reject('Connection failed');
+    })
 }
 
 const fetchData = async ( props ) => {
@@ -77,29 +86,30 @@ const parseData = (data) => {
     data.map(async (obj) => {
         const planet = obj.TD;
 
-        collection.find({pl_name: planet[1]})
+        //collection.find({pl_name: planet[1]})
 
-        const foundPlanet = await collection.findOne({pl_name: planet[1]});
+        //const foundPlanet = await collection.findOne({pl_name: planet[1]});
         
+        var foundPlanet = null;
         if (foundPlanet === null) {
             const planetEntry = {
                 hostname: planet[0],
                 pl_name: planet[1],
-                pl_rade: planet[2],
-                pl_masse: planet[3],
-                pl_bmassj: planet[4], // TODO: Tää on aina pl_masse / 317.816
-                pl_radj: planet[5],
-                pl_orbsmax: planet[6],
-                pl_orbper: planet[7],
-                pl_orbeccen: planet[8],
+                pl_rade: Number(planet[2]),
+                pl_masse: Number(planet[3]),
+                pl_bmassj: Number(planet[4]),
+                pl_radj: Number(planet[5]),
+                pl_orbsmax: Number(planet[6]),
+                pl_orbper: Number(planet[7]),
+                pl_orbeccen: Number(planet[8]),
                 disc_year: planet[9],
                 dateAdded: new Date()
             };
 
-            await collection.insertOne(planetEntry)
+            await db.add(planetEntry)
         }
 
-        else {
+        /*else {
             const update = {
                 hostname: planet[0],
                 pl_name: planet[1],
@@ -113,11 +123,11 @@ const parseData = (data) => {
                 disc_year: planet[9],
             }
 
-            /*collection.updateOne({_id: foundPlanet._id}, update)
+            collection.updateOne({_id: foundPlanet._id}, { $set: update })
             .then(() => {
                     //console.log('update ok');
-            })*/
-        }
+            })
+        }*/
         
     });
 }
@@ -137,14 +147,26 @@ const requestData = () => {
 
 
 app.get('/search', async (req, res) => {
-    /*const filter = req.query.filter;
+    const filter = req.query.filter;
     const searchTerm = req.query.searchterm;
     const offset = req.query.offset;
-    const limit = req.query.limit;*/
+    const limit = req.query.limit;
 
-    const planet =  await collection.find({pl_name: /TOI.*/})
-    res.send(planet);
-    console.log(planet);
+    var queryParameters = {};
+    queryParameters[filter] = new RegExp('.*' + searchTerm + '.*', 'gi');
+    queryParameters["sort"] = {disc_year: -1};
+    
+
+    const result =  await db.find(queryParameters);
+
+    await result.forEach(planet => {
+        result.push(planet);
+    });
+
+    res.set(200);
+    res.send(result);
+    //res.send(planet);
+    //console.log(planet);
     /*.then(result => {
         result.forEach(elem => {
             console.log(elem.pl_name);
@@ -157,7 +179,7 @@ app.get('/search', async (req, res) => {
 })
 
 
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
     console.log('Server running on port ' + PORT);
     
     connectDatabase()
@@ -171,10 +193,9 @@ const server = app.listen(PORT, () => {
 
     console.log('Fetching planet entries...');
 
-    fetchData(defaultUrl)
+    await fetchData(defaultUrl)
     .then((data) => {
         parseData(data);
-        console.log('Database read');
     })
 
     setInterval(requestData, 21600000);
