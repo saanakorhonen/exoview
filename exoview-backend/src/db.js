@@ -2,9 +2,11 @@ const fs = require('fs');
 
 const path = './db.dat';
 
-const EMPTY = 0;
-const REMOVED = -1;
+const EMPTY = 0; //Tyhjä paikka entrylle
+const REMOVED = -1; //Poistetun entryn signaali
 
+
+//Tietokantaluokka
 var Db = class {
     constructor(validator) {
         this._validator = validator;
@@ -14,18 +16,87 @@ var Db = class {
 
     }
 
-    find({query, sort}) {
-        return this._entries;
+
+    /**
+     * Etsii planeetan annettujen tietojen perusteella, järjestää planeetan sort-objektin perustteella.
+     * Palauttaa lopuksi halutun määrän planeettoja.
+     */
+    async find({searchTerm, filter, sort = {field: "disc_year", direction:-1}, offset = 0, limit = this._count}) {
+        var foundResults = this._entries.filter(entry => {
+            return searchTerm.test(entry[filter]);
+        })
+
+
+    
+        var sortField = sort.field;
+        var sortDirection = sort.direction;
+
+        foundResults.sort((a, b) => {
+            return this.sortResults(a, b, sortField, sortDirection);
+        })
+
+        var results = foundResults.slice(offset, limit);
+
+
+        return new Promise((resolve, reject) => {
+            var success = results !== undefined;
+
+            success ? resolve(results) : reject('.find() failed', console.trace());
+        })
     }
 
-    async add(entry) {
 
-        if (entry._id !== undefined) {
-            var key = this.generateHashKey(entry._id);
+    //Sort-funktio. Sorttaa entryt annetun kentän perusteella ja antaa suunnan.
+    sortResults(a, b, sortField, sortDirection) {
+        var compare1 = a[sortField];
+        var compare2 = b[sortField];
 
-            var index = this.findIndexById(key, entry._id);
-            this._entries[index] = entry;
+        if (typeof(compare1 === 'string')) {
+            if (compare1 < compare2) {
+                return -1 * sortDirection;
+            }
+
+            if (compare1 == compare2) {
+                return 0;
+            }
+
+            if (compare1 > compare2) {
+                return 1 * sortDirection;
+            }
         }
+
+        return (compare1 - compare2) * sortDirection;
+        
+    }
+
+
+    /**
+     * Päivittää yhden entryn id:n ja annetun materiaalin perusteella.
+     */
+    async update(id, update) {
+        var success = true;
+
+        var hashKey = this.generateHashKey(id);
+
+        var index = this.findIndexById(hashKey, id);
+
+        if (index === undefined) success = false;
+        else {
+            var keys = Object.keys(update);
+
+            for (let i in keys) {
+                this._entries[index][keys[i]] = update[keys[i]];
+            }
+        }
+
+        return new Promise((resolve, reject) => {
+            success ? resolve('Update ok.') : reject('Update failed');
+        })
+    }
+
+
+    //Lisää uuden entryn, generoi sille id:n ja sen perusteella indeksin.
+    async add(entry) {
 
         try {
             await this.validateEntry(entry);
@@ -46,18 +117,29 @@ var Db = class {
         }
     }
 
+
+    //Generoi hajautuksen tarvittavan avaimen id:n perusteella.
     generateHashKey(id) {
         var key = 0;
 
         for (let i in id) {
-            key += id.charCodeAt(i);
+            if (i == 0) {
+				key = id.charCodeAt(i);
+			} else {
+				let sum = id.charCodeAt(i) + id.charCodeAt(i - 1);
+				let diff = id.charCodeAt(i) - id.charCodeAt(i - 1);
+				if (diff == 0) diff = 1;
+				key += id.charCodeAt(i) * Math.floor(Math.abs(sum / diff));
+			}
         }
 
         return key;
     }
 
+
+    //Generoi indeksin annetun avaimen perusteella hajautusfunktiota käyttäen.
     hash(key, i = 0) {
-        var index = key % this._entries.length + i;
+        var index = (key + 13 * i + 93 * i * i) % this._entries.length;
 
         if (this._entries[index] === EMPTY || this._entries[index] === REMOVED) {
             return index;
@@ -67,8 +149,9 @@ var Db = class {
     }
 
 
+    //Etsii entryn indeksin hash-avaimen ja id:n perusteella.
     findIndexById(key, id, i = 0) {
-        var index = key % this._entries.length + i;
+        var index = (key + 13 * i + 93 * i * i) % this._entries.length + 1;
 
         if (this._entries[index] === EMPTY) return undefined;
 
@@ -77,6 +160,8 @@ var Db = class {
         this.findIndexById(key, id, i + 1);
     }
 
+
+    //Validoi annetun entryn muodostettaessa annetun validaattorin perusteella.
     async validateEntry(entry) {
         var validated = true;
 
@@ -109,6 +194,8 @@ var Db = class {
         })
     }
 
+    
+    //Generoi uniikin id:n yhdelle entrylle.
     generateId() {
         const characters = '1234567890abcdefghijklmnopqrstuvwxyz';
 
