@@ -31,7 +31,11 @@ offset: vapaaehtoinen, aloitusindeksi näytettäville tuloksille. Oletus on 0.
 
 limit: vapaaehtoinen, lopetusindeksi näytettäville tuloksille. Oletus on dokumenttien määrä.
 
-sort: vapaaehtoinen, objekti joka määrittää järjestysfunktion.
+sortField: vapaaehtoinen, määrittää järjestysfunktiossa käytettävän kentän. Filterissä sallitut kentät ovat sallittuja myös sortFieldissä.
+
+sortDirection: vapaaehtoinen, määrittää järjestämisen suunnan. -1 on laskeva, 1 on nouseva.
+
+sortField ja sortDirection muodostavat seurvaan objektin.
     
  ```
   sort = {
@@ -40,7 +44,7 @@ sort: vapaaehtoinen, objekti joka määrittää järjestysfunktion.
   }
   ```
 
-  sortField määrittää kentän, jonka perusteella järjestetään. Direction määrittää suunnan, -1 on laskeva ja 1 on nouseva. Oletuksena yllämainittu esimerkkiobjekti.
+  Oletuksena yllämainittu esimerkkiobjekti, mikäli joko sortFieldiä tai sortDirectionia ei ole annettu.
 
 ## Lisenssi
 Joskus
