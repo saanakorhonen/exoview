@@ -32,13 +32,14 @@ limit: vapaaehtoinen, lopetusindeksi näytettäville tuloksille. Oletus on dokum
 
 sort: vapaaehtoinen, objekti joka määrittää järjestysfunktion.
     
- ```sort = {
+ ```
+ sort = {
         sortField: "disc_year",
         direction: -1
-    }
+ }
   ```
 
-    sortField määrittää kentän, jonka perusteella järjestetään. Direction määrittää suunnan, -1 on laskeva ja 1 on nouseva. Oletuksena yllämainittu esimerkkiobjekti.
+  sortField määrittää kentän, jonka perusteella järjestetään. Direction määrittää suunnan, -1 on laskeva ja 1 on nouseva. Oletuksena yllämainittu esimerkkiobjekti.
 
 ## Lisenssi
 Joskus
