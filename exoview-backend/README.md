@@ -15,17 +15,17 @@ searchterm: pakollinen, vapaa tekstihaku. Tietokanta testaa merkkijonon perustee
 
 filter: pakollinen, kenttä jota haetaan. Sallittuja kenttiä ovat tällä hetkellä
 
-    - "hostname",
-    - "pl_name",
-    - "pl_rade",
-    - "pl_masse",
-    - "pl_bmassj",
-    - "pl_radj",
-    - "pl_orbsmax",
-    - "pl_orbper",
-    - "pl_orbeccen",
-    - "disc_year",
-    - "dateAdded".
+    "hostname"
+    "pl_name"
+    "pl_rade"
+    "pl_masse"
+    "pl_bmassj"
+    "pl_radj"
+    "pl_orbsmax"
+    "pl_orbper"
+    "pl_orbeccen"
+    "disc_year"
+    "dateAdded"
 
 offset: vapaaehtoinen, aloitusindeksi näytettäville tuloksille. Oletus on 0.
 
