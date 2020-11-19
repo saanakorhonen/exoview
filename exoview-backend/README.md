@@ -7,13 +7,13 @@ Serveri, joka sisältää myös tietokannan. Välittää käyttäjälle tietoa e
 Serverin juurihakemisto tarvitsee .env-tiedoston, jossa PORT=8080. Serveri käynnistyy komennolla **npm start**.
 
 ## Api ja sen käyttö
-Serverin api noudattelee vapaasti REST-tyyppistä APIa. Serveriin otetaan yhteys get-komennolla, jossa määritellään tietokantahaun parametrit.
+Serverin api noudattelee vapaasti REST-tyyppistä APIa. Serveriin otetaan yhteys get-komennolla, jossa määritellään tietokantahaun parametrit. Serverin ymmärtämä komento on search, jonka jälkeen lisätään parametrit.
 
 Parametrit:
 
-searchterm: pakollinen, vapaa tekstihaku. Tietokanta testaa merkkijonon perusteella, kuuluuko jokin tietokannan dokumenteista hakuun.
+searchterm: vapaaehtoinen, vapaa tekstihaku. Tietokanta testaa merkkijonon perusteella, kuuluuko jokin tietokannan dokumenteista hakuun. Jos joko searchterm tai filter puuttuu, palautetaan kaikki entryt (oletushaku)
 
-filter: pakollinen, kenttä jota haetaan. Sallittuja kenttiä ovat tällä hetkellä
+filter: vapaaehtoinen, kenttä jota haetaan. Sallittuja kenttiä ovat tällä hetkellä
 
     "hostname"
     "pl_name"

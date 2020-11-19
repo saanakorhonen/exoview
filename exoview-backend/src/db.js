@@ -22,9 +22,13 @@ var Db = class {
      * Palauttaa lopuksi halutun määrän planeettoja.
      */
     async find({searchTerm, filter, sort = {field: "disc_year", direction:-1}, offset = 0, limit = this._count}) {
-        var foundResults = this._entries.filter(entry => {
-            return searchTerm.test(entry[filter]);
-        })
+        
+        if (searchTerm !== undefined && filter !== undefined) 
+            var foundResults = this._entries.filter(entry => {
+                return searchTerm.test(entry[filter]);
+            })
+
+        else foundResults = this._entries;
 
 
     
@@ -115,6 +119,28 @@ var Db = class {
         catch (err) {
             console.log("Entry adding failed:", err);
         }
+    }
+
+
+    /**
+     * Removes and pops an entry by id
+     * @param {*} id id of the entry to remove
+     */
+    async pop(id) {
+        const hashKey = this.generateHashKey(id);
+
+        var index = this.findIndexById(hashKey, id);
+
+        var removedEntry;
+        if (id !== undefined) {
+            removedEntry = this._entries[index];
+            this._entries[index] = -1;
+        }
+
+        return new Promise((resolve, reject) => {
+            var success = id !== undefined;
+            success ? resolve(removedEntry) : reject(undefined)
+        })
     }
 
 
