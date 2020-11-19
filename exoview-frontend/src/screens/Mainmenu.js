@@ -85,7 +85,7 @@ const Mainmenu = ({ navigation }) => {
           </View>
           <View style={styles.buttonsBox}>
             <View style={styles.buttons}>
-              <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Information', foundPlanets[0]) }>
+              <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Information', foundPlanets) }>
                 <Text style={styles.text}>Recent planet</Text>
               </TouchableOpacity>
               <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Search', foundPlanets) }>

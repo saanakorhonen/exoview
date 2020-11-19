@@ -55,21 +55,23 @@ export default function Stars({ star }) {
   
   console.log(bStar.color)
   return (
-    <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
-      {/** background star */}
+      <View style={{alignItems: 'center', justifyContent:'center'}}>
         <View style={{ position: 'relative', backgroundColor: bStar.color, height: WW()* bStar.relativeSize, width: WW()*bStar.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
         </View>
         {/** front star */}
         <View style={{ position: 'absolute',backgroundColor: fStar.color,  height: WW()* fStar.relativeSize, width: WW()*fStar.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
-        </View> 
-    </View>
-  );
+        </View>
+      </View>
+  )
 }
 
 /**
  * 
  * @param { <Planet relative={relativeSize}></Planet>
       <Planet isEarth={true} relative={relativeSize}></Planet>} temp 
+            <View style={{ flex: 10,backgroundColor: 'red', height: Dimensions.get('window').width / 2 }}>
+          <Text style={{marginHorizontal: 10,}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque venenatis tortor id eros bibendum, at sollicitudin ligula maximus. Suspendisse potenti. In feugiat sem in velit iaculis, quis pellentesque purus elementum. Praesent mollis massa sed interdum lacinia. Nullam sed convallis lectus, eget semper ante. Vestibulum fermentum sagittis rhoncus. Integer maximus a sem eget finibus. Aliquam nec felis felis. Nam vitae augue et ligula convallis finibus sit amet vel diam. Nunc pulvinar ullamcorper gravida. Integer sit amet ipsum sit amet nulla faucibus vehicula id et sem. Morbi egestas ultrices lectus ac maximus. Nulla aliquet non erat ac elementum. Nullam odio nisl, feugiat eu lacinia sit amet, lacinia a magna. Fusce massa mauris, rutrum at leo a, tempus eleifend lorem.)</Text>
+      </View>
  */
 
 function starColor(temp){

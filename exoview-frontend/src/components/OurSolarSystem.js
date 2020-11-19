@@ -18,7 +18,7 @@ const OurSolarSystem= ({ planet }) => {
 
     return (
         <View >
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{flex: 1,flexDirection: 'row', alignItems: 'center'}}>
                 <Text style={{color: 'white', fontSize: 16, backgroundColor: 'black'}}>{planet.au} {planet.name}</Text>
             </View>
         </View>

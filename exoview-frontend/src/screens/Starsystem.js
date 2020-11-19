@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {  FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import {  TouchableOpacity, FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView, Dimensions } from 'react-native';
 import DistanceOrbit from '../components/DistanceOrbit'
 import Stars from '../components/Stars'
 import OurSolarSystem from '../components/OurSolarSystem';
@@ -19,26 +19,33 @@ neptunus 30.33
 TODO: sklaaukset fiksusti
 TODO: tekstit
 */
-const Starsystem = ({ route }) => {
-    const hPhone = Dimensions.get('screen').height
+const Starsystem = ({ route, navigation }) => {
+    console.log('satrsyst', route.params)
+    const hPhone = Dimensions.get('window').height
+    const hStar = Dimensions.get('window').width / 2
+    const star = route.params.star != undefined ? route.params.star : route.params
     console.log('hphone', hPhone)
     //console.log()
-    let  auEarth =Dimensions.get('window').width / 2 +Dimensions.get('window').height/6
-    var etaisyydet = [ {name: 'Earth', au:1},{name:"Mars",au:1.666},{name:"Jupiter",au:5.4588},{name:"Saturn",au:10.1238},{name:"Uranus",au:20.11},{name:"Neptune",au:30.33}];
-    let  pituus = kaukaisin(route.params.planets) ;
-    let kaukaisinPlaneetta = solarSystem(pituus,etaisyydet)
-        
+    let  auEarth =hStar + hPhone/20 // 1 AU
+    var etaisyydet = [ {name: 'Mercury', au: 0.4667}, {name:'Venus', au: 0.72813}, {name: 'Earth', au:1},{name:"Mars",au:1.666},{name:"Jupiter",au:5.4588},{name:"Saturn",au:10.1238},{name:"Uranus",au:20.11},{name:"Neptune",au:30.33}];
+    let  pituus = kaukaisin(route.params.planets) ; // kaukaisin tähtijärjestelmän eksoplaneetta (AU)
+    let kaukaisinPlaneetta = solarSystem(pituus,etaisyydet) // meidän aurinkokunnan planeettta, jota lähempänä kaukaisin eksoplaneetta on (AU)
+    let lahinAU = lahin(route.params.planets)
+    console.log('lahin', lahinAU)
+
     console.log('kaukaisinp', kaukaisinPlaneetta)
-    if (pituus < 1.0) {
+    if (lahinAU < 1.0) {
         console.log('pituus pienempi kuin auearth', pituus)
-        auEarth = auEarth *20
-        pituus = auEarth
-        etaisyydet = [...etaisyydet, {name: 'Mercury', au: 0.4667}, {name:'Venus', au: 0.72813}]
+        // aseteteaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
+        auEarth = auEarth/ lahinAU
+        pituus =  auEarth *kaukaisinPlaneetta
     } else {
         pituus = kaukaisinPlaneetta * auEarth
+        etaisyydet.shift()
     }
+    if (pituus < hPhone) pituus=hPhone
     console.log('pituus', pituus)
-    console.log('star sytemissa ollaan', route.params.planets)
+    console.log('star sytemissa ollaan', auEarth)
 
     return (
         <View style={styles.container}>
@@ -55,14 +62,18 @@ const Starsystem = ({ route }) => {
                          </View>
                      )}
                     {route.params.planets.map((planet) =>
-                    <View key={planet.pl_name} style={{position: 'absolute', marginTop: Dimensions.get('window').width / 2 +auEarth*planet.pl_orbsmax}}>
-                        <Planets planet={planet} />
+                    <View key={planet.pl_name} style={{position: 'absolute', marginTop:  auEarth*planet.pl_orbsmax}} >
+                        <Planets planet={planet} navigation={navigation} />
                     </View>
                 )}
                 </View>
 
             </ScrollView>
-            <View style={styles.infotext}><Text>kissa</Text></View>
+            <View style={styles.infotext}>
+                <Text style={styles.textTitle}>{star.hostname}</Text>
+                <Text style={{color:'white'}}>- star system</Text>
+                <Text style={styles.textParagraph}>{star.hostname}</Text>
+            </View>
             
         </View>
 
@@ -88,10 +99,17 @@ return kaukaisin.pl_orbsmax;
 
     
 }
-
-
-
-
+function lahin(planets){
+    var lahin = planets[0];
+    for (const p in planets) {
+        if(planets[p].pl_orbsmax < lahin.pl_orbsmax){
+            lahin = planets[p];
+        }
+    }
+    return lahin.pl_orbsmax;
+    
+        
+    }
 
 const styles = StyleSheet.create({
     container: {
@@ -99,7 +117,7 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent:'flex-start',
       //justifyContent: 'center',
-      backgroundColor: 'white',
+      backgroundColor: 'black',
       paddingTop: 10,
     },
     system: {
@@ -109,8 +127,20 @@ const styles = StyleSheet.create({
     },
     infotext: {
         flex: 10,
-        backgroundColor: 'red',
+        backgroundColor: 'black',
+    },
+    textTitle: {
+        fontSize: 20,
+        margin: 10,
+        color: "white",
+        fontWeight: 'bold'
+    },
+    textParagraph: {
+        color: 'white',
+        margin: 10
     }
 })
 
 export default Starsystem;
+
+

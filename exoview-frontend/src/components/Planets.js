@@ -1,6 +1,6 @@
 "use strict";
 import React from "react";
-import { Text, View, Dimensions } from "react-native";
+import { TouchableOpacity, View, Dimensions, Text } from "react-native";
 
 
 /**
@@ -10,7 +10,7 @@ import { Text, View, Dimensions } from "react-native";
  *  name = "Planeetan nimi" (string)
  *  size = planeetan koko numerona (pl_rade)
  */
-export default function Stars({ planet }) {
+export default function Stars({ planet, navigation }) {
     console.log(planet.pl_rade)
   /*
   let relativeSize = 1.0;
@@ -52,7 +52,8 @@ export default function Stars({ planet }) {
   
   
   return (
-    <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }}>
+    <TouchableOpacity onPress = { () => navigation.navigate('Information', {planet: planet,system: []})}>
+    <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }  }  >
       {/** background star */}
         <View style={{ position: 'relative', backgroundColor: bPlanet.color, height: WW()* bPlanet.relativeSize, width: WW()*bPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
         </View>
@@ -60,7 +61,8 @@ export default function Stars({ planet }) {
         <View style={{ position: 'absolute',backgroundColor: fPlanet.color,  height: WW()* fPlanet.relativeSize, width: WW()*fPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
         </View> 
     </View>
-  );
+
+    </TouchableOpacity>  )
 }
 
 
