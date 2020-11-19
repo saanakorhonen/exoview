@@ -2,18 +2,25 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const PORT = process.env.PORT;
+const CLIENT_PORT = process.env.CLIENT_PORT;
 const fetch = require('node-fetch');
 const parser = require('fast-xml-parser');
+const http = require('http').createServer(app).listen(CLIENT_PORT);
+const io = require('socket.io')(http);
 
 const planetSchema = require('./models/planet');
 const Db = require('./src/db');
 
 
-var defaultUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+order+by+disc_year+desc'
+var defaultUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year,st_spectype,st_teff,st_rad,st_mass,st_lum,st_age,st_dens,st_rotp,st_radv+from+pscomppars+order+by+disc_year+desc'
 
 var db;
 
 
+
+io.on('toimi', (msg) => {
+    console.log(msg);
+})
 
 
 /**
@@ -75,10 +82,26 @@ const parseData = (data) => {
                 pl_orbper: Number(planet[7]),
                 pl_orbeccen: Number(planet[8]),
                 disc_year: planet[9],
-                dateAdded: new Date()
+                st_spectype: planet[10],
+                st_teff: Number(planet[11]),
+                st_rad: Number(planet[12]),
+                st_mass: Number(planet[13]),
+                st_lum: Number(planet[14]),
+                st_age: Number(planet[15]),
+                st_dens: Number(planet[16]),
+                st_rotp: Number(planet[17]),
+                st_radv: Number(planet[18]),
+                dateAdded: new Date(),
             };
 
-            await db.add(planetEntry)
+            const entry = await db.add(planetEntry)
+
+            const newPlanetInfo = {
+                name: entry.pl_name,
+                id: entry._id
+            }
+
+            io.emit('new planet', newPlanetInfo);
         }
 
         else {
@@ -93,6 +116,15 @@ const parseData = (data) => {
                 pl_orbper: planet[7],
                 pl_orbeccen: planet[8],
                 disc_year: planet[9],
+                st_spectype: planet[10],
+                st_teff: planet[11],
+                st_rad: planet[12],
+                st_mass: planet[13],
+                st_lum: planet[14],
+                st_age: planet[15],
+                st_dens: planet[16],
+                st_rotp: planet[17],
+                st_radv: planet[18]
             }
 
             db.update(foundPlanet._id, update);
@@ -101,6 +133,7 @@ const parseData = (data) => {
         
     });
 }
+
 
 
 /**
@@ -131,10 +164,16 @@ app.get('/', (req,res) => {
 app.get('/search', async (req, res) => {
     const filter = req.query.filter;
     const searchTerm = req.query.searchterm;
-    const offset = req.query.offset;
-    const limit = req.query.limit;
+    var offset = req.query.offset;
+    var limit = req.query.limit;
     const sortField = req.query.sortField;
     const sortDirection = req.query.sortDirection;
+
+    
+    if (offset > limit) {
+        limit = undefined;
+        offset = undefined;
+    }
 
     var queryParameters = {};
 
@@ -149,6 +188,7 @@ app.get('/search', async (req, res) => {
         field: sortField,
         direction: sortDirection
     }
+
     
 
     db.find(queryParameters)

@@ -44,6 +44,42 @@ module.exports = {
             type: "string"
         },
 
+        st_spectype: {
+            type: "string"
+        },
+
+        st_teff: {
+            type: "number"
+        },
+
+        st_rad: {
+            type: "number"
+        },
+
+        st_mass: {
+            type: "number"
+        },
+
+        st_lum: {
+            type: "number"
+        },
+
+        st_age: {
+            type: "number"
+        },
+
+        st_dens: {
+            type: "number"
+        },
+
+        st_rotp: {
+            type: "number"
+        },
+
+        st_radv: {
+            type: "number"
+        },
+
         dateAdded: {
             type: "object"
         }

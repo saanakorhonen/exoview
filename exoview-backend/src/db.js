@@ -2,6 +2,7 @@ const fs = require('fs');
 
 const path = './db.dat';
 
+
 const EMPTY = 0; //Tyhjä paikka entrylle
 const REMOVED = -1; //Poistetun entryn signaali
 
@@ -13,7 +14,6 @@ var Db = class {
         this._entries = new Array(10000);
         this._entries.fill(0);
         this._count = 0;
-
     }
 
 
@@ -101,6 +101,8 @@ var Db = class {
 
     //Lisää uuden entryn, generoi sille id:n ja sen perusteella indeksin.
     async add(entry) {
+        var success = true;
+
 
         try {
             await this.validateEntry(entry);
@@ -118,7 +120,12 @@ var Db = class {
         } 
         catch (err) {
             console.log("Entry adding failed:", err);
+            success = false;
         }
+
+        return new Promise((resolve, reject) => {
+            success ? resolve(entry) : reject(undefined)
+        })
     }
 
 
@@ -208,7 +215,7 @@ var Db = class {
                 var validatorProperty = this._validator.properties[entryKeys[i]];
     
                 if (typeof(entry[key]) !== validatorProperty.type) {
-                    console.log("type: " + typeof(entry[key]) + " validator: " + validatorProperty.type);
+                    console.log("Key:" + entryKeys[i] + " type: " + typeof(entry[key]) + " validator: " + validatorProperty.type);
                     validated = false;
                     break;
                 }
