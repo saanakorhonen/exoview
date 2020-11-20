@@ -1,6 +1,6 @@
 "use strict";
 import React from "react";
-import { TouchableOpacity, View, Dimensions } from "react-native";
+import { TouchableOpacity, View, Dimensions, Text } from "react-native";
 
 
 /**
@@ -42,14 +42,21 @@ export default function Stars({ planet, system,  navigation }) {
   } 
   
   return (
-    <TouchableOpacity onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
-      <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }  }  >
+    <TouchableOpacity  onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
+      <View  style={{flexDirection: 'row', alignItems:'center', justifyContent: 'center'}}>
+      <View style={{  alignItems: 'center', justifyContent: 'center', width:Dimensions.get('window').width / 2 }}  >
       {/** background star */}
         <View style={{ position: 'relative', backgroundColor: bPlanet.color, height: WW()* bPlanet.relativeSize, width: WW()*bPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
         </View>
         {/** front star */}
         <View style={{ position: 'absolute',backgroundColor: fPlanet.color,  height: WW()* fPlanet.relativeSize, width: WW()*fPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
-        </View> 
+        </View>
+      </View>
+      <View >
+        <Text style={{color:'white'}}>{planet.pl_name}</Text>
+        <Text style={{color:'white'}}>radius: {planet.pl_rade}</Text>
+        <Text style={{color:'white'}}>distance: {planet.pl_orbsmax}AU</Text>
+      </View>
       </View>
     </TouchableOpacity>  )
 }

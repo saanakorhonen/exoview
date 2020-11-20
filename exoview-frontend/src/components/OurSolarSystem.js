@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {  FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
+import {  Dimensions,View, Text } from 'react-native';
 import DistanceOrbit from './DistanceOrbit'
 //import PlanetSizeComparison from './p'
 
@@ -18,8 +18,8 @@ const OurSolarSystem= ({ planet }) => {
 
     return (
         <View >
-            <View style={{flex: 1,flexDirection: 'row', alignItems: 'center'}}>
-                <Text style={{color: 'white', fontSize: 16, backgroundColor: 'black'}}>{planet.au} {planet.name}</Text>
+            <View style={{flex: 1,flexDirection: 'row', alignItems: 'center',marginLeft:Dimensions.get('window').width / 8}}>
+                <Text style={{color: 'white', fontSize: 16, backgroundColor: 'black'}}>{planet.au} AU {planet.name}</Text>
             </View>
         </View>
 

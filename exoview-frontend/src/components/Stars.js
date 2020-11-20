@@ -1,6 +1,6 @@
 "use strict";
 import React from "react";
-import { Text, View, Dimensions } from "react-native";
+import { Text, View, Dimensions, StyleSheet } from "react-native";
 
 let fColor = "lightblue";
 let bColor = "lightblue";
@@ -27,39 +27,59 @@ export default function Stars({ star }) {
   const starSunRel = star.st_rad / 1.0;
 
   const bStar = {
+    name:"",
     color:"",
+    teff:'',
     relativeSize: -1,
   };
 
   const fStar = {
+    name:'',
     color: "",
+    teff:'',
     relativeSize: -1,
   }
 
   if(starSunRel > 1){
     bStar.color = starColor(star.st_teff);
     bStar.relativeSize = 1.0
+    bStar.name = star.hostname
+    bStar.teff = star.st_teff
+
     fStar.relativeSize = 1 / starSunRel 
     fStar.color = starColor(5772);
+    fStar.name = 'Sun'
+    fStar.teff = 5772
     //padding = (WW() - (WW() * relativeSize)) / 2;
   }
   else {
       bStar.color = starColor(5772);
       bStar.relativeSize = 1.0
+      bStar.name = 'Sun'
+      bStar.teff= 5772
 
       fStar.color = starColor(star.st_teff);
       fStar.relativeSize = star.st_rad;
+      fStar.name = star.hostname
+      fStar.teff = star.st_teff
 
      // padding = (WW() - (WW() * relativeSize)) / 2;
   }
   
   console.log(bStar.color)
   return (
-      <View style={{alignItems: 'center', justifyContent:'center'}}>
+      <View style={{flexDirection:'row'}}>
+        <View style={{alignItems: 'center', justifyContent:'center'}}>
         <View style={{ position: 'relative', backgroundColor: bStar.color, height: WW()* bStar.relativeSize, width: WW()*bStar.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
         </View>
         {/** front star */}
         <View style={{ position: 'absolute',backgroundColor: fStar.color,  height: WW()* fStar.relativeSize, width: WW()*fStar.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
+        </View>
+        </View>
+        <View style={{flex:1, height:Dimensions.get('window').width / 2, marginHorizontal: 10}}>
+          <Text style={styles.title}>{star.hostname}</Text>
+          <Text style={styles.paragraph}>The Star shown behind is {bStar.name}. It's stellar effective temperature is {bStar.teff} K.
+          The star infront is {fStar.name} and it's stellar effective temperature is {fStar.teff}</Text>
         </View>
       </View>
   )
@@ -68,12 +88,7 @@ export default function Stars({ star }) {
 /**
  * 
  * @param { <Planet relative={relativeSize}></Planet>
-      <Planet isEarth={true} relative={relativeSize}></Planet>} temp 
-            <View style={{ flex: 10,backgroundColor: 'red', height: Dimensions.get('window').width / 2 }}>
-          <Text style={{marginHorizontal: 10,}}>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque venenatis tortor id eros bibendum, at sollicitudin ligula maximus. Suspendisse potenti. In feugiat sem in velit iaculis, quis pellentesque purus elementum. Praesent mollis massa sed interdum lacinia. Nullam sed convallis lectus, eget semper ante. Vestibulum fermentum sagittis rhoncus. Integer maximus a sem eget finibus. Aliquam nec felis felis. Nam vitae augue et ligula convallis finibus sit amet vel diam. Nunc pulvinar ullamcorper gravida. Integer sit amet ipsum sit amet nulla faucibus vehicula id et sem. Morbi egestas ultrices lectus ac maximus. Nulla aliquet non erat ac elementum. Nullam odio nisl, feugiat eu lacinia sit amet, lacinia a magna. Fusce massa mauris, rutrum at leo a, tempus eleifend lorem.)</Text>
-      </View>
- */
-
+*/
 function starColor(temp){
     if(temp < 3500) return "red";
     else if(temp < 5000) return "orange";
@@ -92,43 +107,17 @@ function WW() {
   return ww;
 }
 
-/**
- * Tekee sen planeetan
- * @param {*} props
- *  name = planeetan nimi, ei tarvi antaa jos maa
- *  isEarth = boolean true jos maa
- *  relative = relativeSize tuolta ylempää ^
- */
-const Planet = (props) => {
+const styles = StyleSheet.create({
+  paragraph: {
+    color: 'white',
 
-  let relativeSize = 1.0;
-  let padding = 0;
-
-  // Jos ei ole maa mutta on sitä pienempi, pienennetään suhteessa vakiokokoon
-  if (props.relative < 1.0 && !props.isEarth) {
-    relativeSize = props.relative;
-    padding = (WW() - (WW() * relativeSize)) / 2;
+  },
+  title:{
+    color:'white',
+    fontSize: 20,
+    fontWeight: '700'
   }
-
-  // Jos on maa ja eksoplaneetta on suurempi, otetaan kokosuhteen käänteisluku
-  if (props.relative > 1.0 && props.isEarth) {
-    relativeSize = 1 / props.relative;
-    padding = (WW() - (WW() * relativeSize)) / 2;
-  }
-
-  return (
-    <View style={{flex: 1, alignItems: "center", height: WW(), paddingTop: padding, backgroundColor: 'rgba(52, 52, 52, 0.0)'}}>
-        <View style={
-          {
-            fontSize: (30  * relativeSize), 
-            borderRadius: 1000, // random ylisuuri numero
-            backgroundColor: props.color, 
-            width: WW() * relativeSize, 
-            height: WW() * relativeSize, 
-            paddingTop: 55 * relativeSize, 
-            textAlign: 'center'}
-          } >
-        </View>
-      </View>
-  );
 }
+
+)
+

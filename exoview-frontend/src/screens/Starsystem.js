@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {  TouchableOpacity, FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import {  TouchableOpacity, FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import DistanceOrbit from '../components/DistanceOrbit'
 import Stars from '../components/Stars'
 import OurSolarSystem from '../components/OurSolarSystem';
@@ -21,35 +21,31 @@ TODO: tekstit
 */
 const Starsystem = ({ route, navigation }) => {
     console.log('satrsyst', route.params)
+
     const hPhone = Dimensions.get('window').height
     const hStar = Dimensions.get('window').width / 2
     const star = route.params.star != undefined ? route.params.star : route.params
     const system = {star: star, planets: route.params.planets}
-    console.log('hphone', hPhone)
-    //console.log()
     let  auEarth =hStar + hPhone/20 // 1 AU
+
+    //meidän aurinkokunnan planettoojen etäisyydet
     var etaisyydet = [ {name: 'Mercury', au: 0.4667}, {name:'Venus', au: 0.72813}, {name: 'Earth', au:1},{name:"Mars",au:1.666},{name:"Jupiter",au:5.4588},{name:"Saturn",au:10.1238},{name:"Uranus",au:20.11},{name:"Neptune",au:30.33}];
     let  pituus = kaukaisin(route.params.planets) ; // kaukaisin tähtijärjestelmän eksoplaneetta (AU)
     let kaukaisinPlaneetta = solarSystem(pituus,etaisyydet) // meidän aurinkokunnan planeettta, jota lähempänä kaukaisin eksoplaneetta on (AU)
     let lahinAU = lahin(route.params.planets)
-    console.log('lahin', lahinAU)
 
-    console.log('kaukaisinp', kaukaisinPlaneetta)
+    // etäisyyksien uudelleen suhteuttaminen: 1. lähempänä kuin maa, maa ja neptunus välillä, kauempana kuin neptunus
     if (lahinAU < 1.0) {
-        console.log('pituus pienempi kuin auearth', pituus)
-        // aseteteaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
-        auEarth = auEarth/ lahinAU
+        auEarth = auEarth/ lahinAU // aseteteaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
         pituus =  auEarth *kaukaisinPlaneetta
     } else {
         pituus = kaukaisinPlaneetta * auEarth
-        etaisyydet.shift();etaisyydet.shift()
+        etaisyydet.shift();etaisyydet.shift() //poistetaan näkymästä merkurius ja venus
     }
-    if (pituus < hPhone) pituus=hPhone
-    console.log('pituus', pituus)
-    console.log('star sytemissa ollaan', auEarth)
+    if (pituus < hPhone) pituus=hPhone // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
 
-    return (
-        <View style={styles.container}>
+    return ( 
+        <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
             <ScrollView>
                 <View key = {2} style={styles.system}>
                     <Stars key={route.params.star.hostname} star={route.params.star}></Stars>
@@ -66,18 +62,10 @@ const Starsystem = ({ route, navigation }) => {
                     <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*planet.pl_orbsmax}} >
                         <Planets planet={planet} navigation={navigation} system={system} />
                     </View>
-                )}
+                    )}
                 </View>
-
             </ScrollView>
-            <View style={styles.infotext}>
-                <Text style={styles.textTitle}>{star.hostname}</Text>
-                <Text style={{color:'white'}}>- star system</Text>
-                <Text style={styles.textParagraph}>{star.hostname}</Text>
-            </View>
-            
-        </View>
-
+        </ImageBackground>
     )
 };
 
@@ -134,17 +122,18 @@ const styles = StyleSheet.create({
       flexDirection: 'row',
       justifyContent:'flex-start',
       //justifyContent: 'center',
-      backgroundColor: 'black',
+      //backgroundColor: 'black',
       paddingTop: 10,
+      paddingLeft: 10
     },
     system: {
         flexDirection: 'column',
-        alignItems: 'center',
-        backgroundColor:'black',
+        alignItems: 'flex-start',
+       // backgroundColor:'black',
     },
     infotext: {
         flex: 10,
-        backgroundColor: 'black',
+       // backgroundColor: 'black',
     },
     textTitle: {
         fontSize: 20,
@@ -157,7 +146,11 @@ const styles = StyleSheet.create({
         margin: 10
     }
 })
-
+/**         <View style={styles.infotext}>
+                <Text style={styles.textTitle}>{star.hostname}</Text>
+                <Text style={{color:'white'}}>- star system</Text>
+                <Text style={styles.textParagraph}>{star.hostname}</Text>
+            </View> */
 export default Starsystem;
 
 
