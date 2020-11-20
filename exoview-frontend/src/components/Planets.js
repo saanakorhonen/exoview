@@ -1,6 +1,6 @@
 "use strict";
 import React from "react";
-import { TouchableOpacity, View, Dimensions, Text } from "react-native";
+import { TouchableOpacity, View, Dimensions } from "react-native";
 
 
 /**
@@ -10,16 +10,8 @@ import { TouchableOpacity, View, Dimensions, Text } from "react-native";
  *  name = "Planeetan nimi" (string)
  *  size = planeetan koko numerona (pl_rade)
  */
-export default function Stars({ planet, navigation }) {
+export default function Stars({ planet, system,  navigation }) {
     console.log(planet.pl_rade)
-  /*
-  let relativeSize = 1.0;
-  exoSize = props.planet.pl_rade;
-
-  if (isNaN(props.planet.pl_rade)) {
-    exoSize = 1.0;
-  }
-*/
 
   const pEarthRel = planet.pl_rade / 1.0;
 
@@ -43,28 +35,24 @@ export default function Stars({ planet, navigation }) {
   else {
       bPlanet.color = "darkblue";
       bPlanet.relativeSize = 1.0
-
       fPlanet.color = 'grey';
       fPlanet.relativeSize = planet.pl_rad;
 
      // padding = (WW() - (WW() * relativeSize)) / 2;
-  }
-  
+  } 
   
   return (
-    <TouchableOpacity onPress = { () => navigation.navigate('Information', {planet: planet,system: []})}>
-    <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }  }  >
+    <TouchableOpacity onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
+      <View style={{ flex: 0.5, alignItems: 'center', justifyContent: 'center' }  }  >
       {/** background star */}
         <View style={{ position: 'relative', backgroundColor: bPlanet.color, height: WW()* bPlanet.relativeSize, width: WW()*bPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
         </View>
         {/** front star */}
         <View style={{ position: 'absolute',backgroundColor: fPlanet.color,  height: WW()* fPlanet.relativeSize, width: WW()*fPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
         </View> 
-    </View>
-
+      </View>
     </TouchableOpacity>  )
 }
-
 
 /**
  * Ottaa ikkunan leveydestä jonkun murto-osan

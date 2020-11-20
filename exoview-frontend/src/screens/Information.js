@@ -10,7 +10,9 @@ import Distance from '../screens/Distance'
 const Information = ({ navigation, route }) => {
   const screenWidth = Dimensions.get('window').width
   const [system, setSystem] = useState()
+  const [planets, setPlanets] = useState([])
   const [loading, setLoading] = useState(true)
+  const [planetsSet, setPlanetsSet] = useState(false)
   // alussa tyhjä alustus
   const [planet, setPlanet] = useState({
     planet: {
@@ -25,73 +27,64 @@ const Information = ({ navigation, route }) => {
   })
 
   useEffect(() => {
-    console.log('infossa',route.params)
+    console.log(route.params)
     if (route.params.planet !=undefined) {
-      console.log('infossa',route.params)
+      console.log('infossa useEffect if',route.params)
       const p = route.params.planet
-      
       setPlanet({ planet: { hostname: p.hostname, pl_name: p.pl_name, pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen, disc_year: p.disc_year }})
       setSystem(route.params.system)
       setLoading(false)
       return
     }
-    fetchPlanet(route.params[0]);
-  },[])
-
-  // haetaan 1 planeetan tiedot
-  const fetchPlanet = (p) => {
-    //const res = await fetch('https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+where+disc_year+=+2020')
-    //const teksti = await res.text()
-    //const obj = await parse(teksti)
-    // varsinainen haluttu data taulukkossa
-
-    // asetetaan planeetan tiedot
+    const p = route.params[0]
+    setPlanets(route.params)
     setPlanet({ planet: { hostname: p.hostname, pl_name: p.pl_name, pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen, disc_year: p.disc_year }})  
-  }
-
+    setPlanetsSet(true)
+  },[])
+  
   useEffect(() => {
-    var nimi = planet.planet.pl_name;
-    //console.log('nimi', nimi)
-    var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
+    const nimi = planet.planet.pl_name;
+    const kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
     fetchData(kutsu)
     .then((data) =>{
-      console.log(data)
         var star = setStars(data,planet.planet.hostname)
-        console.log("tähti infossa",star)
-        var tahdenplaneetat = route.params.filter(planet => planet['hostname'].match(star.hostname))
+        var tahdenplaneetat = planets.filter(planet => planet['hostname'].match(star.hostname))
         const system = {star: star, planets: tahdenplaneetat}   
         setSystem(system)
         setLoading(false)
-    })
-  }, [planet])
+    }).catch((error) => console.log('error fetcData')) 
+
+  }, [planetsSet])
 
   const fetchData = async ( props ) => {
     const response = await fetch(props);
-
     const teksti = await response.text();
     const objects = await parse(teksti);
-
     const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
     return new Promise((resolve, reject) => {
         var success = planetArray != undefined;
         success ? resolve(planetArray) : reject('Query failed');
     })
-}
-      const setStars = (arr,data) => {
-        const star = arr.TD
-        const propPlanet =
-            {
-                hostname: data,
-                st_spectype: star[0],
-                st_teff: star[1],
-                st_rad: star[2],
-                st_mass: star[3],
-                st_age: star[4],
-                st_rotp: star[5]
-            }
-        return propPlanet
-    }
-    console.log('systeminfossa', system)
+  } 
+  
+  const setStars = (arr,data) => {
+    const star = arr.TD
+    const propPlanet =
+      {
+        hostname: data,
+        st_spectype: star[0],
+        st_teff: star[1],
+        st_rad: star[2],
+        st_mass: star[3],
+        st_age: star[4],
+        st_rotp: star[5]
+      }
+    return propPlanet
+  }
+
+  
+  console.log('info systeemi', system)
+
   return (
     <View style={styles.container}>
       {loading
@@ -126,7 +119,6 @@ const Information = ({ navigation, route }) => {
 
     </View>   
   )
-
 }
 
 //TODO: siisti!
@@ -167,16 +159,5 @@ const styles = StyleSheet.create({
     fontSize: 18
   }
 })
-
-        
-         {/**navigoidaan visualisaatioihin 
-          *           <View style={styles.visualisationButton}>
-            </View>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Visualisation',planet)}>
-            <Text style={{color: '#fff'}}>Open visualisation</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={() => navigation.navigate('Distance',planet)}>
-            <Text style={{color: '#fff'}}>Open visualisation</Text>
-          </TouchableOpacity> */}
 
 export default Information;

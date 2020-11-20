@@ -24,6 +24,7 @@ const Starsystem = ({ route, navigation }) => {
     const hPhone = Dimensions.get('window').height
     const hStar = Dimensions.get('window').width / 2
     const star = route.params.star != undefined ? route.params.star : route.params
+    const system = {star: star, planets: route.params.planets}
     console.log('hphone', hPhone)
     //console.log()
     let  auEarth =hStar + hPhone/20 // 1 AU
@@ -41,7 +42,7 @@ const Starsystem = ({ route, navigation }) => {
         pituus =  auEarth *kaukaisinPlaneetta
     } else {
         pituus = kaukaisinPlaneetta * auEarth
-        etaisyydet.shift()
+        etaisyydet.shift();etaisyydet.shift()
     }
     if (pituus < hPhone) pituus=hPhone
     console.log('pituus', pituus)
@@ -57,13 +58,13 @@ const Starsystem = ({ route, navigation }) => {
                         <DistanceOrbit height ={pituus}/>
                     </View>
                     {etaisyydet.map((planet) => 
-                         <View key={planet.pl_name} style={{position: 'absolute', marginTop: auEarth*planet.au}}>
+                         <View key={generateKey()} style={{position: 'absolute', marginTop: auEarth*planet.au}}>
                          <OurSolarSystem planet={planet}/>
                          </View>
                      )}
                     {route.params.planets.map((planet) =>
-                    <View key={planet.pl_name} style={{position: 'absolute', marginTop:  auEarth*planet.pl_orbsmax}} >
-                        <Planets planet={planet} navigation={navigation} />
+                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*planet.pl_orbsmax}} >
+                        <Planets planet={planet} navigation={navigation} system={system} />
                     </View>
                 )}
                 </View>
@@ -106,10 +107,26 @@ function lahin(planets){
             lahin = planets[p];
         }
     }
-    return lahin.pl_orbsmax;
-    
-        
+    return lahin.pl_orbsmax; 
+}
+
+//Luo id:n planeettakomponenteille
+const generateKey = () => {
+    const keys = '1234567890abcdefghijklmnopqrstuvwxyz'
+
+    const idLength = 10
+
+    let i = 0;
+
+    let id = '';
+
+    while (i < idLength) {
+        id = id + keys.charAt(Math.floor(Math.random() * Math.floor(keys.length)))
+        i++;
     }
+
+    return id;
+}
 
 const styles = StyleSheet.create({
     container: {
