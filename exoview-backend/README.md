@@ -20,6 +20,7 @@ const newPlanetInfo = {
 , jossa name sisältää uuden planeetan nimen ja id planeetan id:n.
 
 ## Api ja sen käyttö
+
 Serverin api noudattelee vapaasti REST-tyyppistä APIa. Serveriin otetaan yhteys get-komennolla, jossa määritellään tietokantahaun parametrit. Serverin ymmärtämä komento on search, jonka jälkeen lisätään parametrit.
 
 Parametrit:
@@ -48,6 +49,8 @@ filter: vapaaehtoinen, kenttä jota haetaan. Sallittuja kenttiä ovat tällä he
     "st_dens"
     "st_rotp"
     "st_radv"
+    "sy_bmag"
+    "sy_vmag"
 
 offset: vapaaehtoinen, aloitusindeksi näytettäville tuloksille. Oletus on 0.
 
@@ -58,7 +61,7 @@ sortField: vapaaehtoinen, määrittää järjestysfunktiossa käytettävän kent
 sortDirection: vapaaehtoinen, määrittää järjestämisen suunnan. -1 on laskeva, 1 on nouseva.
 
 sortField ja sortDirection muodostavat seurvaan objektin.
-    
+
 ```
   sort = {
       sortField: "disc_year",
@@ -69,6 +72,7 @@ sortField ja sortDirection muodostavat seurvaan objektin.
 Oletuksena yllämainittu esimerkkiobjekti, mikäli joko sortFieldiä tai sortDirectionia ei ole annettu.
 
 ## Lisenssi
+
 Joskus
 
 This research has made use of the NASA Exoplanet Archive, which is operated by the California Institute of Technology, under contract with the National Aeronautics and Space Administration under the Exoplanet Exploration Program.
