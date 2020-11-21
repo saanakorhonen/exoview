@@ -86,6 +86,7 @@ const Information = ({ navigation, route }) => {
   console.log('info systeemi', system)
 
   return (
+    <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
     <View style={styles.container}>
       {loading
        ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
@@ -117,7 +118,8 @@ const Information = ({ navigation, route }) => {
       </ScrollView>
       )}
 
-    </View>   
+    </View>  
+    </ImageBackground> 
   )
 }
 
@@ -125,14 +127,14 @@ const Information = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#0E1D32',
+    //backgroundColor: '#0E1D32',
   },
   nameBox: {
     flex: 0.2,
     flexDirection:'row',
     justifyContent:'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(82, 113, 255, 0.7)',
+    backgroundColor: 'rgba(82, 113, 255, 0.5)',
     borderWidth:1,
     borderBottomLeftRadius: 30,
     borderBottomRightRadius:30
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
   visualisationButton: {
     flexDirection: 'row',
     justifyContent:'center',
-    backgroundColor:'rgba(82, 113, 255, 0.7)',
+    backgroundColor:'rgba(82, 113, 255, 0.5)',
     padding: 20,
     marginHorizontal: 10,
     marginTop: 10,

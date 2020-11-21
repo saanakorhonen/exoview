@@ -37,7 +37,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignContent:'center',
-    backgroundColor: 'rgb(25, 25, 25)'
   },
   planetBox :{
     flex:4,
@@ -45,7 +44,7 @@ const styles = StyleSheet.create({
   textBox: {
     flex:1,
     justifyContent:'center',
-    backgroundColor: 'rgba(82, 113, 255, 0.7)',
+    backgroundColor: 'rgba(82, 113, 255, 0.5)',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10
   }

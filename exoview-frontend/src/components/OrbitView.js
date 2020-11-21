@@ -15,7 +15,6 @@ const OrbitView = ({ eccentricity }) => {
 		<View
 			style={{
 				flex: 2,
-				backgroundColor: "black",
 				justifyContent: "center",
 				alignItems: "center",
 			}}>

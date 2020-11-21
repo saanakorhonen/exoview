@@ -4,6 +4,7 @@ import {  FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView } fr
 import { parse } from 'fast-xml-parser';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
+import { MaterialIcons } from '@expo/vector-icons';
 import { set } from 'react-native-reanimated';
 
 //Planeettojen etsimisikkuna
@@ -121,40 +122,40 @@ const Search = ({ navigation, route } ) => {
     //Palauttaa hakunäkymän
     return (
         
-            <MenuProvider /*style={padding}*/ on>
-                <Menu onSelect={filter => 
+            <MenuProvider style={{ backgroundColor: '#0E1D32', padding: 5}} on>
+                    <View style={styles.searchBar}>
+                        <TextInput style={styles.textInput} onChangeText={term => handleTextChange(term)}></TextInput>
+                    <TouchableOpacity style ={styles.searchIcon} onPress={() => parseSearchTerms()}>
+                        {/*<Text style={styles.buttonText}>Search</Text>*/}
+                        <MaterialIcons name="search" size={35} color="white" />
+                    </TouchableOpacity>    
+                    </View>
+                    <View style={{flexDirection: 'row', alignItems: 'flex-end', justifyContent:'flex-end'}}>
+                    <Menu style={styles.menu} onSelect={filter => 
                                     {
                                         setFilter(filter);
                                         changeMenuTrigger(filter);
                                     }}>
-                        <MenuTrigger /*onPress={() => setMenuProviderStyle()}*/>
-                            <Text>{menuTriggerText}</Text>
+                        <MenuTrigger  /*onPress={() => setMenuProviderStyle()}*/ >
+                            <Text style={{fontSize: 14, color:'white'}}>{menuTriggerText}</Text>
                         </MenuTrigger>
-
-                        <MenuOptions>
+                        <MenuOptions style={{backgroundColor: '#0E1D32', padding: 10}}>
                             <MenuOption value={"pl_name"}>
-                                <Text>Planet name</Text>
+                                <Text style={{color:'white', padding: 5}}>Planet name</Text>
                             </MenuOption>
-                            
                             <MenuOption value={"hostname"}>
-                                <Text>Host star</Text>
+                                <Text style={{color:'white', padding: 5}}>Host star</Text>
                             </MenuOption>
 
                             <MenuOption value={"pl_rade"}>
-                                <Text>Radius</Text>
+                                <Text style={{color:'white', padding: 5}}>Radius</Text>
                             </MenuOption>
 
                             <MenuOption value={"pl_masse"}>
-                                <Text>planet masse</Text>
+                                <Text style={{color:'white', padding: 5}}>Planet masse</Text>
                             </MenuOption>
                         </MenuOptions>
-
                     </Menu>
-                    <View style={styles.searchBar}>
-                        <TextInput style={styles.textInput} onChangeText={term => handleTextChange(term)}></TextInput>
-                    <TouchableOpacity style={styles.button} onPress={() => parseSearchTerms()}>
-                        <Text style={styles.buttonText}>Search</Text>
-                    </TouchableOpacity>    
                     </View>
                     {/*
                     <ScrollView onScroll={({nativeEvent}) => {loadNext(nativeEvent);}} scrollEventThrottle={16}>
@@ -214,15 +215,15 @@ const PlanetBrief = ( props ) => {
         return null;
     }
 
-    var view =  <View>    
+    var view =  <View style={{flexDirection:'row'}}>    
                     <View style={styles.infoWrapper}>
-                        <Text>
+                        <Text style={styles.infoText}>
                             Host star: { props.data.hostname}
                         </Text>
-                        <Text>
+                        <Text style={styles.infoText}>
                             Masse: { props.data.pl_masse}
                         </Text>
-                        <Text>
+                        <Text style={styles.infoText}>
                             Radius: { props.data.pl_rade}
                         </Text>
                         {/*
@@ -233,7 +234,7 @@ const PlanetBrief = ( props ) => {
                     </View>
                     <View style = {styles.buttonWrapper}>
                         <TouchableOpacity style={styles.button} onPress={() => handleStarsystem2(props)}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => handleStarsystem(props)}><Text style={styles.buttonText}>View host star</Text></TouchableOpacity>
+                        <TouchableOpacity style={styles.button} onPress={() => handleStarsystem(props)}><Text style={styles.buttonText}>Stellar System</Text></TouchableOpacity>
                     </View>
                 </View>
 
@@ -309,15 +310,28 @@ const fetchData = async ( props ) => {
 
 const styles = StyleSheet.create({
     container: {
-        padding: 20
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        padding:10,
+        marginHorizontal: 10,
+        marginBottom: 20,
+        borderRadius: 10, 
+
     },
 
     textInput: {
-        width: 200,
-        backgroundColor: "gray",
-        marginRight: 10,
+        width: '90%',
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderTopLeftRadius:10,
         borderBottomLeftRadius: 10,
-        borderBottomRightRadius: 10
+        padding:12,
+        position: 'relative'
+    },
+    searchIcon: {
+        backgroundColor: 'rgba(255,255,255,0.2)',
+        borderTopRightRadius:10,
+        borderBottomRightRadius: 10,
+        padding: 3
+
     },
 
     menuProvider:{
@@ -327,27 +341,36 @@ const styles = StyleSheet.create({
         
     },
     searchBar: {
-    
+        //backgroundColor: '#0E1D32',
         flexDirection: "row",
         justifyContent: "center",
-        zIndex:1
+        alignItems: 'center',
+        zIndex:1,
+        marginHorizontal: 10,
+        marginBottom:10,
+        marginTop: 15,
     },
 
     infoWrapper: {
         justifyContent: "center",
-        alignContent: "center"
+        alignContent: "center",
+        flex: 2
     },
 
     headerWrapper: {
         flexDirection:'row',
-        justifyContent:'center',
-        backgroundColor: '#134261',
-        borderWidth:1,
-        borderColor: '#134261',
+        justifyContent:'flex-start',
+        //backgroundColor: '#134261',
+       // borderWidth:1,
+        //borderColor: '#134261',
         borderBottomLeftRadius: 40,
         borderBottomRightRadius:40,
         borderTopLeftRadius: 40,
-        borderTopRightRadius: 40
+        borderTopRightRadius: 40, 
+        
+    },
+    infoText: {
+        color: 'white'
     },
 
     header: {
@@ -355,20 +378,34 @@ const styles = StyleSheet.create({
         fontWeight: "bold",
         color: "#ffff"
     },
-
+    pBrief: {
+        backgroundColor: 'white'
+    },
     buttonWrapper: {
-        flexDirection: "row",
-        justifyContent: "center"
+        //flexDirection: "row",
+        alignItems: "stretch",
+        
     },
 
     button:{
-        backgroundColor:'#134261',
+        alignItems:'center',
+        backgroundColor:'rgba(82, 113, 255, 0.7)',
         color: "white",
-        padding: 10
+        padding: 10,
+        margin: 2,
+        borderRadius: 10
     },
 
     buttonText: {
         color: "white"
+    },
+    menu: {
+        width: '40%',
+        padding: 10,
+        alignItems:'flex-end',
+        marginBottom:10
+        
+
     }
 });
 

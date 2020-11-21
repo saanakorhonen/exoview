@@ -34,7 +34,6 @@ const PlanetDistanceComparison = ({ planet }) => {
 				flex: 1,
 				justifyContent: "center",
 				alignItems: "flex-start",
-        backgroundColor: "black",
         marginLeft: 20,
 			}}>
 			<View style={styles.line}>

@@ -96,6 +96,7 @@ export default function Stars({ star }) {
 					height: Dimensions.get("window").width / 2,
 					marginHorizontal: 10,
 				}}>
+					
 				<Text style={styles.title}>{star.hostname}</Text>
 				<Text style={styles.paragraph}>
 					The Star shown behind is {bStar.name}. It's stellar effective

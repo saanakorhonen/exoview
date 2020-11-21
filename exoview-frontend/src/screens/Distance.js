@@ -70,7 +70,6 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		flexDirection: "row",
-		backgroundColor: "black",
 		justifyContent: "center",
 	},
 	distanceBox: {
@@ -81,7 +80,7 @@ const styles = StyleSheet.create({
 		flex: 3,
 
 		//width: Dimensions.get('window').width /2,
-		backgroundColor: "black",
+
 
 	},
 	infoBoxTitle: {

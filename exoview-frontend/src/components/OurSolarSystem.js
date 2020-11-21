@@ -13,6 +13,8 @@ jupiter 5.4588
 saturnus 10.1238
 uranus 20.11
 neptunus 30.33
+
+ 
 */
 const OurSolarSystem= ({ planet }) => {
 

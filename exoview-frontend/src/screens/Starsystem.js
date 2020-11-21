@@ -38,11 +38,13 @@ const Starsystem = ({ route, navigation }) => {
     if (lahinAU < 1.0) {
         auEarth = auEarth/ lahinAU // aseteteaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
         pituus =  auEarth *kaukaisinPlaneetta
+        
     } else {
         pituus = kaukaisinPlaneetta * auEarth
         etaisyydet.shift();etaisyydet.shift() //poistetaan näkymästä merkurius ja venus
     }
     if (pituus < hPhone) pituus=hPhone // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
+
 
     return ( 
         <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
