@@ -119,3 +119,6 @@ web-build/
 
 # environmental variables
 .env
+
+#database
+db.json

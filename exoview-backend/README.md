@@ -25,10 +25,13 @@ Serverin api noudattelee vapaasti REST-tyyppistä APIa. Serveriin otetaan yhteys
 
 Parametrit:
 
+from: pakollinen, etsittävän collectionin nimi. Serverissä käytössä tällä hetkellä "planets" ja "stars".
+
 searchterm: vapaaehtoinen, vapaa tekstihaku. Tietokanta testaa merkkijonon perusteella, kuuluuko jokin tietokannan dokumenteista hakuun. Jos joko searchterm tai filter puuttuu, palautetaan kaikki entryt (oletushaku)
 
 filter: vapaaehtoinen, kenttä jota haetaan. Sallittuja kenttiä ovat tällä hetkellä
 
+planets:
     "hostname"
     "pl_name"
     "pl_rade"
@@ -40,6 +43,9 @@ filter: vapaaehtoinen, kenttä jota haetaan. Sallittuja kenttiä ovat tällä he
     "pl_orbeccen"
     "disc_year"
     "dateAdded"
+
+stars:
+    "hostname"
     "st_spectype"
     "st_teff"
     "st_rad"
