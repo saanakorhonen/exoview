@@ -1,6 +1,7 @@
 "use strict";
 import React from "react";
-import { TouchableOpacity, View, Dimensions, Text } from "react-native";
+import { TouchableOpacity, View, Dimensions, Text, Alert } from "react-native";
+import { AntDesign } from '@expo/vector-icons';
 
 
 /**
@@ -42,8 +43,9 @@ export default function Stars({ planet, system,  navigation }) {
   } 
   
   return (
-    <TouchableOpacity  onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
+    <View>
       <View  style={{flexDirection: 'row', alignItems:'center', justifyContent: 'center'}}>
+      <TouchableOpacity  onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
       <View style={{  alignItems: 'center', justifyContent: 'center', width:Dimensions.get('window').width / 2 }}  >
       {/** background star */}
         <View style={{ position: 'relative', backgroundColor: bPlanet.color, height: WW()* bPlanet.relativeSize, width: WW()*bPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}> 
@@ -52,13 +54,24 @@ export default function Stars({ planet, system,  navigation }) {
         <View style={{ position: 'absolute',backgroundColor: fPlanet.color,  height: WW()* fPlanet.relativeSize, width: WW()*fPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}>
         </View>
       </View>
+    </TouchableOpacity> 
       <View >
-        <Text style={{color:'white'}}>{planet.pl_name}</Text>
-        <Text style={{color:'white'}}>radius: {planet.pl_rade}</Text>
-        <Text style={{color:'white'}}>distance: {planet.pl_orbsmax}AU</Text>
+        <Text style={{color:'white'}}>{planet.pl_orbsmax} AU</Text>
+        <Text style={{color:'lightblue', marginRight: 10, textDecorationLine: 'underline'}} onPress={() => {
+							Alert.alert(`Info about ${planet.pl_name}`,
+                  `${planet.pl_name} has ${planet.pl_rade} radius of earth and ${planet.pl_masse} mass of Earth. 
+                  Its orbit is ${planet.pl_orbsmax} of Earths and revolves arounds its star every days.`
+								);
+							}}>{planet.pl_name} </Text>
+ 
+        {/*
+               <AntDesign name="infocirlce" size={24} color="white"  />
+        <Text style={{color:'white'}}>{planet.pl_name} has {planet.plrade} radius of earth and {planet.pl_masse}
+          mass of Earth. Its orbit is {planet.orbsmax} of Earths and revolves arounds its star every {planet.orbper}
+        days.</Text> */}
       </View>
       </View>
-    </TouchableOpacity>  )
+      </View>)
 }
 
 /**
