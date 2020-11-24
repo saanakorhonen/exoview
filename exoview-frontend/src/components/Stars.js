@@ -95,14 +95,17 @@ export default function Stars({ star }) {
 					flex: 1,
 					height: Dimensions.get("window").width / 2,
 					marginHorizontal: 10,
-				}}>
-					
+				}}>	
 				<Text style={styles.title}>{star.hostname}</Text>
 				<Text style={styles.paragraph}>
+				    {star.hostname} has {star.st_rad} radius of the sun and {star.st_mass} mass of the sun.
+					It has the stellar age of {star.st_age} and {star.st_teff} K hot. The star spins around its own axis in {star.st_rotp} days.
+				</Text>
+				{/*<Text style={styles.paragraph}>
 					The Star shown behind is {bStar.name}. It's stellar effective
 					temperature is {bStar.teff} K. The star infront is {fStar.name} and
 					it's stellar effective temperature is {fStar.teff}
-				</Text>
+				   </Text> */}
 			</View>
 		</View>
 	);
