@@ -7,7 +7,7 @@ const fetch = require('node-fetch');
 const parser = require('fast-xml-parser');
 const http = require('http').createServer(app).listen(CLIENT_PORT);
 const io = require('socket.io')(http);
-
+const cors = require('cors');
 const planetSchema = require('./models/planet');
 const starSchema = require('./models/star');
 const Db = require('./src/db');
@@ -18,6 +18,9 @@ var defaultUrl =
 
 var db;
 
+/**
+ * Esimerkki. TODO: Poista
+ */
 io.on('toimi', (msg) => {
 	console.log(msg);
 });
@@ -109,6 +112,7 @@ const parseData = async (data) => {
 				pl_orbper: Number(planet[7]),
 				pl_orbeccen: Number(planet[8]),
 				disc_year: planet[9],
+				/*
 				st_spectype: planet[10],
 				st_teff: Number(planet[11]),
 				st_rad: Number(planet[12]),
@@ -119,7 +123,7 @@ const parseData = async (data) => {
 				st_rotp: Number(planet[17]),
 				st_radv: Number(planet[18]),
 				sy_bmag: Number(planet[19]),
-				sy_vmag: Number(planet[20]),
+				sy_vmag: Number(planet[20]),*/
 				dateAdded: new Date(),
 			};
 
@@ -181,7 +185,9 @@ const parseData = async (data) => {
 	db.write();
 };
 
-
+/**
+ * Tekee löydetyistä tähdistä oman collectionin
+ */
 const parseStars = async (foundStars) => {
 	console.log('Parsing stars...');
 
@@ -274,9 +280,10 @@ app.get('/stars', (req, res) => {
 });
 
 /**
- * Hakee tietokannasta hakuehtojen perusteella planeettoja
+ * Hakee tietokannasta hakuehtojen perusteella elementtejä
  */
 app.get('/search', async (req, res) => {
+	//console.log('server.js: 282 täällä')
 	const filter = req.query.filter;
 	const searchTerm = req.query.searchterm;
 	var offset = req.query.offset;
@@ -356,3 +363,7 @@ const server = app.listen(PORT, async () => {
 	}
 	setInterval(requestData, 21600000);
 });
+
+
+app.use(cors());
+//app.use(express.json())

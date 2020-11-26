@@ -27,7 +27,6 @@ const Information = ({ navigation, route }) => {
   })
 
   useEffect(() => {
-    console.log(route.params)
     if (route.params.planet !=undefined) {
       console.log('infossa useEffect if',route.params)
       const p = route.params.planet
@@ -82,19 +81,17 @@ const Information = ({ navigation, route }) => {
     return propPlanet
   }
 
-  
-  console.log('info systeemi', system)
 
   return (
     <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
     <View style={styles.container}>
       {loading
-       ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
+      ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
           <ActivityIndicator size='large' color='rgba(255,255,255, 0.4)' />
           <Text style={{padding: 10, marginBottom: 50, color:'rgba(255,255,255, 0.4)'}}>Loading</Text>
           <Text style={{padding: 10,color:'rgba(255,255,255, 0.2)'}}>Eksolaakson tarinoita 2020</Text>
         </ImageBackground>
-       :(
+      :(
       <ScrollView
         horizontal={true}>
           <View style={{ width: screenWidth}}>

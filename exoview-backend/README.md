@@ -25,7 +25,7 @@ Serverin api noudattelee vapaasti REST-tyyppistä APIa. Serveriin otetaan yhteys
 
 Parametrit:
 
-from: pakollinen, etsittävän collectionin nimi. Serverissä käytössä tällä hetkellä "planets" ja "stars".
+from: pakollinen, etsittävän collectionin nimi. Serverissä käytössä tällä hetkellä **"planets"** ja **"stars"**.
 
 searchterm: vapaaehtoinen, vapaa tekstihaku. Tietokanta testaa merkkijonon perusteella, kuuluuko jokin tietokannan dokumenteista hakuun. Jos joko searchterm tai filter puuttuu, palautetaan kaikki entryt (oletushaku)
 
@@ -57,6 +57,7 @@ stars:
     "st_radv"
     "sy_bmag"
     "sy_vmag"
+    "planetIds"
 
 offset: vapaaehtoinen, aloitusindeksi näytettäville tuloksille. Oletus on 0.
 

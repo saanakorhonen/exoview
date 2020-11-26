@@ -20,7 +20,7 @@ TODO: sklaaukset fiksusti
 TODO: tekstit
 */
 const Starsystem = ({ route, navigation }) => {
-    console.log('satrsyst', route.params)
+    //console.log('satrsyst', route.params)
 
     const hPhone = Dimensions.get('window').height
     const hStar = Dimensions.get('window').width / 2
@@ -53,7 +53,7 @@ const Starsystem = ({ route, navigation }) => {
     if (pituus < hPhone) pituus=hPhone /2 // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
 
 
-    console.log('auearth', auEarth)
+    //console.log('auearth', auEarth)
     return ( 
         <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
             
@@ -89,7 +89,7 @@ const Starsystem = ({ route, navigation }) => {
 
 function solarSystem(pituus, etaisyydet) {
 for (const p in etaisyydet) {
-        if (pituus <etaisyydet[p].au) {console.log('returnissa'); return etaisyydet[p].au}
+        if (pituus <etaisyydet[p].au) {console.log('Starsystem.js:92 returnissa'); return etaisyydet[p].au}
 
 }
     return pituus

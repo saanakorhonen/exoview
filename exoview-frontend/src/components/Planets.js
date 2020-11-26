@@ -12,7 +12,7 @@ import { AntDesign } from '@expo/vector-icons';
  *  size = planeetan koko numerona (pl_rade)
  */
 export default function Stars({ planet, system,  navigation }) {
-    console.log(planet.pl_rade)
+    console.log('Planets.js:15', planet.pl_rade)
 
   const pEarthRel = planet.pl_rade / 1.0;
 

@@ -60,15 +60,15 @@ const Search = ({ navigation, route } ) => {
             setMenuTriggerText('Search Options'); 
             return setFoundPlanets(allPlanets);
         }
-      const searchedWord = '^' + searchTerm
-      const filteredPlanetsAr = (searchFilter !== 'pl_rade' && searchFilter !== 'pl_masse' 
-      
-       ? (allPlanets.filter(planet => planet[searchFilter].toLowerCase().match(searchTerm.toLowerCase())))
-       : (allPlanets.filter(planet => planet[searchFilter].toString().match(searchedWord))))
-      
-      setFoundPlanets(filteredPlanetsAr)
-      Keyboard.dismiss()
-      
+        const searchedWord = '^' + searchTerm
+        const filteredPlanetsAr = (searchFilter !== 'pl_rade' && searchFilter !== 'pl_masse' 
+
+        ? (allPlanets.filter(planet => planet[searchFilter].toLowerCase().match(searchTerm.toLowerCase())))
+        : (allPlanets.filter(planet => planet[searchFilter].toString().match(searchedWord))))
+
+        setFoundPlanets(filteredPlanetsAr)
+        Keyboard.dismiss()
+
     }
 
     const handleTextChange = (term) => {
@@ -80,7 +80,7 @@ const Search = ({ navigation, route } ) => {
 
         changeSearchTerm(term)
     }
-   
+
     //Luo uuden api queryn
     const createQuery = () => {
         var hakuehto = searchFilter;
@@ -167,11 +167,9 @@ const Search = ({ navigation, route } ) => {
                         renderItem={({ item }) => (
                             <PlanetBrief navigation={navigation} data={item} allPlanets={foundPlanets} />
                         )}
-                        keyExtractor={(item) => item.pl_name}
-                        >
-                       
+                        keyExtractor={(item) => item._id}
+                    >    
                     </FlatList>
-
             </MenuProvider>     
 
     )
@@ -289,7 +287,7 @@ const fetchData = async ( props ) => {
     })
 }
     
-      const setStars = (arr,data) => {
+    const setStars = (arr,data) => {
         const star = arr.TD
         const propPlanet =
             {
@@ -303,7 +301,7 @@ const fetchData = async ( props ) => {
             }
         return propPlanet
     }
-     
+    
 
 
 

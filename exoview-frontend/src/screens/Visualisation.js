@@ -4,7 +4,7 @@ import { MaterialIcons } from '@expo/vector-icons';
 import Planet from '../components/Planet';
 
 const Visualisation = ({ planet }) => {
-  console.log(planet)
+  //console.log(planet)
 
   const params = ( param ) => param  === undefined ? 'an unknown amount' : param
   

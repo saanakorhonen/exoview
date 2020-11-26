@@ -22,11 +22,8 @@ var Collection = class {
                 return searchTerm.test(entry[filter]);
             })
 
-        else foundResults = this._entries;
+        else var foundResults = this._entries.filter( (entry) => (entry !== 0 && entry !== -1) );
 
-
-
-    
         var sortField = sort.field;
         var sortDirection = sort.direction;
 
@@ -36,6 +33,7 @@ var Collection = class {
 
         var results = foundResults.slice(offset, limit);
 
+        console.log(results);
 
         return new Promise((resolve, reject) => {
             var success = results !== undefined;
@@ -45,7 +43,9 @@ var Collection = class {
     }
 
 
-    //Sort-funktio. Sorttaa entryt annetun kentän perusteella ja antaa suunnan.
+    /**
+     * Sort-funktio. Sorttaa entryt annetun kentän perusteella ja antaa suunnan.
+     */
     sortResults(a, b, sortField, sortDirection) {
         var compare1 = a[sortField];
         var compare2 = b[sortField];
@@ -216,8 +216,8 @@ var Collection = class {
         var index = (key + 13 * i + 93 * i * i) % this._entries.length;
 
         if (this._entries[index] === EMPTY) {
-          console.log("Slot empty: " + this._entries[index]._id + " looking for " + id);
-          return undefined;
+            console.log("Slot empty: " + this._entries[index]._id + " looking for " + id);
+            return undefined;
         };
 
         if (this._entries[index]._id === id) {

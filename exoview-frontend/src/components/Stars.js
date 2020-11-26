@@ -13,7 +13,7 @@ let bColor = "lightblue";
  *  size = planeetan koko numerona (pl_rade)
  */
 export default function Stars({ star }) {
-	console.log(star.st_rad);
+	console.log('Stars.js:16 ', star.st_rad);
 	/*
   let relativeSize = 1.0;
   exoSize = props.planet.pl_rade;
@@ -64,7 +64,7 @@ export default function Stars({ star }) {
 		// padding = (WW() - (WW() * relativeSize)) / 2;
 	}
 
-	console.log(bStar.color);
+	console.log('Stars.js:67 ', bStar.color);
 	return (
 		<View style={{ flexDirection: "row" }}>
 			<View style={{ alignItems: "center", justifyContent: "center" }}>

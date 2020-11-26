@@ -12,41 +12,46 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 //saa argumenttina tuon navigaation jotta pystytään kulkemaan screeneistä toiseen 
 const Mainmenu = ({ navigation }) => {
   // Jos hakee tällä: https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+ps+where+disc_year+=+2020+and+default_flag+=+1+order+by+disc_pubdate+desc
-  // jossa siis huomioitu publicity date (hakee ps data basesta), niin tulee paljon tyhjää, eli backissä pitää ehkä katsoa miten niitä tietoja saa siistittyä ja yhdistettyä
+  // jossa siis huomioitu publication date (hakee ps data basesta), niin tulee paljon tyhjää, eli backissä pitää ehkä katsoa miten niitä tietoja saa siistittyä ja yhdistettyä
   // nyt alla oleva on pscomppars, missä siis ei tyhjiä, mutta ei myöskääm discovery publicity datea
-  var defaultUrl = 'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+200+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+where+disc_year+=+2020' //order+by+disc_year+desc'
+  var defaultUrl = 'http://192.168.43.209:8080/search?from=planets' //https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+200+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+where+disc_year+=+2020' //order+by+disc_year+desc'
   const [foundPlanets, setFoundPlanets] = useState([]) 
   const [loading, setLoading] = useState(true)
 
   //Aloittaa hakemalla datan
   useEffect(() => {
+    console.log('Mainmenu.js:23 täällä');
     if (loading) {
       fetchData(defaultUrl)
-      .then((data) => {
+      /*.then((data) => {
         const arr = setPlanets(data)
-        setFoundPlanets(arr);
-        setLoading(false)
-        console.log(foundPlanets.length)
-        console.log(loading)
-      })
-    }
+        setFoundPlanets(arr);*/
+      }
+    
   }, []);
 
   //Hakee default-datan tässä vaiheessa
   const fetchData = async ( props ) => {
     const response = await fetch(props);
 
-    const teksti = await response.text();
-    const objects = await parse(teksti);
+    const objects = await response.json();
+    //const objects = await parse(teksti);
 
+    //console.log(objects);
+    setFoundPlanets(objects)
+    setLoading(false)
+    
+    //console.log('Mainmenu.js:29 foundPlanets length: ', foundPlanets.length)
+    console.log('Loading: ', loading)
+    /*
     const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-    console.log('täällä Mainmenu fetchdatassa')
+    //console.log('täällä Mainmenu fetchdatassa')
     return new Promise((resolve, reject) => {
         var success = planetArray != undefined;
         success ? resolve(planetArray) : reject('Query failed');
-    })
+    })*/
   }
-
+ 
   const setPlanets = (arr) => {
     let arrayP = []
     arr.map(obj => {
@@ -67,8 +72,9 @@ const Mainmenu = ({ navigation }) => {
         arrayP = arrayP.concat(propPlanet)
     })
     return arrayP
- };
+};
 
+console.log('mainmenu 78',foundPlanets.length)
 
 	return (
     <View style={{ flex:1, justifyContent: 'center', }}>

@@ -49,7 +49,11 @@ var Db = class {
         fs.writeFileSync(this._path, JSON.stringify(this._collections));
     }
 
-
+    /**
+     * Luo tietokantaan uuden collectionin
+     * Tarvitsee nimen ja validaattorin
+     * Ei tee mitään jos saman niminen collection on jo olemassa.
+     */
     setCollection(name, validator) {
         if (this._collections[name] !== undefined) return;
 
@@ -57,7 +61,11 @@ var Db = class {
         return this._collections[name];
     }
 
-
+    /**
+     * Hakee tietoa collectionista
+     * Tarvitsee collectionin nimen
+     * ja parametrit
+     */
     async find(collection, parameters) {
         var promise = await this._collections[collection].find(parameters);
         return promise;
