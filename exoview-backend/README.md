@@ -22,6 +22,7 @@ const newPlanetInfo = {
 ## Api ja sen käyttö
 
 Serverin api noudattelee vapaasti REST-tyyppistä APIa. Serveriin otetaan yhteys get-komennolla, jossa määritellään tietokantahaun parametrit. Serverin ymmärtämä komento on search, jonka jälkeen lisätään parametrit.
+search/id mahdollistaa id:n perusteella hakemisen.
 
 Parametrit:
 

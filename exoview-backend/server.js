@@ -19,13 +19,6 @@ var defaultUrl =
 var db;
 
 /**
- * Esimerkki. TODO: Poista
- */
-io.on('toimi', (msg) => {
-	console.log(msg);
-});
-
-/**
  * Yhdistää tietokantaan, palauttaa promisen joka kertoo yhteyden joko onnistuneen tai epäonnistuneen,
  * mikäli db:n sai tehtyä.
  */
@@ -210,12 +203,12 @@ const parseStars = async (foundStars) => {
 
 		var defaultPlanet = planets[0];
 
-		if (planets[0] == undefined) {
+		/*if (planets[0] == undefined) {
 			console.log('?????');
 			console.log(planets);
 			console.log(starName);
 			console.log(foundStars);
-		}
+		}*/
 
 		var star = {
 			hostname: defaultPlanet.hostname,
@@ -279,6 +272,29 @@ app.get('/stars', (req, res) => {
 	res.send(db._collections["stars"]._entries);
 });
 
+
+/**
+ * Etsii id:n perusteella entryn tietokannasta
+ */
+app.get('/search/id', async (req, res) => {
+	const id = req.query.id
+	const collection = req.query.from;
+
+	if (id === undefined || collection === undefined) {
+		res.set(500);
+		res.send();
+	}
+
+
+	db.findEntryById(collection, id)
+		.then(data => {
+			res.send(data);
+		})
+		.catch(err => {
+			res.set(500);
+			res.send(err);
+		})
+})
 /**
  * Hakee tietokannasta hakuehtojen perusteella elementtejä
  */

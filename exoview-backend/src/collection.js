@@ -33,8 +33,6 @@ var Collection = class {
 
         var results = foundResults.slice(offset, limit);
 
-        console.log(results);
-
         return new Promise((resolve, reject) => {
             var success = results !== undefined;
 
