@@ -14,7 +14,7 @@ const Mainmenu = ({ navigation }) => {
   // Jos hakee tällä: https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+ps+where+disc_year+=+2020+and+default_flag+=+1+order+by+disc_pubdate+desc
   // jossa siis huomioitu publication date (hakee ps data basesta), niin tulee paljon tyhjää, eli backissä pitää ehkä katsoa miten niitä tietoja saa siistittyä ja yhdistettyä
   // nyt alla oleva on pscomppars, missä siis ei tyhjiä, mutta ei myöskääm discovery publicity datea
-  var defaultUrl = 'http://localhost:8080/search?from=planets' //https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+200+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+where+disc_year+=+2020' //order+by+disc_year+desc'
+  var defaultUrl = 'http://192.168.43.209:8080/search?from=planets' //https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+200+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+where+disc_year+=+2020' //order+by+disc_year+desc'
   const [foundPlanets, setFoundPlanets] = useState([]) 
   const [loading, setLoading] = useState(true)
 
