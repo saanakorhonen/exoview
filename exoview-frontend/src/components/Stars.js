@@ -66,7 +66,7 @@ export default function Stars({ star }) {
 
 	console.log('Stars.js:67 ', bStar.color);
 	return (
-		<View style={{ flexDirection: "row" }}>
+		<View style={{ flexDirection: "row"}}>
 			<View style={{ alignItems: "center", justifyContent: "center" }}>
 				<View
 					style={{
@@ -95,6 +95,7 @@ export default function Stars({ star }) {
 					flex: 1,
 					height: Dimensions.get("window").width / 2,
 					marginHorizontal: 10,
+					justifyContent:'center'
 				}}>	
 				<Text style={styles.title}>{star.hostname}</Text>
 				<Text style={styles.paragraph}>

@@ -12,9 +12,14 @@ const Stack = createStackNavigator();
 //stack navigaatio plneetan infosta planeetan visualisaatioihin
 function InfoVisualisationStack() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator
+      screenOptions={{
+        headerTintColor: 'white',
+        headerStyle: { backgroundColor: '#0E1D32'}
+      }}
+    >
 	    <Stack.Screen name="Mainmenu" component={Mainmenu} options={{ headerTransparent: true, headerTitle: '' }}/>
-      <Stack.Screen name="Information" component={Information} />
+      <Stack.Screen name="Information" component={Information}  />
       <Stack.Screen name="Visualisation" component={Visualisation} />
 	    <Stack.Screen name="Distance" component={Distance} />
       <Stack.Screen name="About" component={About} />

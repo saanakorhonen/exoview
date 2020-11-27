@@ -26,7 +26,7 @@ const Starsystem = ({ route, navigation }) => {
     const hStar = Dimensions.get('window').width / 2
     const star = route.params.star != undefined ? route.params.star : route.params
     const system = {star: star, planets: route.params.planets}
-    let  auEarth =hPhone/8// 1 AU
+    let  auEarth =hPhone/5// 1 AU
 
     //meidän aurinkokunnan planettoojen etäisyydet
     var etaisyydet = [ {name: 'Mercury', au: 0.4667}, {name:'Venus', au: 0.72813}, {name: 'Earth', au:1},{name:"Mars",au:1.666},{name:"Jupiter",au:5.4588},{name:"Saturn",au:10.1238},{name:"Uranus",au:20.11},{name:"Neptune",au:30.33}];
@@ -39,7 +39,7 @@ const Starsystem = ({ route, navigation }) => {
     if (lahinAU < 1.0) {
         auEarth = auEarth/ lahinAU // aseteteaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
         pituus =  auEarth *kaukaisinPlaneetta +30
-        if (lahinAU > 0.48 )  etaisyydet.shift(); etaisyydet.shift()
+        if (lahinAU > 0.48 )  {etaisyydet.shift(); etaisyydet.shift()}
     } else  if (lahinAU < 31 ){
         pituus = kaukaisinPlaneetta * auEarth
         etaisyydet.shift();etaisyydet.shift() //poistetaan näkymästä merkurius ja venus
@@ -50,7 +50,7 @@ const Starsystem = ({ route, navigation }) => {
         
         
     }
-    if (pituus < hPhone) pituus=hPhone /2 // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
+    if (pituus < hPhone) pituus=hPhone  // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
 
 
     //console.log('auearth', auEarth)
@@ -58,13 +58,14 @@ const Starsystem = ({ route, navigation }) => {
         <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
             
             <ScrollView > 
+                {/*
             <View style={{height: 200}}>
                 <Text style={{color:'white'}}>Kissa</Text>
                 <Text style={{color:'white'}}>Kissa</Text>
                 <Text style={{color:'white'}}>Kissa</Text>
                 <Text style={{color:'white'}}>Kissa</Text>
                 <Text style={{color:'white'}}>Kissa</Text>
-            </View>
+                </View> */}
                 <View key = {2} style={styles.system}>
                     <Stars key={route.params.star.hostname} star={route.params.star}></Stars>
                 {/*jokaista planeettaa kohten palautetaan*/}
@@ -72,7 +73,7 @@ const Starsystem = ({ route, navigation }) => {
                         <DistanceOrbit height ={pituus}/>
                     </View>
                    {etaisyydet.map((planet) => 
-                         <View key={generateKey()} style={{ position: 'absolute', marginTop: auEarth*planet.au + hStar }}>
+                         <View key={generateKey()} style={{ position: 'absolute', marginTop: auEarth*planet.au + hStar}}>
                          <OurSolarSystem planet={planet}/>
                          </View>
                      )}
@@ -137,9 +138,9 @@ const generateKey = () => {
 const styles = StyleSheet.create({
     container: {
       flex: 1,
-
-      justifyContent:'flex-start',
+      //justifyContent:'flex-start',
       //justifyContent: 'center',
+     // alignItems: 'center',
       //backgroundColor: 'black',
       paddingTop: 10,
       paddingLeft: 10

@@ -81,7 +81,7 @@ const Information = ({ navigation, route }) => {
     return propPlanet
   }
 
-
+console.log('system', system)
   return (
     <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
     <View style={styles.container}>

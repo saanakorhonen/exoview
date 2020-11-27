@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, View, Dimensions, StyleSheet } from "react-native";
+import { Text, View, Dimensions, StyleSheet, Alert } from "react-native";
 import PlanetDistanceComparison from "../components/PlanetDistanceComparison";
 import OrbitView from "../components/OrbitView";
 
@@ -18,9 +18,9 @@ const Distance = ({ eplanet }) => {
 					<Text style={styles.infoBoxContent}>
 						{planet.pl_name} has a
 						<Text
-							style={{ color: "lightblue" }}
+							style={{ color: "rgba(82, 113, 255, 1.0)" }}
 							onPress={() => {
-								alert(
+								Alert.alert('Semimajor axis',
 									"The Semimajor axis is the distance from the center of an ellipse to its farthest edge. It can also be thought of as a rough estimate of the average distance of the planet from its host star."
 								);
 							}}>
@@ -30,9 +30,9 @@ const Distance = ({ eplanet }) => {
 						of{" "}
 						<Text style={{ color: "yellow" }}>{planet.pl_orbsmax + " "}</Text>
 						<Text
-							style={{ color: "lightblue" }}
+							style={{ color: "rgba(82, 113, 255, 1.0)" }}
 							onPress={() => {
-								alert(
+								Alert.alert('Astronomical unit',
 									"An astronomical unit (AU) is 149,597,900km, or roughly the average distance of the Earth from the sun."
 								);
 							}}>
@@ -48,9 +48,9 @@ const Distance = ({ eplanet }) => {
 					<Text style={styles.infoBoxContent}>
 						{planet.pl_name}'s orbit has an{" "}
 						<Text
-							style={{ color: "lightblue" }}
+							style={{ color: "rgba(82, 113, 255, 1.0)"}}
 							onPress={() => {
-								alert(
+								Alert.alert('Eccentricity',
 									"Eccentricity is a measure of how elliptical the orbit is, with 0 being perfectly circular and getting more elliptical as it approaches 1."
 								);
 							}}>
