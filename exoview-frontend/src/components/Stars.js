@@ -100,7 +100,7 @@ export default function Stars({ star }) {
 				<Text style={styles.title}>{star.hostname}</Text>
 				<Text style={styles.paragraph}>
 				    {star.hostname} has {star.st_rad} radius of the sun and {star.st_mass} mass of the sun.
-					It has the stellar age of {star.st_age} and {star.st_teff} K hot. The star spins around its own axis in {star.st_rotp} days.
+					It has the stellar age of {star.st_age} and {star.st_teff} K hot. The star spins around its own axis in {star.st_rotp !== "" ?star.st_rotp : 'unknown'} days.
 				</Text>
 				{/*<Text style={styles.paragraph}>
 					The Star shown behind is {bStar.name}. It's stellar effective

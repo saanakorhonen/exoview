@@ -43,7 +43,7 @@ const Starsystem = ({ route, navigation }) => {
         pituus =  auEarth *kaukaisinPlaneetta +30
         if (lahinAU > 0.48 )  {etaisyydet.shift(); etaisyydet.shift()}
     } else  if (lahinAU < 31 ){
-        pituus = kaukaisinPlaneetta * auEarth
+        pituus = kaukaisinPlaneetta * auEarth +30
         etaisyydet.shift();etaisyydet.shift() //poistetaan näkymästä merkurius ja venus
     } else {
         etaisyydet =[{name:"Neptune",au:30.44}]
@@ -80,7 +80,7 @@ const Starsystem = ({ route, navigation }) => {
                          </View>
                      )}
                     {route.params.planets.map((planet) =>
-                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*(planet?.pl_orbsmax ??1.0)+ hStar -(Dimensions.get('window').width / 16), marginBottom:(Dimensions.get('window').width / 16) }} >
+                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*(planet.pl_orbsmax  !== "" ? planet.pl_orbsmax: 1.0)+ hStar -(Dimensions.get('window').width / 16), marginBottom:(Dimensions.get('window').width / 16) }} >
                         <Planets planet={planet} navigation={navigation} system={system} />
                     </View>
                     )}
