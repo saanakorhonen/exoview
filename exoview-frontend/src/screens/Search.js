@@ -250,11 +250,13 @@ const PlanetBrief = ( props ) => {
 
 const handleStarsystem = (props,allPlanets) => {
     //console.log(props.allPlanets.length)
-    var nimi = props.data.pl_name;
-    var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
+    var nimi = props.data.hostname;
+    //var nimi = props.data.pl_name;
+    var kutsu ="http://192.168.10.1:8080/search?filter=hostname&searchterm="+nimi+"&limit=1&from=Stars"
+    //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
     fetchData(kutsu)
     .then((data) =>{
-        var star = setStars(data,props.data.hostname)
+        var star = data[0] //setStars(data,props.data.hostname)
         var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
         const system = {star: star, planets: tahdenplaneetat}
         props.navigation.navigate('StarSystem', system)
@@ -263,11 +265,13 @@ const handleStarsystem = (props,allPlanets) => {
 }
 const handleStarsystem2 = (props,allPlanets) => {
     //console.log(props.allPlanets.length)
-    var nimi = props.data.pl_name;
-    var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
+    var nimi = props.data.hostname;
+    //var nimi = props.data.pl_name;
+    var kutsu = "http://192.168.10.1:8080/search?filter=hostaname&searchterm=" + nimi + "&limit=1&from=Stars";
+    //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
     fetchData(kutsu)
     .then((data) =>{
-        var star = setStars(data,props.data.hostname)
+        var star =  data[0]     //setStars(data,props.data.hostname)
         var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
         const system = {star: star, planets: tahdenplaneetat}
         props.navigation.navigate('Information',{ planet:props.data, system: system} )
@@ -277,13 +281,13 @@ const handleStarsystem2 = (props,allPlanets) => {
 const fetchData = async ( props ) => {
     const response = await fetch(props);
 
-    const teksti = await response.text();
-    const objects = await parse(teksti);
+    //const teksti = await response.text();
+    const objects = await response.json();
 
-    const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
+    //const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
     return new Promise((resolve, reject) => {
-        var success = planetArray != undefined;
-        success ? resolve(planetArray) : reject('Query failed');
+        var success = objects != undefined;
+        success ? resolve(objects) : reject('Query failed');
     })
 }
     
