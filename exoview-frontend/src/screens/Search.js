@@ -248,49 +248,94 @@ const PlanetBrief = ( props ) => {
     )
 }
 
-const handleStarsystem = (props,allPlanets) => {
+const handleStarsystem = (props) => {
+    //console.log(props.data)
     //console.log(props.allPlanets.length)
     var nimi = props.data.hostname;
+    //console.log(nimi)
     //var nimi = props.data.pl_name;
-    var kutsu ="http://192.168.10.1:8080/search?filter=hostname&searchterm="+nimi+"&limit=1&from=Stars"
+    var kutsu ="http://192.168.10.60:8080/search?filter=hostname&searchterm="+nimi+"&limit=1&from=stars" //
     //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
-    fetchData(kutsu)
-    .then((data) =>{
+    fetchData({kutsu: kutsu, allPlanets: props.allPlanets,data: props.data,navigation: props.navigation})
+    /*.then((data) =>{
         var star = data[0] //setStars(data,props.data.hostname)
         var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
         const system = {star: star, planets: tahdenplaneetat}
         props.navigation.navigate('StarSystem', system)
-    })
+    })*/
 
 }
-const handleStarsystem2 = (props,allPlanets) => {
-    //console.log(props.allPlanets.length)
-    var nimi = props.data.hostname;
-    //var nimi = props.data.pl_name;
-    var kutsu = "http://192.168.10.1:8080/search?filter=hostaname&searchterm=" + nimi + "&limit=1&from=Stars";
-    //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
-    fetchData(kutsu)
-    .then((data) =>{
-        var star =  data[0]     //setStars(data,props.data.hostname)
-        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
-        const system = {star: star, planets: tahdenplaneetat}
-        props.navigation.navigate('Information',{ planet:props.data, system: system} )
-    })
 
-}
 const fetchData = async ( props ) => {
-    const response = await fetch(props);
+    //console.log(props.kutsu)
+    //console.log(props.allPlanets)
+    //console.log(props.data)
+    const response = await fetch(props.kutsu);
 
     //const teksti = await response.text();
     const objects = await response.json();
+    console.log(objects)
+    var star =  objects[0]
+
+    //console.log(objects)
+    //setStars(data,props.data.hostname)
+    var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
+    const system = {star: star, planets: tahdenplaneetat}
+    props.navigation.navigate('StarSystem', system)
+
 
     //const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
+    /*
     return new Promise((resolve, reject) => {
         var success = objects != undefined;
         success ? resolve(objects) : reject('Query failed');
     })
+    */
+}   
+
+const handleStarsystem2 = (props) => {
+    //console.log(props.allPlanets.length)
+    var nimi = props.data.hostname;
+    //var nimi = props.data.pl_name;
+    var kutsu ="http://192.168.10.60:8080/search?filter=hostname&searchterm="+nimi+"&limit=1&from=stars" //
+    //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
+    fetchData2({kutsu: kutsu, allPlanets: props.allPlanets,data: props.data,navigation: props.navigation})
+    /*
+    .then((data) =>{
+        var star =  data[0]
+        console.log(data)
+        //setStars(data,props.data.hostname)
+        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
+        const system = {star: star, planets: tahdenplaneetat}
+        props.navigation.navigate('Information',{ planet:props.data, system: system} )
+    })
+    */
 }
-    
+const fetchData2 = async ( props ) => {
+    const response = await fetch(props.kutsu);
+
+    //const teksti = await response.text();
+    const objects = await response.json();
+
+    var star =  objects[0]
+    //setStars(data,props.data.hostname)
+    var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
+    const system = {star: star, planets: tahdenplaneetat}
+    props.navigation.navigate('Information',{ planet:props.data, system: system} )
+
+    //const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
+    /*
+    return new Promise((resolve, reject) => {
+        var success = objects != undefined;
+        success ? resolve(objects) : reject('Query failed');
+    })
+    */
+}
+
+
+
+
+
     const setStars = (arr,data) => {
         const star = arr.TD
         const propPlanet =
