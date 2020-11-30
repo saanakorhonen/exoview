@@ -15,7 +15,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 export default function Planets({ planet, system,  navigation }) {
     console.log('Planets.js:15', planet.pl_rade)
 
-  const pEarthRel = planet.pl_rade / 1.0;
+  const pEarthRel = (planet?.pl_rade ?? 1.0) / 1.0;
 
   const bPlanet = {
     color:"",
@@ -43,7 +43,7 @@ export default function Planets({ planet, system,  navigation }) {
       bPlanet.relativeSize = 1.0
       bPlanet.isEarth = true
       fPlanet.color = 'rgba(82, 113, 255, 1.0)';
-      fPlanet.relativeSize = planet.pl_rad;
+      fPlanet.relativeSize = planet?.pl_rad ?? 1.0;
       fPlanet.isEarth = false
 
      // padding = (WW() - (WW() * relativeSize)) / 2;
@@ -70,7 +70,7 @@ export default function Planets({ planet, system,  navigation }) {
         <Text style={{color:'white'}}>{planet.pl_orbsmax} AU</Text>
         <Text style={{color: 'rgba(82, 113, 255, 1.0)', marginRight: 10, textDecorationLine: 'underline'}} onPress={() => {
 							Alert.alert(`Info about ${planet.pl_name}`,
-                  `${planet.pl_name} has ${planet.pl_rade} radius of earth and ${planet.pl_masse} mass of Earth. \n\nIts orbit is ${planet.pl_orbsmax} of Earths and revolves arounds its star every ${planet.pl_orbper.toFixed(0)} days.`,
+                  `${planet.pl_name} has ${planet?.pl_rade ?? 'unknown'} radius of earth and ${planet?.pl_masse ?? 'unknown'} mass of Earth. \n\nIts orbit is ${planet?.pl_orbsmax ?? 'unknown'} of Earths and revolves arounds its star every ${planet?.pl_orbper.toFixed(0) ?? 'unknown'} days.`,
                   [
                     {
                       text: 'View exoplanet',

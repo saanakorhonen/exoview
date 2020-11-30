@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {  TouchableOpacity, FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView, Dimensions, ImageBackground } from 'react-native';
+import {  TouchableOpacity, View,StyleSheet, ScrollView, Dimensions, ImageBackground } from 'react-native';
 import DistanceOrbit from '../components/DistanceOrbit'
 import Stars from '../components/Stars'
 import OurSolarSystem from '../components/OurSolarSystem';
@@ -22,6 +22,8 @@ TODO: tekstit
 const Starsystem = ({ route, navigation }) => {
     //console.log('satrsyst', route.params)
 
+    //const areNaNs = route.params.planets.fi
+    console.log(route.params)
     const hPhone = Dimensions.get('window').height
     const hStar = Dimensions.get('window').width / 2
     const star = route.params.star != undefined ? route.params.star : route.params
@@ -53,12 +55,12 @@ const Starsystem = ({ route, navigation }) => {
     if (pituus < hPhone) pituus=hPhone  // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
 
 
+
     //console.log('auearth', auEarth)
-    return ( 
+    return (
         <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
-            
             <ScrollView > 
-                {/*
+                {/* Todo: tekstist tänne Sasu ehkä?
             <View style={{height: 200}}>
                 <Text style={{color:'white'}}>Kissa</Text>
                 <Text style={{color:'white'}}>Kissa</Text>
@@ -78,7 +80,7 @@ const Starsystem = ({ route, navigation }) => {
                          </View>
                      )}
                     {route.params.planets.map((planet) =>
-                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*planet.pl_orbsmax + hStar -(Dimensions.get('window').width / 16), marginBottom:(Dimensions.get('window').width / 16) }} >
+                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*(planet?.pl_orbsmax ??1.0)+ hStar -(Dimensions.get('window').width / 16), marginBottom:(Dimensions.get('window').width / 16) }} >
                         <Planets planet={planet} navigation={navigation} system={system} />
                     </View>
                     )}

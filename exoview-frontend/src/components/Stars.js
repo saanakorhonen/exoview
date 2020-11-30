@@ -23,7 +23,7 @@ export default function Stars({ star }) {
   }
 */
 
-	const starSunRel = star.st_rad / 1.0;
+	const starSunRel = (star?.st_rad ?? 1.0) / 1.0;
 
 	const bStar = {
 		name: "",
@@ -40,10 +40,10 @@ export default function Stars({ star }) {
 	};
 
 	if (starSunRel > 1) {
-		bStar.color = starColor(star.st_teff);
+		bStar.color = starColor(star?.st_teff ?? 5772);
 		bStar.relativeSize = 1.0;
 		bStar.name = star.hostname;
-		bStar.teff = star.st_teff;
+		bStar.teff = star?.st_teff ?? 'unknown';
 
 		fStar.relativeSize = 1 / starSunRel;
 		fStar.color = starColor(5772);
@@ -56,10 +56,10 @@ export default function Stars({ star }) {
 		bStar.name = "Sun";
 		bStar.teff = 5772;
 
-		fStar.color = starColor(star.st_teff);
-		fStar.relativeSize = star.st_rad;
+		fStar.color = starColor(star?.st_teff ?? 5772);
+		fStar.relativeSize = star?.st_rad ?? 1.0;
 		fStar.name = star.hostname;
-		fStar.teff = star.st_teff;
+		fStar.teff = star?.st_teff ?? 'unknown';
 
 		// padding = (WW() - (WW() * relativeSize)) / 2;
 	}
