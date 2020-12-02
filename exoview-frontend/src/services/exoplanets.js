@@ -1,8 +1,10 @@
-const urlPlanets = 'http://172.20.10.2:8080/search?from=planets'
-const urlStellarSystem = "http://172.20.10.2:8080/search?filter=hostname&searchterm="
+const urlPlanets = 'http://address:8080/search?from=planets'
+const urlStellarSystem = "http://address:8080/search?filter=hostname&searchterm="
+
 
 // fetching all expoplanets in the db
 const getAllExo = async () => {
+    console.log('getalexo')
     const res = await fetch(urlPlanets);
     const data =  await res.json();
     return data
