@@ -1,6 +1,6 @@
 "use strict";
-import React, { useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React from "react";
+import { StyleSheet, View } from "react-native";
 
 //var ecc = 0.1;
 //var sminax = Math.sqrt(1 - ecc * ecc);

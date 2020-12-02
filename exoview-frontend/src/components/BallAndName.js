@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, FlatList, TouchableOpacity, Button } from 'react-native'
+import {  View, Text, } from 'react-native'
 
 const BallAndName = ({ pName, pSize, flex, top }) => {
   return (
@@ -18,7 +18,7 @@ const BallAndName = ({ pName, pSize, flex, top }) => {
         backgroundColor: 'white',
 
       }}></View>
-      <Text style={{ color: 'white', top: top}}>{pName}</Text>
+      <Text style={{ color: 'white', top: top, width: 100 }}>{pName}</Text>
     </View>
   )
 }

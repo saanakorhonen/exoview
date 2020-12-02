@@ -24,7 +24,7 @@ function InfoVisualisationStack() {
 	    <Stack.Screen name="Distance" component={Distance} />
       <Stack.Screen name="About" component={About} />
       <Stack.Screen name="Search" component={Search} />
-      <Stack.Screen name="StarSystem" component={Starsystem} />
+      <Stack.Screen name="Stellar System" component={Starsystem} />
     </Stack.Navigator>
   );
 }

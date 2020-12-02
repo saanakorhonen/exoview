@@ -1,7 +1,7 @@
 "use strict";
 import React from "react";
 import { TouchableOpacity, View, Dimensions, Text, Alert } from "react-native";
-import { AntDesign } from '@expo/vector-icons';
+//import { AntDesign } from '@expo/vector-icons';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
@@ -52,23 +52,23 @@ export default function Planets({ planet, system,  navigation }) {
   return (
     <View>
       <View  style={{flexDirection: 'row', alignItems:'center', justifyContent: 'center'}}>
-      <TouchableOpacity  onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
-      <View style={{  alignItems: 'center', justifyContent: 'center', width:Dimensions.get('window').width / 2 }}  >
-      {/** background planet */}
-      {bPlanet.isEarth
-        ? <MaterialCommunityIcons  style={{position:'absolute'}} name="earth" size={WW()* bPlanet.relativeSize} color={bPlanet.color} />
-        : <View style={{ position: 'relative', backgroundColor: bPlanet.color, height: WW()* bPlanet.relativeSize, width: WW()*bPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}></View>
-      }
-       {/** front planet */}
-      {fPlanet.isEarth
-        ? <MaterialCommunityIcons  style={{position:'absolute'}} name="earth" size={WW()* fPlanet.relativeSize} color={fPlanet.color} />
-        : <View style={{ position: 'absolute',backgroundColor: fPlanet.color,  height: WW()* fPlanet.relativeSize, width: WW()*fPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}></View>
-      }
-      </View>
-    </TouchableOpacity> 
-      <View >
-        <Text style={{color:'white'}}>{planet.pl_orbsmax} AU</Text>
-        <Text style={{color: 'rgba(82, 113, 255, 1.0)', marginRight: 10, textDecorationLine: 'underline'}} onPress={() => {
+        <TouchableOpacity  onPress = { () => navigation.navigate('Information', {planet: planet,system: system})}>
+          <View style={{  alignItems: 'center', justifyContent: 'center', width:Dimensions.get('window').width / 2 }}  >
+          {/** background planet */}
+          {bPlanet.isEarth
+            ? <MaterialCommunityIcons  style={{position:'absolute'}} name="earth" size={WW()* bPlanet.relativeSize} color={bPlanet.color} />
+            : <View style={{ position: 'relative', backgroundColor: bPlanet.color, height: WW()* bPlanet.relativeSize, width: WW()*bPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}></View>
+          }
+          {/** front planet */}
+          {fPlanet.isEarth
+            ? <MaterialCommunityIcons  style={{position:'absolute'}} name="earth" size={WW()* fPlanet.relativeSize} color={fPlanet.color} />
+            : <View style={{ position: 'absolute',backgroundColor: fPlanet.color,  height: WW()* fPlanet.relativeSize, width: WW()*fPlanet.relativeSize, borderRadius: 1000, borderColor: 'grey', borderWidth:1}}></View>
+         }
+          </View>
+        </TouchableOpacity> 
+        <View >
+          <Text style={{color:'white'}}>{planet.pl_orbsmax} AU</Text>
+          <Text style={{color: 'rgba(82, 113, 255, 1.0)', marginRight: 10, textDecorationLine: 'underline'}} onPress={() => {
 							Alert.alert(`Info about ${planet.pl_name}`,
                   `${planet.pl_name} has ${planet.pl_rade !== "" ? planet.pl_rade : 'unknown'} radius of earth and ${planet.pl_masse !== "" ? planet.pl_masse :'unknown'} mass of Earth. \n\nIts orbit is ${planet.pl_orbsmax !== "" ? planet.pl_orbsmax :'unknown'} of Earths and revolves arounds its star every ${planet.pl_orbper !== "" ? planet.pl_orbper.toFixed(0) : 'unknown'} days.`,
                   [
@@ -83,15 +83,9 @@ export default function Planets({ planet, system,  navigation }) {
                   {cancelable: true}
 								);
 							}}>{planet.pl_name} </Text>
- 
-        {/*
-               <AntDesign name="infocirlce" size={24} color="white"  />
-        <Text style={{color:'white'}}>{planet.pl_name} has {planet.plrade} radius of earth and {planet.pl_masse}
-          mass of Earth. Its orbit is {planet.orbsmax} of Earths and revolves arounds its star every {planet.orbper}
-        days.</Text> */}
+        </View>
       </View>
-      </View>
-      </View>)
+    </View>)
 }
 
 /**

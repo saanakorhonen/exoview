@@ -1,6 +1,6 @@
 "use strict";
 import React from "react";
-import { Text, View, Dimensions } from "react-native";
+import {  View, Dimensions } from "react-native";
 
 const color = "lightblue";
 const exocolor = "lightblue";

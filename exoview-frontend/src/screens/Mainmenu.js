@@ -1,80 +1,27 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect } from 'react';
-import { Image, ActivityIndicator, StyleSheet, Text, View, Button, ImageBackground } from 'react-native';
-import { parse } from 'fast-xml-parser';
-import { NavigationContainer } from '@react-navigation/native';
-import { createStackNavigator } from '@react-navigation/stack';
+import exoService from '../services/exoplanets'
+import { Image, ActivityIndicator, StyleSheet, Text, View,ImageBackground } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { StatusBar } from 'expo-status-bar';
 
-
-//luo päävalikko componentin  order+by+
-//saa argumenttina tuon navigaation jotta pystytään kulkemaan screeneistä toiseen 
 const Mainmenu = ({ navigation }) => {
-  // Jos hakee tällä: https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+ps+where+disc_year+=+2020+and+default_flag+=+1+order+by+disc_pubdate+desc
-  // jossa siis huomioitu publication date (hakee ps data basesta), niin tulee paljon tyhjää, eli backissä pitää ehkä katsoa miten niitä tietoja saa siistittyä ja yhdistettyä
-  // nyt alla oleva on pscomppars, missä siis ei tyhjiä, mutta ei myöskääm discovery publicity datea
-  var defaultUrl = 'http://192.168.10.60:8080/search?from=planets' //https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+200+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year+from+pscomppars+where+disc_year+=+2020' //order+by+disc_year+desc'
-  const [foundPlanets, setFoundPlanets] = useState([]) 
+  const [exoplanets, setExoplanets] = useState([]) 
   const [loading, setLoading] = useState(true)
 
   //Aloittaa hakemalla datan
   useEffect(() => {
     console.log('Mainmenu.js:23 täällä');
     if (loading) {
-      fetchData(defaultUrl)
-      /*.then((data) => {
-        const arr = setPlanets(data)
-        setFoundPlanets(arr);*/
-      }
-    
+      exoService.getAllExo()
+      .then((planets) => {
+        setExoplanets(planets)
+        setLoading(false)
+      })
+    }
   }, []);
 
-  //Hakee default-datan tässä vaiheessa
-  const fetchData = async ( props ) => {
-    const response = await fetch(props);
-
-    const objects = await response.json();
-    //const objects = await parse(teksti);
-
-    //console.log(objects);
-    setFoundPlanets(objects)
-    setLoading(false)
-    
-    //console.log('Mainmenu.js:29 foundPlanets length: ', foundPlanets.length)
-    console.log('Loading: ', loading)
-    /*
-    const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-    //console.log('täällä Mainmenu fetchdatassa')
-    return new Promise((resolve, reject) => {
-        var success = planetArray != undefined;
-        success ? resolve(planetArray) : reject('Query failed');
-    })*/
-  }
- 
-  const setPlanets = (arr) => {
-    let arrayP = []
-    arr.map(obj => {
-        const planet = obj.TD
-        const propPlanet =
-        {
-            hostname: planet[0],
-            pl_name: planet[1],
-            pl_rade: planet[2],
-            pl_masse: planet[3],
-            pl_bmassj: planet[4],
-            pl_radj: planet[5],
-            pl_orbsmax: planet[6],
-            pl_orbper: planet[7],
-            pl_orbeccen: planet[8],
-            disc_year: planet[9]
-        }
-        arrayP = arrayP.concat(propPlanet)
-    })
-    return arrayP
-};
-
-console.log('mainmenu 78',foundPlanets.length)
+console.log('mainmenu 78',exoplanets.length)
 
 	return (
     <View style={{ flex:1, justifyContent: 'center', }}>
@@ -91,10 +38,10 @@ console.log('mainmenu 78',foundPlanets.length)
           </View>
           <View style={styles.buttonsBox}>
             <View style={styles.buttons}>
-              <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Information', foundPlanets) }>
+              <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Information', exoplanets) }>
                 <Text style={styles.text}>Recent planet</Text>
               </TouchableOpacity>
-              <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Search', foundPlanets) }>
+              <TouchableOpacity style={styles.nappi} onPress = { () => navigation.navigate('Search', exoplanets) }>
                 <Text style={styles.text}>Search Planets</Text>
               </TouchableOpacity>
             </View>

@@ -1,10 +1,9 @@
 import React from "react";
-import { Text, View, Dimensions, StyleSheet, Alert } from "react-native";
+import { Text, View, StyleSheet, Alert } from "react-native";
 import PlanetDistanceComparison from "../components/PlanetDistanceComparison";
 import OrbitView from "../components/OrbitView";
 
 const Distance = ({ eplanet }) => {
-	//console.log("const dist", route.params.planet);
 	const planet = eplanet;
 
 	return (
@@ -74,14 +73,9 @@ const styles = StyleSheet.create({
 	},
 	distanceBox: {
 		flex: 2,
-		//width: Dimensions.get('window').width /2,
 	},
 	infoBox: {
 		flex: 3,
-
-		//width: Dimensions.get('window').width /2,
-
-
 	},
 	infoBoxTitle: {
 		fontSize: 30,

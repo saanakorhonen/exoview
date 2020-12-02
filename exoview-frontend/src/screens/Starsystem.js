@@ -15,27 +15,21 @@ jupiter 5.4588
 saturnus 10.1238
 uranus 20.11
 neptunus 30.33
-
-TODO: sklaaukset fiksusti
-TODO: tekstit
 */
 const Starsystem = ({ route, navigation }) => {
-    //console.log('satrsyst', route.params)
 
-    //const areNaNs = route.params.planets.fi
-    console.log(route.params)
+    console.log('starsystem routeparans', route.params)
     const hPhone = Dimensions.get('window').height
     const hStar = Dimensions.get('window').width / 2
     const star = route.params.star != undefined ? route.params.star : route.params
     const system = {star: star, planets: route.params.planets}
-    let  auEarth =hPhone/5// 1 AU
+    let  auEarth =hPhone/5 // 1 AU
 
     //meidän aurinkokunnan planettoojen etäisyydet
     var etaisyydet = [ {name: 'Mercury', au: 0.4667}, {name:'Venus', au: 0.72813}, {name: 'Earth', au:1},{name:"Mars",au:1.666},{name:"Jupiter",au:5.4588},{name:"Saturn",au:10.1238},{name:"Uranus",au:20.11},{name:"Neptune",au:30.33}];
     let  pituus = kaukaisin(route.params.planets) ; // kaukaisin tähtijärjestelmän eksoplaneetta (AU)
     let kaukaisinPlaneetta = solarSystem(pituus,etaisyydet) // meidän aurinkokunnan planeettta, jota lähempänä kaukaisin eksoplaneetta on (AU)
     let lahinAU = lahin(route.params.planets)
-
 
     // etäisyyksien uudelleen suhteuttaminen: 1. lähempänä kuin maa, maa ja neptunus välillä, kauempana kuin neptunus
     if (lahinAU < 1.0) {
@@ -47,16 +41,11 @@ const Starsystem = ({ route, navigation }) => {
         etaisyydet.shift();etaisyydet.shift() //poistetaan näkymästä merkurius ja venus
     } else {
         etaisyydet =[{name:"Neptune",au:30.44}]
-        auEarth = auEarth/30.244 /// aseteteaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
-        pituus =  auEarth *kaukaisinPlaneetta + 100
-        
-        
+        auEarth = auEarth/30.244 // asetetaan uuteen suhteeseen lähin eksoplaneetta nyt 1AU
+        pituus =  auEarth *kaukaisinPlaneetta + 100    
     }
     if (pituus < hPhone) pituus=hPhone  // pidetään huoli, että viiva jatkuu vähintään puhelimen näytön pituuden verran
 
-
-
-    //console.log('auearth', auEarth)
     return (
         <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
             <ScrollView > 

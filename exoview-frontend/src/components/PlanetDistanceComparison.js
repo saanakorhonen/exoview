@@ -1,6 +1,6 @@
 "use strict";
-import React, { useState } from "react";
-import { Text, View, Dimensions, StyleSheet, SafeAreaView } from "react-native";
+import React from "react";
+import { View, StyleSheet, SafeAreaView } from "react-native";
 import BallAndName from './BallAndName';
 
 /*

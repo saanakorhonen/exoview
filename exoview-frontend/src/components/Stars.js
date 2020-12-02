@@ -2,9 +2,6 @@
 import React from "react";
 import { Text, View, Dimensions, StyleSheet } from "react-native";
 
-let fColor = "lightblue";
-let bColor = "lightblue";
-
 /**
  * Piirtää vierekkäin kokovertauksen eksoplaneetan ja maan välillä.
  * TODO: Vertaa Jupiteriin jos koko on sitä lähempänä
@@ -14,14 +11,6 @@ let bColor = "lightblue";
  */
 export default function Stars({ star }) {
 	console.log('Stars.js:16 ', star.st_rad);
-	/*
-  let relativeSize = 1.0;
-  exoSize = props.planet.pl_rade;
-
-  if (isNaN(props.planet.pl_rade)) {
-    exoSize = 1.0;
-  }
-*/
 
 	const starSunRel = (star?.st_rad ?? 1.0) / 1.0;
 

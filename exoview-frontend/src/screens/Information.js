@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from 'react'
 import { ImageBackground, ActivityIndicator, StyleSheet, View, Text, TouchableOpacity, Dimensions,  } from 'react-native'
 //import { MaterialIcons } from '@expo/vector-icons';
-import { parse } from 'fast-xml-parser';
 import InfoView from '../components/InfoView';
 import { ScrollView } from 'react-native-gesture-handler';
 import Visualisation from '../screens/Visualisation'
 import Distance from '../screens/Distance'
+import exoService from '../services/exoplanets'
 
 const Information = ({ navigation, route }) => {
   const screenWidth = Dimensions.get('window').width
   const [system, setSystem] = useState()
   const [planets, setPlanets] = useState([])
   const [loading, setLoading] = useState(true)
-  const [planetsSet, setPlanetsSet] = useState(false)
+  const [planetsSet, setPlanetsSet] = useState()
+  
   // alussa tyhjä alustus
   const [planet, setPlanet] = useState({
     planet: {
@@ -27,7 +28,9 @@ const Information = ({ navigation, route }) => {
   })
 
   useEffect(() => {
-    if (route.params.planet !=undefined) {
+    setPlanetsSet(false)
+    // tänne,kun tullaan searchchista view planet
+    if (route.params.planet !== undefined) {
       console.log('infossa useEffect if',route.params)
       const p = route.params.planet
       setPlanet({ planet: { hostname: p.hostname, pl_name: p.pl_name, pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen, disc_year: p.disc_year }})
@@ -35,53 +38,27 @@ const Information = ({ navigation, route }) => {
       setLoading(false)
       return
     }
+    // tänne, kun tukkaa stellar viewsta
     const p = route.params[0]
     setPlanets(route.params)
     setPlanet({ planet: { hostname: p.hostname, pl_name: p.pl_name, pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen, disc_year: p.disc_year }})  
-    setPlanetsSet(true)
+    setPlanetsSet(true) // tästä hyppää 'useEffect 2' laittamaan tähtijärjestelmän
   },[])
   
   useEffect(() => {
-    const nimi = planet.planet.pl_name;
-    const kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
-    fetchData(kutsu)
-    .then((data) =>{
-        var star = setStars(data,planet.planet.hostname)
-        var tahdenplaneetat = planets.filter(planet => planet['hostname'].match(star.hostname))
-        const system = {star: star, planets: tahdenplaneetat}   
-        setSystem(system)
-        setLoading(false)
-    }).catch((error) => console.log('error fetcData')) 
-
+    //tänne, kun tullaan main menusta suoraan
+    if(planetsSet === true){
+    console.log('info 51 aka useEffect2')
+    const nimi = planet.planet.hostname
+    exoService.getStellarSystem(nimi)
+    .then((star) => {
+      var tahdenplaneetat = planets.filter(planet => planet['hostname'].match(star.hostname))
+      const system = {star: star, planets: tahdenplaneetat}   
+      setSystem(system)
+      setLoading(false)
+    })}
   }, [planetsSet])
 
-  const fetchData = async ( props ) => {
-    const response = await fetch(props);
-    const teksti = await response.text();
-    const objects = await parse(teksti);
-    const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-    return new Promise((resolve, reject) => {
-        var success = planetArray != undefined;
-        success ? resolve(planetArray) : reject('Query failed');
-    })
-  } 
-  
-  const setStars = (arr,data) => {
-    const star = arr.TD
-    const propPlanet =
-      {
-        hostname: data,
-        st_spectype: star[0],
-        st_teff: star[1],
-        st_rad: star[2],
-        st_mass: star[3],
-        st_age: star[4],
-        st_rotp: star[5]
-      }
-    return propPlanet
-  }
-
-console.log('system', system)
   return (
     <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
     <View style={styles.container}>
@@ -101,8 +78,8 @@ console.log('system', system)
             <View style={styles.infoBox}>
            {/**detaljeet, informaatio datat */}
               <InfoView data={planet.planet}/>
-              <TouchableOpacity  style ={styles.visualisationButton} onPress = { () => navigation.navigate('StarSystem', system) }>
-                <Text style={styles.buttonText}>Starsystem view</Text>
+              <TouchableOpacity  style ={styles.visualisationButton} onPress = { () => navigation.navigate('Stellar System', system) }>
+                <Text style={styles.buttonText}>Stellar System view</Text>
               </TouchableOpacity>
             </View >
         </View>
@@ -114,7 +91,6 @@ console.log('system', system)
         </View>
       </ScrollView>
       )}
-
     </View>  
     </ImageBackground> 
   )

@@ -1,20 +1,14 @@
 import 'react-native-gesture-handler';
 import React, { useEffect, useState } from 'react';
-import {  FlatList, Keyboard, View, Text, TextInput, StyleSheet, ScrollView } from 'react-native';
-import { parse } from 'fast-xml-parser';
+import {  FlatList, Keyboard, View, Text, TextInput, StyleSheet } from 'react-native';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Menu, MenuProvider, MenuOptions, MenuOption, MenuTrigger} from "react-native-popup-menu";
 import { MaterialIcons } from '@expo/vector-icons';
-import { set } from 'react-native-reanimated';
+import PlanetBrief from '../components/PlanetBrief'
 
 //Planeettojen etsimisikkuna
 const Search = ({ navigation, route } ) => {
 
-    /*Aloitusmaksimi queryssa
-    var start = 0;
-    var alku = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj+from+pscomppars+where+";
-	var loppu = "+default_flag+=+1";//format=csv;
-	*/
 
     //Löydetyt planeetat
     const [foundPlanets, setFoundPlanets] = useState([]) 
@@ -26,9 +20,6 @@ const Search = ({ navigation, route } ) => {
 
     //Hakutermi
     const [searchTerm, changeSearchTerm] = useState('')
-
-    //laitettava tänne, jotta päivittyy aina
-    const [juoksevaluku, setJuoksevaluku] = useState(0)
 
     //Menutriggerin tekstin vaihto
     const [menuTriggerText, setMenuTriggerText] = useState('Search options')
@@ -43,12 +34,6 @@ const Search = ({ navigation, route } ) => {
     useEffect(() => {
         setFoundPlanets(allPlanets)
     }, [allPlanets])
-
-
-    //Tekee löydetyistä planeetoista katseltavia komponentteja
-    const renderFoundPlanets = () => {
-        return foundPlanets.map(planet => <PlanetBrief navigation={navigation} data={planet} key={generateKey()}/>)
-    }
 
 
     //Käsittelee hakutermin ja -filtterin
@@ -73,28 +58,12 @@ const Search = ({ navigation, route } ) => {
 
     const handleTextChange = (term) => {
         if (term === '') {
-            setFilter(""); 
+            //setFilter(""); 
             //setMenuTriggerText('Search Options'); 
-            return setFoundPlanets(allPlanets);
+            setFoundPlanets(allPlanets);
+
         }
-
         changeSearchTerm(term)
-    }
-
-    //Luo uuden api queryn
-    const createQuery = () => {
-        var hakuehto = searchFilter;
-
-        //var rajat = '+rownum+>=' + juoksevaluku + '+and+rownum+<+' + (juoksevaluku+9) +'+and'
-        
-        if (hakuehto === '' || hakuehto === undefined) {
-            console.log(alku+/*rajat+*/loppu);
-            return alku + /*rajat+*/ loppu;
-        } 
-        //+and'    + /*rajat+*/ loppu
-        var hakutermi = '+like+\'' + searchTerm + '%\''
-        console.log(alku + hakuehto + hakutermi);
-        return alku + hakuehto + hakutermi;
     }
 
     const changeMenuTrigger = (filter) => {
@@ -161,197 +130,21 @@ const Search = ({ navigation, route } ) => {
                     <ScrollView onScroll={({nativeEvent}) => {loadNext(nativeEvent);}} scrollEventThrottle={16}>
                         {renderFoundPlanets()}
                     </ScrollView> */}
-
                     <FlatList
                         data={foundPlanets}
                         renderItem={({ item }) => (
                             <PlanetBrief navigation={navigation} data={item} allPlanets={foundPlanets} />
                         )}
-                        keyExtractor={(item) => item._id}
-                    >    
+                        keyExtractor={(item) => item._id}>    
                     </FlatList>
             </MenuProvider>     
-
     )
-}
-
-//Luo id:n planeettakomponenteille
-const generateKey = () => {
-    const keys = '1234567890abcdefghijklmnopqrstuvwxyz'
-
-    const idLength = 10
-
-    let i = 0;
-
-    let id = '';
-
-    while (i < idLength) {
-        id = id + keys.charAt(Math.floor(Math.random() * Math.floor(keys.length)))
-        i++;
-    }
-
-    return id;
 }
 
 //Planeetan kevyet tiedot search-näkymään
 //TODO komponentin voinee eriyttää
 //TODO infon collapse
 //TODO n/a jos tietoa ei ole saatavilla
-const PlanetBrief = ( props ) => {
-
-    var isVisible = false;
-
-    const toggleVisibility = () => {
-        isVisible = !isVisible;
-    }
-
-    const renderView = () => {
-        if (isVisible) {
-            return view;
-        }
-
-        return null;
-    }
-
-    var view =  <View style={{flexDirection:'row'}}>    
-                    <View style={styles.infoWrapper}>
-                        <Text style={styles.infoText}>
-                            Host star: { props.data.hostname}
-                        </Text>
-                        <Text style={styles.infoText}>
-                            Masse: { props.data.pl_masse}
-                        </Text>
-                        <Text style={styles.infoText}>
-                            Radius: { props.data.pl_rade}
-                        </Text>
-                        {/*
-                        <Text>
-                            Discovery year: { props.data.disc_year}
-                        </Text>
-                        */}
-                    </View>
-                    <View style = {styles.buttonWrapper}>
-                        <TouchableOpacity style={styles.button} onPress={() => handleStarsystem2(props)}><Text style={styles.buttonText}>View planet</Text></TouchableOpacity>
-                        <TouchableOpacity style={styles.button} onPress={() => handleStarsystem(props)}><Text style={styles.buttonText}>Stellar System</Text></TouchableOpacity>
-                    </View>
-                </View>
-
-    return (
-        <View style={styles.container}>
-            <View style = {styles.headerWrapper} onPress = {toggleVisibility()}>
-                <Text style = {styles.header}>
-                    { props.data.pl_name }
-                </Text>
-            </View>
-            {renderView()}
-        </View>
-    )
-}
-
-const handleStarsystem = (props) => {
-    //console.log(props.data)
-    //console.log(props.allPlanets.length)
-    var nimi = props.data.hostname;
-    //console.log(nimi)
-    //var nimi = props.data.pl_name;
-    var kutsu ="http://192.168.10.60:8080/search?filter=hostname&searchterm="+nimi+"&limit=1&from=stars" //
-    //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
-    fetchData({kutsu: kutsu, allPlanets: props.allPlanets,data: props.data,navigation: props.navigation})
-    /*.then((data) =>{
-        var star = data[0] //setStars(data,props.data.hostname)
-        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
-        const system = {star: star, planets: tahdenplaneetat}
-        props.navigation.navigate('StarSystem', system)
-    })*/
-
-}
-
-const fetchData = async ( props ) => {
-    //console.log(props.kutsu)
-    //console.log(props.allPlanets)
-    //console.log(props.data)
-    const response = await fetch(props.kutsu);
-
-    //const teksti = await response.text();
-    const objects = await response.json();
-    console.log(objects)
-    var star =  objects[0]
-
-    //console.log(objects)
-    //setStars(data,props.data.hostname)
-    var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
-    const system = {star: star, planets: tahdenplaneetat}
-    props.navigation.navigate('StarSystem', system)
-
-
-    //const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-    /*
-    return new Promise((resolve, reject) => {
-        var success = objects != undefined;
-        success ? resolve(objects) : reject('Query failed');
-    })
-    */
-}   
-
-const handleStarsystem2 = (props) => {
-    //console.log(props.allPlanets.length)
-    var nimi = props.data.hostname;
-    //var nimi = props.data.pl_name;
-    var kutsu ="http://192.168.10.60:8080/search?filter=hostname&searchterm="+nimi+"&limit=1&from=stars" //
-    //var kutsu = "https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+top+1+st_spectype,st_teff,st_rad,st_mass,st_age,st_rotp+from+pscomppars+where+pl_name+like+\'"+nimi+"\'+order+by+disc_year+desc";
-    fetchData2({kutsu: kutsu, allPlanets: props.allPlanets,data: props.data,navigation: props.navigation})
-    /*
-    .then((data) =>{
-        var star =  data[0]
-        console.log(data)
-        //setStars(data,props.data.hostname)
-        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
-        const system = {star: star, planets: tahdenplaneetat}
-        props.navigation.navigate('Information',{ planet:props.data, system: system} )
-    })
-    */
-}
-const fetchData2 = async ( props ) => {
-    const response = await fetch(props.kutsu);
-
-    //const teksti = await response.text();
-    const objects = await response.json();
-
-    var star =  objects[0]
-    //setStars(data,props.data.hostname)
-    var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
-    const system = {star: star, planets: tahdenplaneetat}
-    props.navigation.navigate('Information',{ planet:props.data, system: system} )
-
-    //const planetArray = objects.VOTABLE.RESOURCE.TABLE.DATA.TABLEDATA.TR;
-    /*
-    return new Promise((resolve, reject) => {
-        var success = objects != undefined;
-        success ? resolve(objects) : reject('Query failed');
-    })
-    */
-}
-
-
-
-
-
-    const setStars = (arr,data) => {
-        const star = arr.TD
-        const propPlanet =
-            {
-                hostname: data,
-                st_spectype: star[0],
-                st_teff: star[1],
-                st_rad: star[2],
-                st_mass: star[3],
-                st_age: star[4],
-                st_rotp: star[5]
-            }
-        return propPlanet
-    }
-    
-
 
 
 

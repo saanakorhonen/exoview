@@ -1,7 +1,6 @@
 import 'react-native-gesture-handler';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import {  Dimensions,View, Text } from 'react-native';
-import DistanceOrbit from './DistanceOrbit'
 //import PlanetSizeComparison from './p'
 
 /*
