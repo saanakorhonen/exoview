@@ -15,14 +15,34 @@ var Collection = class {
      * Etsii planeetan annettujen tietojen perusteella, järjestää planeetan sort-objektin perustteella.
      * Palauttaa lopuksi halutun määrän planeettoja.
      */
-    async find({searchTerm, filter, sort = {field: "disc_year", direction:-1}, offset = 0, limit = this._count}) {
+    async find({searchTerm = '', filter, sort = {field: "disc_year", direction:-1}, offset = 0, limit = this._count, exact_match = 0}) {
+        if (exact_match === 0) var searchEnd = '.*'
+        else var searchEnd = '$';
 
-        if (searchTerm !== undefined && filter !== undefined) 
+        if (searchTerm !== undefined || filter !== undefined) {
+            //console.log('collection.js:21 ', searchTerm);
+
+
+            var indexOfPlus = searchTerm.indexOf('+');
+
+	        if (indexOfPlus > -1) 
+		    {
+                var searchRegex = new RegExp('^' + searchTerm.substring(0, indexOfPlus) + '\\' + searchTerm.substring(indexOfPlus, searchTerm.length) + searchEnd, 'gi');
+		    }
+
+
+            else var searchRegex = new RegExp('^' + searchTerm + searchEnd, 'gi');
+            
+
             var foundResults = this._entries.filter(entry => {
-                return searchTerm.test(entry[filter]);
+                return searchRegex.test(entry[filter]);
             })
+        }
+
 
         else var foundResults = this._entries.filter( (entry) => (entry !== 0 && entry !== -1) );
+
+        //console.log("collection searchterm: " + searchTerm);
 
         var sortField = sort.field;
         var sortDirection = sort.direction;
@@ -182,14 +202,6 @@ var Collection = class {
         } while (!spaceFound)
 
         return index;
-
-        /*var index = (key + 13 * i + 93 * i * i) % this._entries.length;
-
-        if (this._entries[index] === EMPTY || this._entries[index] === REMOVED) {
-            return index;
-        }
-
-        return this.hash(key, i + 1);*/
     }
 
 
@@ -209,23 +221,6 @@ var Collection = class {
         } while (id !== this._entries[index])
 
         return index;
-
-        /*console.log("äälllä: " + key + " " + id + " " + i + " collection nimi: " + this._name);
-        var index = (key + 13 * i + 93 * i * i) % this._entries.length;
-
-        if (this._entries[index] === EMPTY) {
-            console.log("Slot empty: " + this._entries[index]._id + " looking for " + id);
-            return undefined;
-        };
-
-        if (this._entries[index]._id === id) {
-            console.log('indeksi löytyi')
-            return index;
-        } 
-
-        //console.log("collection.js:190 compared: " + this._entries[index]._id + " with " + id);
-
-        //this.findIndexById(key, id, i + 1);*/
     }
 
 

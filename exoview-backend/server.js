@@ -63,38 +63,36 @@ const parseData = async (data) => {
 	
 	var foundStars = [];
 
+	//Etsitään datasta planeetat
 	for (let i in data) {
 		const obj = data[i];
 		const planet = obj.TD;
 
-		var searchPlanet = new RegExp('.*' + planet[1] + '.*', 'gi');
-
 		var starName = planet[0];
 
-		var indexOfPlus = starName.indexOf('+');
 
-		if (indexOfPlus > -1) 
-			starName = starName.substring(0, indexOfPlus) + '\\' + starName.substring(indexOfPlus, starName.length);
-
-		var searchStar = new RegExp('^' + starName + '$', 'gi');
-
+		//Etsitään, löytyykö nimellä valmiiksi planeettaa
 		var foundPlanetResult = await db.find("planets", {
-			searchTerm: searchPlanet,
+			searchTerm: planet[1],
 			filter: 'pl_name',
+			exact_match: 1
 		}); //jotain?
 
-		//console.log("(server.js ~90) Found planet result: ", foundPlanetResult);
 
+		//Etsitään, löytyykö host tähden nimellä tähteä
 		var foundStarResult = await db.find("stars", {
-			searchTerm: searchStar,
-			filter: "hostname"
+			searchTerm: starName,
+			filter: "hostname",
+			exact_match: 1
 		});
 		
 		var foundPlanet = foundPlanetResult[0];
 		var foundStar = foundStarResult[0];
 
+
+		//Jos planeettaa ei löydy, luodaan uusi entry
 		if (foundPlanet === undefined) {
-			const planetEntry = {
+			var planetEntry = {
 				hostname: planet[0],
 				pl_name: planet[1],
 				pl_rade: Number(planet[2]),
@@ -105,37 +103,47 @@ const parseData = async (data) => {
 				pl_orbper: Number(planet[7]),
 				pl_orbeccen: Number(planet[8]),
 				disc_year: planet[9],
-				/*
-				st_spectype: planet[10],
-				st_teff: Number(planet[11]),
-				st_rad: Number(planet[12]),
-				st_mass: Number(planet[13]),
-				st_lum: Number(planet[14]),
-				st_age: Number(planet[15]),
-				st_dens: Number(planet[16]),
-				st_rotp: Number(planet[17]),
-				st_radv: Number(planet[18]),
-				sy_bmag: Number(planet[19]),
-				sy_vmag: Number(planet[20]),*/
 				dateAdded: new Date(),
 			};
 
+			//Jos tähteä ei ole olemassa, tarvitaan planeettaan tähden tiedot myöhempää tarkastelua varten
+			if (foundStar === undefined) {
+				planetEntry.merge({
+					st_spectype: planet[10],
+					st_teff: Number(planet[11]),
+					st_rad: Number(planet[12]),
+					st_mass: Number(planet[13]),
+					st_lum: Number(planet[14]),
+					st_age: Number(planet[15]),
+					st_dens: Number(planet[16]),
+					st_rotp: Number(planet[17]),
+					st_radv: Number(planet[18]),
+					sy_bmag: Number(planet[19]),
+					sy_vmag: Number(planet[20]),
+				})
+			}
+
+
+			//Lisätään uusi planeetta
 			const entry = await db.add("planets", planetEntry);
 
+
+			//Jos uutta (undefined) tähteä ei ole vielä tähtien taulukossa, lisätään se sinne
+			if (!foundStars.includes(planetEntry.hostname)
+				&& foundStar === undefined) {
+					foundStars.push(planetEntry.hostname);
+				}
+
+
+			//Uuden planeetan info lähetetään soketeille
 			const newPlanetInfo = {
 				name: entry.pl_name,
 				id: entry._id,
 			};
 
-			if (!foundStars.includes(planetEntry.hostname)
-				&& foundStarResult[0] === undefined) {
-					foundStars.push(planetEntry.hostname);
-					//console.log(foundStars);
-				}
-
 			io.emit('new planet', newPlanetInfo);
 
-		} else {
+		} else { 						//Muussa tapauksessa päivitetään tiedot
 			const update = {
 				hostname: planet[0],
 				pl_name: planet[1],
@@ -149,8 +157,11 @@ const parseData = async (data) => {
 				disc_year: planet[9],
 			};
 
-			const otherPlanets = await db.find("planets", {searchTerm:searchStar, filter: "hostname"});
 
+			//Muut samaan tähtijärjestelmään kuuluvat planeetat etsitään
+			const otherPlanets = await db.find("planets", {searchTerm:starName, filter: "hostname", exact_match: 1});
+
+			//Ensimmäisestä tähdestä otetaan oletustiedot viimeisimmän planeetan tiedoilla
 			if (otherPlanets[0]._id === foundPlanet._id && foundStar !== undefined) {
 				const starUpdate = {
 					st_spectype: planet[10],
@@ -166,13 +177,16 @@ const parseData = async (data) => {
 					sy_vmag: planet[20],
 				}
 
+				//Päivitetään tähti
 				db.update("stars", foundStar._id, starUpdate);
 			}
 
-			
+			//Päivitetään planeetta
 			db.update("planets", foundPlanet._id, update);
 		}
 	}
+
+	//console.log(foundStars);
 
 	await parseStars(foundStars);
 	db.write();
@@ -187,28 +201,12 @@ const parseStars = async (foundStars) => {
 	for (let i in foundStars) {
 		var starName = foundStars[i];
 
-
-		var indexOfPlus = starName.indexOf('+');
-
-		if (indexOfPlus > -1) 
-			starName = starName.substring(0, indexOfPlus) + '\\' + starName.substring(indexOfPlus, starName.length);
-
-		var searchStar = new RegExp('^' + starName + '$', 'gi');
-
 		var planets = await db.find("planets", {
-			searchTerm: searchStar,
-			filter: "hostname"
+			searchTerm: starName,
+			filter: "hostname",
 		});
 
-
 		var defaultPlanet = planets[0];
-
-		/*if (planets[0] == undefined) {
-			console.log('?????');
-			console.log(planets);
-			console.log(starName);
-			console.log(foundStars);
-		}*/
 
 		var star = {
 			hostname: defaultPlanet.hostname,
@@ -308,6 +306,8 @@ app.get('/search', async (req, res) => {
 	const sortDirection = req.query.sortDirection;
 	const collection = req.query.from;
 
+	console.log("searchTerm: ", searchTerm);
+
 	if (collection === undefined) {
 		res.set(500);
 		res.send();
@@ -326,7 +326,7 @@ app.get('/search', async (req, res) => {
 
 	queryParameters['limit'] = limit;
 
-	if (searchTerm !== undefined) queryParameters['searchTerm'] = new RegExp('.*' + searchTerm + '.*', 'gi');
+	queryParameters['searchTerm'] = searchTerm
 	queryParameters['filter'] = filter;
 
 	if (sortField !== undefined || sortDirection !== undefined)

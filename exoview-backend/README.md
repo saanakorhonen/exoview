@@ -64,6 +64,8 @@ offset: vapaaehtoinen, aloitusindeksi näytettäville tuloksille. Oletus on 0.
 
 limit: vapaaehtoinen, lopetusindeksi näytettäville tuloksille. Oletus on dokumenttien määrä.
 
+exact_match: 0 tai 1. Jos 1 niin haetaan täsmällistä nimeä, esim. Kepler-160 haussa ei palauta Kepler-1607:aa.
+
 sortField: vapaaehtoinen, määrittää järjestysfunktiossa käytettävän kentän. Filterissä sallitut kentät ovat sallittuja myös sortFieldissä.
 
 sortDirection: vapaaehtoinen, määrittää järjestämisen suunnan. -1 on laskeva, 1 on nouseva.

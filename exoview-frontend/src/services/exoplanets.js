@@ -1,5 +1,5 @@
-const urlPlanets = 'http://address:8080/search?from=planets'
-const urlStellarSystem = "http://address:8080/search?filter=hostname&searchterm="
+const urlPlanets = 'http://192.168.43.209:8080/search?from=planets'
+const urlStellarSystem = "http://192.168.43.209:8080/search?filter=hostname&searchterm="
 
 
 // fetching all expoplanets in the db
