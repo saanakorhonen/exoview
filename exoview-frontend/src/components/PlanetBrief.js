@@ -56,7 +56,8 @@ const PlanetBrief = ({ data, allPlanets, navigation } ) => {
 //painettaessa Stellas System
 const handleStarsystem = (props) => {
     var nimi = props.data.hostname;
-    exoService.getStellarSystem(nimi)
+    const hname = nimi.replace(/\+/g, '%2B') // tähdille, joilla + merkki nimessä, jotta haku toimii
+    exoService.getStellarSystem(hname)
     .then((star) => {
         var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
         const system = {star: star, planets: tahdenplaneetat}
