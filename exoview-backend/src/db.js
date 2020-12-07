@@ -71,7 +71,9 @@ var Db = class {
         return promise;
     }
 
-
+    /**
+     * Lisää planeetan/tähden annettuun collectioniin
+     */
     async add(collection, entry) {
         var promise = await this._collections[collection].add(entry);
         return promise;
@@ -95,7 +97,9 @@ var Db = class {
         return promise;
     }
 
-
+    /**
+     * Hakee kokonaisen collectionin
+     */
     getCollection(name) {
         return new Promise((resolve, reject) => {
             var success = this._collections[name] != undefined;

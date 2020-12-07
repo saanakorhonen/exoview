@@ -58,7 +58,16 @@ const handleStarsystem = (props) => {
     var nimi = props.data.hostname;
     exoService.getStellarSystem(nimi)
     .then((star) => {
-        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
+
+        if (star.hostname.indexOf('+') > -1) {
+            var index = star.hostname.indexOf('+');
+
+            var regex = star.hostname.substring(0, index) + '\\' + star.hostname.substring(index, star.hostname.length);
+        }
+
+        else regex = star.hostname;
+
+        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(regex));
         const system = {star: star, planets: tahdenplaneetat}
         props.navigation.navigate('Stellar System', system)})
 }
@@ -68,7 +77,17 @@ const handleViewPlanet= (props) => {
     var nimi = props.data.hostname;
     exoService.getStellarSystem(nimi)
     .then((star) => {
-        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(star.hostname))
+
+        if (star.hostname.indexOf('+') > -1) {
+            var index = nimi.indexOf('+');
+
+            var regex = nimi.substring(0, index) + '\\' + nimi.substring(index, nimi.length);
+        }
+
+        else regex = nimi;
+
+        
+        var tahdenplaneetat = props.allPlanets.filter(planet => planet['hostname'].match(regex))
         const system = {star: star, planets: tahdenplaneetat}
         props.navigation.navigate('Information',{ planet:props.data, system: system}) })
     

@@ -79,11 +79,11 @@ module.exports = {
 			type: 'number',
 		},
 
-		sy_bmag: {
+		ra: {
 			type: 'number',
 		},
 
-		sy_vmag: {
+		dec: {
 			type: 'number',
 		},
 

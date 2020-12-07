@@ -19,7 +19,7 @@ var Collection = class {
         if (exact_match === 0) var searchEnd = '.*'
         else var searchEnd = '$';
 
-        if (searchTerm !== undefined || filter !== undefined) {
+        if (searchTerm !== undefined && filter !== undefined) {
             //console.log('collection.js:21 ', searchTerm);
 
 
@@ -107,13 +107,18 @@ var Collection = class {
             }
         }
 
+        if (success == false) {
+            console.log('collection.js:111:', id, update);
+        }
+
         return new Promise((resolve, reject) => {
             success ? resolve('Update ok.') : reject('Update failed', console.trace());
         })
     }
 
-
-    //Lisää uuden entryn, generoi sille id:n ja sen perusteella indeksin.
+    /**
+     * Lisää uuden entryn, generoi sille id:n ja sen perusteella indeksin.
+     */
     async add(entry) {
         var success = true;
 
@@ -166,7 +171,9 @@ var Collection = class {
     }
 
 
-    //Generoi hajautuksen tarvittavan avaimen id:n perusteella.
+    /**
+     * Generoi hajautuksen tarvittavan avaimen id:n perusteella.
+     */
     generateHashKey(id) {
         var key = 0;
 
@@ -185,7 +192,9 @@ var Collection = class {
     }
 
 
-    //Generoi indeksin annetun avaimen perusteella hajautusfunktiota käyttäen.
+    /**
+     * Generoi indeksin annetun avaimen perusteella hajautusfunktiota käyttäen.
+     */
     hash(key) {
         var i = 0;
         var index = 0;
@@ -205,7 +214,9 @@ var Collection = class {
     }
 
 
-    //Etsii entryn indeksin hash-avaimen ja id:n perusteella.
+    /**
+     * Etsii entryn indeksin hash-avaimen ja id:n perusteella.
+     */
     findIndexById(key, id) {
         var i = 0;
 
@@ -236,7 +247,9 @@ var Collection = class {
     }
 
 
-    //Validoi annetun entryn muodostettaessa annetun validaattorin perusteella.
+    /**
+     * Validoi annetun entryn muodostettaessa annetun validaattorin perusteella.
+     */
     async validateEntry(entry) {
         if (this._validator === undefined) return new Promise((resolve, reject) => {
             resolve('Validation ok');
@@ -273,8 +286,10 @@ var Collection = class {
         })
     }
 
-    
-    //Generoi uniikin id:n yhdelle entrylle.
+
+    /**
+     * Generoi uniikin id:n yhdelle entrylle.
+     */
     generateId() {
         const characters = '1234567890abcdefghijklmnopqrstuvwxyz';
 

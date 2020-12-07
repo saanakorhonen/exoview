@@ -14,7 +14,7 @@ const Db = require('./src/db');
 const { start } = require('repl');
 
 var defaultUrl =
-	'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year,st_spectype,st_teff,st_rad,st_mass,st_lum,st_age,st_dens,st_rotp,st_radv,sy_bmag,sy_vmag+from+pscomppars+order+by+disc_year+desc';
+	'https://exoplanetarchive.ipac.caltech.edu/TAP/sync?query=select+hostname,pl_name,pl_rade,pl_bmasse,pl_bmassj,pl_radj,pl_orbsmax,pl_orbper,pl_orbeccen,disc_year,st_spectype,st_teff,st_rad,st_mass,st_lum,st_age,st_dens,st_rotp,st_radv,ra,dec+from+pscomppars+order+by+disc_year+desc';
 
 var db;
 
@@ -76,8 +76,7 @@ const parseData = async (data) => {
 			searchTerm: planet[1],
 			filter: 'pl_name',
 			exact_match: 1
-		}); //jotain?
-
+		});
 
 		//Etsitään, löytyykö host tähden nimellä tähteä
 		var foundStarResult = await db.find("stars", {
@@ -108,7 +107,7 @@ const parseData = async (data) => {
 
 			//Jos tähteä ei ole olemassa, tarvitaan planeettaan tähden tiedot myöhempää tarkastelua varten
 			if (foundStar === undefined) {
-				planetEntry.merge({
+				planetEntry = Object.assign(planetEntry, {
 					st_spectype: planet[10],
 					st_teff: Number(planet[11]),
 					st_rad: Number(planet[12]),
@@ -118,21 +117,24 @@ const parseData = async (data) => {
 					st_dens: Number(planet[16]),
 					st_rotp: Number(planet[17]),
 					st_radv: Number(planet[18]),
-					sy_bmag: Number(planet[19]),
-					sy_vmag: Number(planet[20]),
+					ra: Number(planet[19]),
+					dec: Number(planet[20]),
 				})
 			}
 
 
-			//Lisätään uusi planeetta
-			const entry = await db.add("planets", planetEntry);
+			
 
 
 			//Jos uutta (undefined) tähteä ei ole vielä tähtien taulukossa, lisätään se sinne
 			if (!foundStars.includes(planetEntry.hostname)
 				&& foundStar === undefined) {
 					foundStars.push(planetEntry.hostname);
-				}
+			}
+
+
+			//Lisätään uusi planeetta
+			const entry = await db.add("planets", planetEntry);
 
 
 			//Uuden planeetan info lähetetään soketeille
@@ -143,8 +145,9 @@ const parseData = async (data) => {
 
 			io.emit('new planet', newPlanetInfo);
 
-		} else { 						//Muussa tapauksessa päivitetään tiedot
-			const update = {
+		} else { 					//Muussa tapauksessa päivitetään tiedot
+
+			var update = {
 				hostname: planet[0],
 				pl_name: planet[1],
 				pl_rade: planet[2],
@@ -156,6 +159,28 @@ const parseData = async (data) => {
 				pl_orbeccen: planet[8],
 				disc_year: planet[9],
 			};
+
+			if (foundStar === undefined) {
+				update = Object.assign(update, {
+					st_spectype: planet[10],
+					st_teff: Number(planet[11]),
+					st_rad: Number(planet[12]),
+					st_mass: Number(planet[13]),
+					st_lum: Number(planet[14]),
+					st_age: Number(planet[15]),
+					st_dens: Number(planet[16]),
+					st_rotp: Number(planet[17]),
+					st_radv: Number(planet[18]),
+					ra: Number(planet[19]),
+					dec: Number(planet[20]),
+				})
+			}
+
+			//Jos uutta (undefined) tähteä ei ole vielä tähtien taulukossa, lisätään se sinne
+			if (!foundStars.includes(update.hostname)
+				&& foundStar === undefined) {
+					foundStars.push(update.hostname);
+			}
 
 
 			//Muut samaan tähtijärjestelmään kuuluvat planeetat etsitään
@@ -173,8 +198,8 @@ const parseData = async (data) => {
 					st_dens: planet[16],
 					st_rotp: planet[17],
 					st_radv: planet[18],
-					sy_bmag: planet[19],
-					sy_vmag: planet[20],
+					ra: planet[19],
+					dec: planet[20],
 				}
 
 				//Päivitetään tähti
@@ -185,8 +210,6 @@ const parseData = async (data) => {
 			db.update("planets", foundPlanet._id, update);
 		}
 	}
-
-	//console.log(foundStars);
 
 	await parseStars(foundStars);
 	db.write();
@@ -219,8 +242,8 @@ const parseStars = async (foundStars) => {
 			st_dens: defaultPlanet.st_dens,
 			st_rotp: defaultPlanet.st_rotp,
 			st_radv: defaultPlanet.st_radv,
-			sy_bmag: defaultPlanet.sy_bmag,
-			sy_vmag: defaultPlanet.sy_vmag,
+			ra: defaultPlanet.ra,
+			ra: defaultPlanet.ra,
 		}
 
 		

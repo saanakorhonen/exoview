@@ -45,11 +45,21 @@ const Search = ({ navigation, route } ) => {
             setMenuTriggerText('Search Options'); 
             return setFoundPlanets(allPlanets);
         }
-        const searchedWord = '^' + searchTerm
+        
+        var searchedWord = '^' + searchTerm + '.*';
+
+        if (searchedWord.indexOf('+') > -1) {
+            const index = searchedWord.indexOf('+');
+            
+            searchedWord = searchedWord.substring(0, index) + '\\' + searchedWord.substring(index, searchedWord.length); 
+        }
+
+        console.log(searchedWord);
+
         const filteredPlanetsAr = (searchFilter !== 'pl_rade' && searchFilter !== 'pl_masse' 
 
-        ? (allPlanets.filter(planet => planet[searchFilter].toLowerCase().match(searchTerm.toLowerCase())))
-        : (allPlanets.filter(planet => planet[searchFilter].toString().match(searchedWord))))
+        ? (allPlanets.filter(planet => planet[searchFilter].match(new RegExp(searchedWord, 'gi'))))
+        : (allPlanets.filter(planet => planet[searchFilter].toString().match(new RegExp(searchedWord, "gi")))))
 
         setFoundPlanets(filteredPlanetsAr)
         Keyboard.dismiss()
