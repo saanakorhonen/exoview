@@ -109,7 +109,8 @@ const handleMap = async (props) => {
 				ra: star.ra,
 				temp: star.st_teff,
 			});
-		});
+		})
+		.catch(error => console.log(error) );
 	}
 	var mapHost = {
 		raRef: raRef,

@@ -1,6 +1,6 @@
-const urlPlanets = 'http://192.168.0.101:8080/search?from=planets';
+const urlPlanets = 'http://address:8080/search?from=planets';
 const urlStellarSystem =
-	'http://192.168.0.101:8080/search?filter=hostname&searchterm=';
+	'http://address:8080/search?filter=hostname&searchterm=';
 
 // fetching all expoplanets in the db
 const getAllExo = async () => {

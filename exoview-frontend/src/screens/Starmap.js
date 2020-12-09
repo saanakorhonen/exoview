@@ -58,7 +58,7 @@ const Starmap = ({ route, navigation }) => {
 						/>
 					</View>
 					{combo.map((item) => (
-						<View>
+						<View key={item.name}>
 							<View
 								style={{
 									left: relativeRa(item.ra, degrees),
@@ -77,7 +77,6 @@ const Starmap = ({ route, navigation }) => {
 					))}
 				</ImageBackground>
 			</View>
-
 			<View style={styles.container}>
 				<Text style={styles.text}>
 					View is currently {degrees * 2} degrees across
@@ -120,15 +119,10 @@ function relativeRa(ra, degrees) {
 }
 
 const styles = StyleSheet.create({
-	img: {
+	button: {
 		flex: 1,
-		resizeMode: 'cover',
-		height: WW(),
-		overflow: 'hidden',
-	},
-	text: {
-		color: 'white',
-		fontSize: 18,
+		alignItems: 'center',
+		backgroundColor: 'rgb(10,10,30)',
 	},
 	buttonText: {
 		color: 'white',
@@ -138,10 +132,15 @@ const styles = StyleSheet.create({
 	container: {
 		alignItems: 'center',
 	},
-	button: {
+	img: {
 		flex: 1,
-		alignItems: 'center',
-		backgroundColor: 'rgb(10,10,30)',
+		resizeMode: 'cover',
+		height: WW(),
+		overflow: 'hidden',
+	},
+	text: {
+		color: 'white',
+		fontSize: 18,
 	},
 });
 
