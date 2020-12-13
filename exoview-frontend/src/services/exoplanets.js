@@ -1,11 +1,11 @@
 const urlPlanets = 'https://exoapp-server.loca.lt/search?from=planets';
-const urlStellarSystem ='https://exoapp-server.loca.lt/search?filter=hostname&searchterm=';// exp://79-4pc.anonymous.exoview-frontend.exp.direct:80
+const urlStellarSystem ='https://exoapp-server.loca.lt/search?filter=hostname&searchterm=';
 
-// fetching all expoplanets in the dbexp://79-4pc.anonymous.exoview-frontend.exp.direct:80
+// fetching all expoplanets in the db
 const getAllExo = async () => {
 	console.log('Getting all planets...');
 	const res = await fetch(urlPlanets);
-	const data = await res.json();
+	const data = await res.json(); 
 	return data;
 };
 

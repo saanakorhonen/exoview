@@ -1,32 +1,29 @@
 import 'react-native-gesture-handler';
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BallAndName from '../components/BallAndName';
 import {
-	Image,
 	StyleSheet,
 	Text,
 	View,
-	Button,
 	Dimensions,
 	ImageBackground,
 	TouchableOpacity,
 } from 'react-native';
-import exoService from '../services/exoplanets';
-import { render } from 'react-dom';
+
 
 //var degrees = 5;
 var decRef;
 var raRef;
 
 //luo about componentin
-const Starmap = ({ route, navigation }) => {
+const Starmap = ({ route }) => {
 	const [degrees, setDegrees] = useState(2);
 	//console.log(route.params.allPlanets);
 	decRef = route.params.decRef;
 	raRef = route.params.raRef;
 	let combo = [].concat(route.params.hostinfo, presetStars);
 
+	console.log(combo)
 	return (
 		<View
 			style={{
@@ -58,7 +55,7 @@ const Starmap = ({ route, navigation }) => {
 						/>
 					</View>
 					{combo.map((item) => (
-						<View key={item.name}>
+						<View key={generateKey()}>
 							<View
 								style={{
 									left: relativeRa(item.ra, degrees),
@@ -99,6 +96,18 @@ const Starmap = ({ route, navigation }) => {
 		</View>
 	);
 };
+
+const generateKey = () => {
+    const keys = '1234567890abcdefghijklmnopqrstuvwxyz'
+    const idLength = 10
+    let i = 0;
+    let id = '';
+    while (i < idLength) {
+        id = id + keys.charAt(Math.floor(Math.random() * Math.floor(keys.length)))
+        i++;
+    }
+    return id;
+}
 
 const WW = () => {
 	return Dimensions.get('window').width;

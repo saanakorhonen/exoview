@@ -97,7 +97,7 @@ const Search = ({ navigation, route } ) => {
 
         }
     }
-    
+    //console.log(allPlanets)
     //Palauttaa hakunäkymän
     return (
         
@@ -171,16 +171,12 @@ const styles = StyleSheet.create({
     textInput: {
         width: '90%',
         backgroundColor: 'rgba(255,255,255,0.2)',
-        borderTopLeftRadius:10,
-        borderBottomLeftRadius: 10,
+        borderRadius: 10,
         padding:12,
         position: 'relative'
     },
     searchIcon: {
-        backgroundColor: 'rgba(255,255,255,0.2)',
-        borderTopRightRadius:10,
-        borderBottomRightRadius: 10,
-        padding: 3
+        marginLeft: 5
 
     },
 

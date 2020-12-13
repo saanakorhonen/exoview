@@ -15,7 +15,8 @@ const Mainmenu = ({ navigation }) => {
     if (loading) {
       exoService.getAllExo()
       .then((planets) => {
-        setExoplanets(planets)
+        const filtered = planets.filter(planet => planet.pl_name.includes('+') !== true) //TODO: oikea fix asialle
+        setExoplanets(filtered)
         setLoading(false)
       })
     }

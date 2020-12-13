@@ -78,7 +78,7 @@ const styles = StyleSheet.create({
 		flex: 3,
 	},
 	infoBoxTitle: {
-		fontSize: 30,
+		fontSize: 28,
 		margin: 10,
 		color: "white",
 	},
@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
 		marginRight: 20,
 		marginBottom: 8,
 		color: "white",
-		fontSize: 18, 
+		fontSize: 16, 
 	},
 });
 
