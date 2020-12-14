@@ -100,7 +100,6 @@ const Search = ({ navigation, route } ) => {
 
     //Palauttaa hakunäkymän
     return (
-        
             <MenuProvider style={{ backgroundColor: '#0E1D32', padding: 5}} on>
                     <View style={styles.searchBar}>
                         <TextInput style={styles.textInput} onChangeText={term => handleTextChange(term)}></TextInput>

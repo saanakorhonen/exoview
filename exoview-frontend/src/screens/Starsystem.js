@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
       //justifyContent:'flex-start',
       //justifyContent: 'center',
      // alignItems: 'center',
-      //backgroundColor: 'black',
+      backgroundColor: '#0E1D32',
       paddingTop: 10,
       paddingLeft: 10
     },

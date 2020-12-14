@@ -58,8 +58,9 @@ const Information = ({ navigation, route }) => {
   }, [planetsSet])
 
   return (
-    <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
+    
     <View style={styles.container}>
+      <ImageBackground style={styles.container} source={require('../../assets/background.png')} >
       {loading
       ? <ImageBackground style={{flex: 1, alignItems: 'center', justifyContent:'flex-end'}} source={require('../../assets/exoView_opening_pic.png')}>
           <ActivityIndicator size='large' color='rgba(255,255,255, 0.4)' />
@@ -88,9 +89,11 @@ const Information = ({ navigation, route }) => {
           <Distance eplanet={planet.planet} />
         </View>
       </ScrollView>
+     
       )}
+       </ImageBackground> 
     </View>  
-    </ImageBackground> 
+    
   )
 }
 
@@ -98,7 +101,7 @@ const Information = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //backgroundColor: '#0E1D32',
+    backgroundColor: '#0E1D32',
   },
   nameBox: {
     flex: 0.2,
