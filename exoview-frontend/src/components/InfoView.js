@@ -7,19 +7,19 @@ const InfoView = ( { data }) => {
     <View style={styles.container}>
       <View style={styles.element}>
         <Text>Host star</Text>
-        <Text style={styles.text}>{data.hostname}</Text>
+        <Text style={styles.text}>{data.hostname !== '' ? data.hostname : '-'}</Text>
       </View>
       <View style={styles.element}>
         <Text>Planet mass</Text>
-        <Text style={styles.text}>{data.pl_masse}</Text>
+        <Text style={styles.text}>{data.pl_masse!== '' ? data.pl_masse: '-'}</Text>
       </View>
       <View style={styles.element}>
         <Text>Planet radius</Text>
-        <Text style={styles.text}>{data.pl_rade}</Text>
+        <Text style={styles.text}>{data.pl_rade !== '' ? data.pl_rade: '-'}</Text>
       </View>
       <View style={styles.element}>
         <Text>Discovery year</Text>
-        <Text style={styles.text}>{data.disc_year}</Text>
+        <Text style={styles.text}>{data.disc_year !== '' ? data.disc_year : '-'}</Text>
       </View>
     </View>
   )

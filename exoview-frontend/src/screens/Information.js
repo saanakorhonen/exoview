@@ -31,7 +31,6 @@ const Information = ({ navigation, route }) => {
     setPlanetsSet(false)
     // tänne,kun tullaan searchchista view planet
     if (route.params.planet !== undefined) {
-      console.log('infossa useEffect if',route.params)
       const p = route.params.planet
       setPlanet({ planet: { hostname: p.hostname, pl_name: p.pl_name, pl_rade: p.pl_rade, pl_masse: p.pl_masse, pl_massj: p.pl_bmassj, pl_radj: p.pl_radj, pl_orbsmax: p.pl_orbsmax, pl_orbper: p.pl_orbper, pl_orbeccen: p.pl_orbeccen, disc_year: p.disc_year }})
       setSystem(route.params.system)
@@ -48,7 +47,6 @@ const Information = ({ navigation, route }) => {
   useEffect(() => {
     //tänne, kun tullaan main menusta suoraan
     if(planetsSet === true){
-    console.log('info 51 aka useEffect2')
     const nimi = planet.planet.hostname
     exoService.getStellarSystem(nimi)
     .then((star) => {

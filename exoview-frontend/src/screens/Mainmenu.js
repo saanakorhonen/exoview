@@ -22,8 +22,6 @@ const Mainmenu = ({ navigation }) => {
     }
   }, []);
 
-console.log('mainmenu 78',exoplanets.length)
-
 	return (
     <View style={{ flex:1, justifyContent: 'center', }}>
       {loading

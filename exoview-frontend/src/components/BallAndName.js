@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import Starcolor from './Starcolor';
 
 const BallAndName = ({ pName, pSize = 10, flex, top, temp }) => {
-	//console.log(temp);
 	return (
 		<View
 			style={{

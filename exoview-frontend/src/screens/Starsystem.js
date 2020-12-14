@@ -18,18 +18,18 @@ neptunus 30.33
 */
 const Starsystem = ({ route, navigation }) => {
 
-    console.log('starsystem routeparans', route.params)
     const hPhone = Dimensions.get('window').height
     const hStar = Dimensions.get('window').width / 2
     const star = route.params.star != undefined ? route.params.star : route.params
     const system = {star: star, planets: route.params.planets}
     let  auEarth =hPhone/5 // 1 AU
+    const planets = route.params.planets.filter(planet => planet.pl_orbsmax !== "")
 
     //meidän aurinkokunnan planettoojen etäisyydet
     var etaisyydet = [ {name: 'Mercury', au: 0.4667}, {name:'Venus', au: 0.72813}, {name: 'Earth', au:1},{name:"Mars",au:1.666},{name:"Jupiter",au:5.4588},{name:"Saturn",au:10.1238},{name:"Uranus",au:20.11},{name:"Neptune",au:30.33}];
-    let  pituus = kaukaisin(route.params.planets) ; // kaukaisin tähtijärjestelmän eksoplaneetta (AU)
+    let  pituus = kaukaisin(planets) ; // kaukaisin tähtijärjestelmän eksoplaneetta (AU)
     let kaukaisinPlaneetta = solarSystem(pituus,etaisyydet) // meidän aurinkokunnan planeettta, jota lähempänä kaukaisin eksoplaneetta on (AU)
-    let lahinAU = lahin(route.params.planets)
+    let lahinAU = lahin(planets)
 
     // etäisyyksien uudelleen suhteuttaminen: 1. lähempänä kuin maa, maa ja neptunus välillä, kauempana kuin neptunus
     if (lahinAU < 1.0) {
@@ -68,8 +68,8 @@ const Starsystem = ({ route, navigation }) => {
                          <OurSolarSystem planet={planet}/>
                          </View>
                      )}
-                    {route.params.planets.map((planet) =>
-                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*(planet.pl_orbsmax  !== "" ? planet.pl_orbsmax: 1.0)+ hStar -(Dimensions.get('window').width / 16), marginBottom:(Dimensions.get('window').width / 16) }} >
+                    {planets.map((planet) =>
+                    <View key={generateKey()} style={{position: 'absolute', marginTop:  auEarth*planet.pl_orbsmax + hStar -(Dimensions.get('window').width / 16), marginBottom:(Dimensions.get('window').width / 16) }} >
                         <Planets planet={planet} navigation={navigation} system={system} />
                     </View>
                     )}

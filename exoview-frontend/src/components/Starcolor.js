@@ -38,6 +38,5 @@ export default function Starcolor(temperature) {
 	let r = GradientColor(temperature, index, 1);
 	let g = GradientColor(temperature, index, 2);
 	let b = GradientColor(temperature, index, 3);
-	//console.log('rgb(' + r + ',' + g + ',' + b + ')');
 	return 'rgb(' + r + ',' + g + ',' + b + ')';
 }

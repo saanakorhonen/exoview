@@ -97,7 +97,7 @@ const Search = ({ navigation, route } ) => {
 
         }
     }
-    //console.log(allPlanets)
+
     //Palauttaa hakunäkymän
     return (
         

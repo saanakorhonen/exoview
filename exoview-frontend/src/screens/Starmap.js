@@ -18,12 +18,10 @@ var raRef;
 //luo about componentin
 const Starmap = ({ route }) => {
 	const [degrees, setDegrees] = useState(2);
-	//console.log(route.params.allPlanets);
 	decRef = route.params.decRef;
 	raRef = route.params.raRef;
 	let combo = [].concat(route.params.hostinfo, presetStars);
 
-	console.log(combo)
 	return (
 		<View
 			style={{

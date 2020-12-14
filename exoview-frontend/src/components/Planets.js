@@ -13,7 +13,6 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
  *  size = planeetan koko numerona (pl_rade)
  */
 export default function Planets({ planet, system,  navigation }) {
-    console.log('Planets.js:15', planet.pl_rade)
 
   const pEarthRel = (planet.pl_rade !== "" ? planet.pl_rade : 1.0) / 1.0;
 
@@ -30,7 +29,7 @@ export default function Planets({ planet, system,  navigation }) {
   }
 
   if(pEarthRel > 1){
-    bPlanet.color = 'rgba(82, 113, 255, 1.0)';
+    bPlanet.color = 'rgba(82, 113, 255, 0.7)';
     bPlanet.relativeSize = 1.0
     bPlanet.isEarth = false
     fPlanet.relativeSize = 1 / pEarthRel 
@@ -42,7 +41,7 @@ export default function Planets({ planet, system,  navigation }) {
       bPlanet.color = "white";
       bPlanet.relativeSize = 1.0
       bPlanet.isEarth = true
-      fPlanet.color = 'rgba(82, 113, 255, 1.0)';
+      fPlanet.color = 'rgba(82, 113, 255, 0.7)';
       fPlanet.relativeSize = planet.pl_rade !== "" ? planet.pl_rade : 1.0;
       fPlanet.isEarth = false
 

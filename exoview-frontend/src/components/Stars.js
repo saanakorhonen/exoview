@@ -6,13 +6,12 @@ import { Text, View, Dimensions, StyleSheet } from "react-native";
  * Piirtää vierekkäin kokovertauksen eksoplaneetan ja maan välillä.
  * TODO: Vertaa Jupiteriin jos koko on sitä lähempänä
  * @param {*} props
- *  name = "Planeetan nimi" (string)
+ *  name = "Planeetan nimi" (string) planet.pl_rade !== "" ? planet.pl_rade : 'unknown'
  *  size = planeetan koko numerona (pl_rade)
  */
 export default function Stars({ star }) {
-	console.log('Stars.js:16 ', star.st_rad);
 
-	const starSunRel = (star?.st_rad ?? 1.0) / 1.0;
+	const starSunRel = ((star.st_rad !== "" ? star.st_rad : 1.0)) / 1.0;
 
 	const bStar = {
 		name: "",
@@ -29,10 +28,10 @@ export default function Stars({ star }) {
 	};
 
 	if (starSunRel > 1) {
-		bStar.color = starColor(star?.st_teff ?? 5772);
+		bStar.color = starColor(star.st_teff !== "" ? star.st_teff : 5772);
 		bStar.relativeSize = 1.0;
 		bStar.name = star.hostname;
-		bStar.teff = star?.st_teff ?? 'unknown';
+		bStar.teff = star.st_teff !== "" ? star.st_teff : 'unknown';
 
 		fStar.relativeSize = 1 / starSunRel;
 		fStar.color = starColor(5772);
@@ -45,15 +44,14 @@ export default function Stars({ star }) {
 		bStar.name = "Sun";
 		bStar.teff = 5772;
 
-		fStar.color = starColor(star?.st_teff ?? 5772);
-		fStar.relativeSize = star?.st_rad ?? 1.0;
+		fStar.color = starColor(star.st_teff !== "" ? star.st_teff : 5772);
+		fStar.relativeSize = star.st_rad !== "" ? star.st_rad : 1.0;
 		fStar.name = star.hostname;
-		fStar.teff = star?.st_teff ?? 'unknown';
+		fStar.teff = star.st_teff !== "" ? star.st_teff : 'unknown';
 
 		// padding = (WW() - (WW() * relativeSize)) / 2;
 	}
 
-	console.log('Stars.js:67 ', bStar.color);
 	return (
 		<View style={{ flexDirection: "row"}}>
 			<View style={{ alignItems: "center", justifyContent: "center" }}>
